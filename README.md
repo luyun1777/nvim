@@ -42,7 +42,7 @@
 
   git clone https://github.com/luyun1777/nvim.git $env:LOCALAPPDATA\nvim
   # or accelerate with gitee
-  git clone https://gitee.com/luyun1777/nvim.git
+  git clone https://gitee.com/luyun1777/nvim.git $env:LOCALAPPDATA\nvim
   ```
 
 ## 📦 Plugins
