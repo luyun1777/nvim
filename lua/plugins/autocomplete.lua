@@ -7,15 +7,14 @@ return {
 	"hrsh7th/nvim-cmp",
 	event = { "InsertEnter", "CmdlineEnter" },
 	dependencies = {
-		{ "hrsh7th/cmp-nvim-lsp", event = "InsertEnter" },
-		{ "saadparwaiz1/cmp_luasnip", envet = "InsertEnter" },
-		{ "hrsh7th/cmp-buffer", event = "InsertEnter" },
-		{ "hrsh7th/cmp-path", event = "InsertEnter" },
-		{ "hrsh7th/cmp-cmdline", event = "CmdlineEnter" },
-		{ "windwp/nvim-autopairs", event = "InsertEnter" },
+		"hrsh7th/cmp-nvim-lsp",
+		"saadparwaiz1/cmp_luasnip",
+		"hrsh7th/cmp-buffer",
+		"hrsh7th/cmp-path",
+		"hrsh7th/cmp-cmdline",
+		"windwp/nvim-autopairs",
 		{
 			"onsails/lspkind.nvim",
-			lazy = true,
 			config = function()
 				require("lspkind").init()
 			end,
@@ -23,15 +22,11 @@ return {
 		{
 			"L3MON4D3/LuaSnip",
 			build = (function()
-				-- Build Step is needed for regex support in snippets
-				-- This step is not supported in many windows environments
-				-- Remove the below condition to re-enable on windows
-				if vim.fn.has("win32") == 1 or vim.fn.executable("make") == 0 then
+				if vim.fn.executable("make") == 0 then
 					return
 				end
 				return "make install_jsregexp"
 			end)(),
-			event = "InsertEnter",
 			dependencies = {
 				"rafamadriz/friendly-snippets",
 				event = "InsertEnter",

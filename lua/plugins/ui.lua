@@ -28,7 +28,6 @@ return {
 				options = {
 					diagnostics = "nvim_lsp",
 					diagnostics_indicator = function(count, level, _, _)
-						-- diagnostics_indicator = function(count, level, diagnostics_dict, context)
 						local icon = level:match("error") and " " or " "
 						return " " .. icon .. count
 					end,
@@ -207,7 +206,6 @@ return {
 	{
 		"folke/noice.nvim",
 		event = "BufEnter",
-		lazy = true,
 		dependencies = {
 			"MunifTanjim/nui.nvim",
 			"rcarriga/nvim-notify",
@@ -230,14 +228,14 @@ return {
 				},
 			})
 			vim.o.cmdheight = 0
-			vim.keymap.set({ "n", "i", "s" }, "<c-f>", function()
+			vim.keymap.set({ "n", "i", "s" }, "<c-d>", function()
 				if not require("noice.lsp").scroll(4) then
-					return "<c-f>"
+					return "<c-d>"
 				end
 			end, { silent = true, expr = true })
-			vim.keymap.set({ "n", "i", "s" }, "<c-b>", function()
+			vim.keymap.set({ "n", "i", "s" }, "<c-u>", function()
 				if not require("noice.lsp").scroll(-4) then
-					return "<c-b>"
+					return "<c-u>"
 				end
 			end, { silent = true, expr = true })
 		end,

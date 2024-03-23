@@ -3,7 +3,7 @@ return {
 		"lewis6991/gitsigns.nvim",
 		enabled = vim.fn.executable("git") == 1,
 		cmd = "Gitsigns",
-		keys = { { "<leader>g", mode = { "n", "v" }, desc = "Toggle gitsigns" } },
+		event = "VeryLazy",
 		config = function()
 			require("gitsigns").setup({
 				signs = {
@@ -13,33 +13,32 @@ return {
 					topdelete = { text = "‾" },
 					changedelete = { text = "~" },
 				},
+				preview_config = { border = "rounded" },
+				-- show_deleted = true,
+				on_attach = function(bufnr)
+					local map = vim.keymap.set
+					local opts = { buffer = bufnr, noremap = true, silent = true }
+					map("n", "<leader>g-", "<cmd>Gitsigns prev_hunk<CR>", opts)
+					map("n", "<leader>g=", "<cmd>Gitsigns next_hunk<CR>", opts)
+					map("n", "[g", "<cmd>Gitsigns prev_hunk<CR>", opts)
+					map("n", "]g", "<cmd>Gitsigns next_hunk<CR>", opts)
+					map("n", "<leader>gb", "<cmd>Gitsigns blame_line<CR>", opts)
+					map("n", "<leader>gl", "<cmd>Gitsigns toggle_linehl<CR>", opts)
+					map("n", "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", opts)
+					map("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", opts)
+					map("n", "<leader>gd", "<cmd>Gitsigns toggle_deleted<CR>", opts)
+				end,
 			})
-			vim.keymap.set("n", "<leader>g-", ":Gitsigns prev_hunk<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<leader>g=", ":Gitsigns next_hunk<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "[g", ":Gitsigns prev_hunk<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "]g", ":Gitsigns next_hunk<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<leader>gl", ":Gitsigns blame_line<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { noremap = true, silent = true })
-			vim.keymap.set("n", "<leader>gh", ":Gitsigns preview_hunk_inline<CR>", { noremap = true, silent = true })
 		end,
 	},
 	{
 		"kdheepak/lazygit.nvim",
 		enabled = vim.fn.executable("git") == 1 and vim.fn.executable("lazygit") == 1,
-		keys = {
-			{ "<leader>gg", ":LazyGit<CR>", mode = { "n" }, desc = "Toggle lazygit" },
-		},
+		cmd = { "LazyGit", "LazyGitConfig", "LazyGitFilter" },
+		keys = { "<leader>gG", { "<leader>gg", "<cmd>LazyGit<CR>", mode = { "n" }, desc = "Toggle lazygit" } },
 		config = function()
-			vim.g.lazygit_floating_window_scaling_factor = 1.0
-			vim.g.lazygit_floating_window_winblend = 0
-			vim.g.lazygit_use_neovim_remote = true
+			require("telescope").load_extension("lazygit")
+			vim.keymap.set("n", "<leader>gG", "<cmd>lua require('telescope').extensions.lazygit.lazygit()<cr>")
 		end,
 	},
-	-- {
-	-- 	"APZelos/blamer.nvim",
-	-- 	config = function()
-	-- 		vim.g.blamer_enabled = true
-	-- 		vim.g.blamer_relative_time = true
-	-- 	end
-	-- }
 }

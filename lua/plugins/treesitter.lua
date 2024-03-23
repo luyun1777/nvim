@@ -20,15 +20,25 @@ return {
 			-- vim.o.foldmethod = "expr"
 			-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 			require("nvim-treesitter.configs").setup({
-				-- stylua: ignore start
 				ensure_installed = {
-					"bash", "c", "html", "java", "javascript", "lua", "markdown", "markdown_inline",
-					"python", "query", "regex", "vim", "vimdoc", "yaml",
+					"bash",
+					"c",
+					"lua",
+					"markdown",
+					"markdown_inline",
+					"python",
+					"rust",
+					"query",
+					"regex",
+					"vim",
+					"vimdoc",
 				},
-				auto_install = false,
+				auto_install = vim.fn.executable("tree-sitter") == 1,
 				highlight = {
 					enable = true,
-					disable = function(_, bufnr) return vim.b[bufnr].large_buf end,
+					disable = function(_, bufnr)
+						return vim.b[bufnr].large_buf
+					end,
 				},
 				indent = { enable = true },
 				incremental_selection = {
@@ -63,7 +73,6 @@ return {
 							["@function.outer"] = "V", -- linewise
 							["@class.outer"] = "<c-v>", -- blockwise
 						},
-						-- include_surrounding_whitespace = true,
 					},
 					move = {
 						enable = true,
@@ -71,7 +80,6 @@ return {
 						goto_next_start = {
 							["]m"] = "@function.outer",
 							["]o"] = "@loop.outer",
-							-- ["]o"] = { query = { "@loop.inner", "@loop.outer" } }
 							["]z"] = { query = "@fold", query_group = "folds", desc = "Next fold" },
 						},
 						goto_next_end = {
@@ -95,10 +103,10 @@ return {
 					swap = {
 						enable = true,
 						swap_next = {
-							['<leader>a'] = '@parameter.inner',
+							["<leader>a"] = "@parameter.inner",
 						},
 						swap_previous = {
-							['<leader>A'] = '@parameter.inner',
+							["<leader>A"] = "@parameter.inner",
 						},
 					},
 					lsp_interop = {
@@ -114,26 +122,4 @@ return {
 			})
 		end,
 	},
-	--[[ {
-		"nvim-treesitter/nvim-treesitter-context",
-		config = function()
-			require("treesitter-context").setup({
-				enable = false, -- Enable this plugin (Can be enabled/disabled later via commands)
-				max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
-				min_window_height = 0, -- Minimum editor window height to enable context. Values <= 0 mean no limit.
-				line_numbers = true,
-				multiline_threshold = 20, -- Maximum number of lines to show for a single context
-				trim_scope = 'outer', -- Which context lines to discard if `max_lines` is exceeded. Choices: 'inner', 'outer'
-				mode = 'cursor', -- Line used to calculate context. Choices: 'cursor', 'topline'
-				-- Separator between context and content. Should be a single character string, like '-'.
-				-- When separator is set, the context will only show up when there are at least 2 lines above cursorline.
-				separator = nil,
-				zindex = 20, -- The Z-index of the context window
-				on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
-			})
-			vim.keymap.set("n", "[c", function()
-				require("treesitter-context").go_to_context(vim.v.count1)
-			end, { silent = true })
-		end
-	} ]]
 }

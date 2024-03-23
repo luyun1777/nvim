@@ -5,12 +5,9 @@ local split = function()
 end
 local compileRun = function()
 	vim.cmd("w")
-	-- check file type
 	local ft = vim.bo.filetype
-	if ft == "dart" then
-		vim.cmd(":FlutterRun -d " .. vim.g.flutter_default_device .. " " .. vim.g.flutter_run_args)
-	elseif ft == "markdown" then
-		vim.cmd(":InstantMarkdownPreview")
+	if ft == "markdown" then
+		vim.cmd("MarkdownPreviewToggle")
 	elseif ft == "c" then
 		split()
 		vim.cmd("term gcc % -o %< && ./%< && rm %<")
@@ -21,7 +18,7 @@ local compileRun = function()
 		split()
 		vim.cmd("term lua %")
 	elseif ft == "tex" then
-		vim.cmd(":VimtexCompile")
+		vim.cmd("VimtexCompile")
 	elseif ft == "python" then
 		split()
 		vim.cmd('silent! exec "!clear"')

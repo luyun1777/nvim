@@ -1,19 +1,5 @@
 return {
-	{
-		"chentoast/marks.nvim",
-		config = function()
-			require("marks").setup()
-		end,
-	},
 	-- python
-	-- {
-	-- 	"stevanmilic/nvim-lspimport", -- auto import
-	-- 	keys = { { "<leader>a", mode = { "n" }, desc = "auto import(python)" } },
-	-- 	ft = { "python" },
-	-- 	config = function()
-	-- 		vim.keymap.set("n", "<leader>a", require("lspimport").import, { noremap = true, silent = true })
-	-- 	end,
-	-- },
 	{
 		"danymat/neogen",
 		dependencies = "nvim-treesitter/nvim-treesitter",
@@ -27,9 +13,6 @@ return {
 					},
 				},
 			})
-			local opts = { noremap = true, silent = true }
-			vim.api.nvim_set_keymap("i", "<C-l>", "<cmd>lua require('neogen').jump_next<CR>", opts)
-			vim.api.nvim_set_keymap("i", "<C-h>", "<cmd>lua require('neogen').jump_prev<CR>", opts)
 		end,
 	},
 	{
@@ -88,9 +71,6 @@ return {
 			require("markdown").setup({})
 		end,
 	},
-
-	-- json
-	-- { "elzr/vim-json", ft = { "json" } },
 
 	-- Tex
 	-- {

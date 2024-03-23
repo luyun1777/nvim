@@ -3,27 +3,30 @@ return {
 	{
 		"nvim-tree/nvim-tree.lua",
 		version = "*",
-		lazy = true,
 		cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus", "NvimTreeFindFileToggle" },
-		keys = { { "tt", ":NvimTreeToggle<cr>", desc = "Toggle nvim-tree" } },
+		keys = { { "tt", desc = "Toggle nvim-tree" } },
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("nvim-tree").setup({
-				disable_netrw = true,
 				sync_root_with_cwd = true,
 				respect_buf_cwd = true,
 				update_focused_file = { enable = true, update_root = true },
 				-- sort = { sorter = "case_sensitive" },
 				view = { width = 20 },
-				renderer = { group_empty = true },
-				-- filters = { dotfiles = true },
-				vim.keymap.set("", "tt", ":NvimTreeToggle<cr>", { silent = true, nowait = true }),
+				renderer = { group_empty = true, indent_markers = { enable = true } },
+				filters = { dotfiles = true, git_ignored = true },
 			})
+			vim.keymap.set("", "tt", "<cmd>NvimTreeToggle<cr>", { silent = true, nowait = true })
+			local api = require("nvim-tree.api")
+
+			vim.keymap.set("n", "zh", function()
+				api.tree.toggle_hidden_filter()
+				api.tree.toggle_gitignore_filter()
+			end, { noremap = true, silent = true, nowait = true, desc = "Toggle filters" })
 		end,
 	},
 	{
 		"windwp/nvim-autopairs",
-		lazy = true,
 		event = "InsertEnter",
 		config = function()
 			require("nvim-autopairs").setup({})
@@ -31,7 +34,7 @@ return {
 	},
 	{
 		"kelly-lin/ranger.nvim",
-		enable = vim.fn.executable("ranger") == 1,
+		enabled = vim.fn.executable("ranger") == 1,
 		keys = { "<leader>ra" },
 		config = function()
 			require("ranger-nvim").setup({ replace_netrw = true, ui = { border = "rounded" } })
@@ -43,19 +46,11 @@ return {
 	-- Better move
 	{
 		"folke/flash.nvim",
-		lazy = true,
 		event = "VeryLazy",
 		opts = { rainbow = { enable = true } },
-		keys = {
-			{
-				"s",
-				mode = { "n", "x", "o" },
-				function()
-					require("flash").jump()
-				end,
-				desc = "Flash",
-			},
-		},
+		-- stylua: ignore start
+		keys = { { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" } },
+		-- stylua: ignore end
 	},
 	-- Better fold
 	{
@@ -122,14 +117,14 @@ return {
 	-- Better scroll
 	-- {
 	-- 	"karb94/neoscroll.nvim",
-	-- 	envet = "VeryLazy",
+	-- 	event = "VeryLazy",
 	-- 	config = function()
 	-- 		require("neoscroll").setup({})
 	-- 	end,
 	-- },
 	{
 		"dstein64/nvim-scrollview",
-		envet = "VeryLazy",
+		event = "VeryLazy",
 		config = function()
 			require("scrollview").setup({
 				-- excluded_filetypes = { "nerdtree" },
@@ -140,7 +135,6 @@ return {
 	-- Other useful tool
 	{ -- Rainbow delimiters
 		"hiphish/rainbow-delimiters.nvim",
-		lazy = true,
 		event = "BufEnter",
 	},
 	{
@@ -152,14 +146,8 @@ return {
 			})
 		end,
 	},
-	-- { -- Better select with <cr>
-	-- 	"gcmt/wildfire.vim",
-	-- 	lazy = true,
-	-- 	keys = { "<cr>", mode = { "n" }, desc = "Start wildfire" },
-	-- },
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",
-		lazy = true,
 		cmd = { "ColorizerToggle" },
 		config = function()
 			require("colorizer").setup({

@@ -12,7 +12,6 @@ return {
 			wk.register({
 				["<leader>f"] = { name = "Find", _ = "which_key_ignore" },
 				["<leader>g"] = { name = "Git", _ = "which_key_ignore" },
-				["<leader>l"] = { name = "Lsp find", _ = "which_key_ignore" },
 			})
 		end,
 	},

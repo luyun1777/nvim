@@ -1,34 +1,27 @@
 vim.g.mapleader = " "
 vim.g.localleader = "\\"
 local map = vim.keymap.set
-local function opts(nowait, expr, desc)
-	nowait = nowait or false
-	expr = expr or false
-	desc = desc or ""
-	return { noremap = true, silent = true, nowait = true, expr = expr, desc = desc }
-end
 
-map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", opts({ desc = "Save file" }))
-map({ "v", "n", "s" }, "S", "<cmd>w<cr>", opts({ desc = "Save file" }))
-map({ "n", "v" }, "Q", "<cmd>q<cr>", opts({ desc = "Quit" }))
+map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { noremap = true, silent = true, desc = "Save file" })
+map({ "v", "n", "s" }, "S", "<cmd>w<cr>", { noremap = true, silent = true, desc = "Save file" })
+map({ "n", "v" }, "Q", "<cmd>q<cr>", { noremap = true, silent = true, desc = "Quit" })
 map({ "n", "v" }, ";", ":", { noremap = true, silent = false })
 map({ "n", "v" }, ":", ";", { noremap = true, silent = false })
 map("v", "Y", '"+y', { desc = "Copy to system clipboard" })
 map("n", "P", '"+p', { desc = "Paste from system clipboard" })
 map({ "n", "v" }, "`", "~", { noremap = true, silent = false })
 map({ "n", "v" }, "~", "`", { noremap = true, silent = false })
-map("n", "R", "<cmd>source $MYVIMRC<cr>", { noremap = true, silent = false, desc = "Reload configuration" })
 map("n", "<leader>rc", "<cmd>e $MYVIMRC<cr>,", { noremap = true, silent = true, desc = "Edit configuration" })
 map("n", ">", ">>", { noremap = true, silent = true })
 map("n", "<", "<<", { noremap = true, silent = true })
+map("v", ">", ">gv", { noremap = true, silent = true })
+map("v", "<", "<gv", { noremap = true, silent = true })
 map("n", "x", '"_x', { noremap = true, silent = true })
 map("n", "X", '"_X', { noremap = true, silent = true })
 
 -- Better up/down
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-map({ "n", "x" }, "<Down>", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-map({ "n", "x" }, "<Up>", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
 -- Move to window using the <leader> hjkl keys
 map("n", "<leader>h", "<c-w>h", { noremap = true, silent = true, desc = "Go to left window" })
@@ -52,16 +45,8 @@ map("n", "<A-j>", "<cmd>m .+1<cr>==", { silent = true, desc = "Move down" })
 map("n", "<A-k>", "<cmd>m .-2<cr>==", { silent = true, desc = "Move up" })
 map("i", "<A-j>", "<esc><cmd>m .+1<cr>==gi", { silent = true, desc = "Move down" })
 map("i", "<A-k>", "<esc><cmd>m .-2<cr>==gi", { silent = true, desc = "Move up" })
-map("v", "<A-j>", ":m '>+1<cr>gv=gv", { silent = true, desc = "Move down" })
-map("v", "<A-k>", ":m '<-2<cr>gv=gv", { silent = true, desc = "Move up" })
-
--- Tab management
-map("", "te", "<cmd>tabe<cr>", { noremap = true, silent = true, desc = "New tab" })
-map("", "tn", "<cmd>-tabnext<cr>", { noremap = true, silent = true, desc = "Previous tab" })
-map("", "te", "<cmd>+tabnext<cr>", { noremap = true, silent = true, desc = "Next tab" })
-map("", "te", "<cmd>tabclose<cr>", { noremap = true, silent = true, desc = "Close tab" })
--- { from = "tmn", to = ":-tabmove<CR>" },
--- { from = "tmp", to = ":+tabmove<CR>" },
+map("v", "<A-j>", "<cmd>m '>+1<cr>gv=gv", { silent = true, desc = "Move down" })
+map("v", "<A-k>", "<cmd>m '<-2<cr>gv=gv", { silent = true, desc = "Move up" })
 
 -- Buffers management
 map("n", "bp", "<cmd>bprevious<cr>", { noremap = true, silent = true, desc = "Prev buffer" })
@@ -70,9 +55,6 @@ map("n", "[b", "<cmd>bprevious<cr>", { noremap = true, silent = true, desc = "Pr
 map("n", "]b", "<cmd>bnext<cr>", { noremap = true, silent = true, desc = "Next buffer" })
 map("n", "bd", "<cmd>bdelete<cr>", { noremap = true, silent = true, desc = "Delete buffer" })
 map("n", "<c-tab>", "<cmd>e #<cr>", { noremap = true, silent = true, desc = "Switch to Other Buffer" })
-
--- Clear search with <esc>
-map({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>", { desc = "Escape and clear hlsearch" })
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 map("n", "n", "'Nn'[v:searchforward].'zv'", { expr = true, desc = "Next search result" })
@@ -108,11 +90,12 @@ map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
 -- Terminal Mappings
 map("t", "<esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
+map("t", "<c-r>", [['<C-\><C-N>"'.nr2char(getchar()).'pi']], { expr = true })
 map("t", "<C-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
 map("t", "<C-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
 map("t", "<C-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
 map("t", "<C-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
-map("t", "<C-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
+map("t", "<C-q>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 
 -- Useful actions
 map({ "n", "v" }, ",.", "%", { noremap = true, silent = true })

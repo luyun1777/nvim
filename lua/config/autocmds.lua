@@ -1,5 +1,5 @@
 local function augroup(name)
-	return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+	return vim.api.nvim_create_augroup("my_group_" .. name, { clear = true })
 end
 
 -- Auto change directory to current dir
@@ -8,27 +8,20 @@ vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", command = "silent! lcd 
 -- Auto restore cursor position to last open
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
 
+-- Auto enter insert mode while enter a terminal
+vim.cmd([[autocmd TermOpen term://* startinsert]])
+
+-- Auto reload neovim configurations, not works in windows for `source` command is no available
+vim.api.nvim_create_autocmd(
+	"BufWritePost",
+	{ group = augroup("auto_reload"), pattern = "*.vim" or "*.lua" or ".vim.lua", command = "silent! so %" }
+)
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	group = augroup("checktime"),
 	command = "checktime",
 })
 
--- Auto format while saving file.
--- vim.api.nvim_create_autocmd("BufWritePre", {
--- 	group = augroup("auto_format"),
--- 	callback = function()
--- 		vim.lsp.buf.format()
--- 	end
--- })
-
--- vim.api.nvim_create_autocmd("BufWritePre", {
--- 	pattern = "*",
--- 	callback = function(args)
--- 		require("conform").format({ bufnr = args.buf })
--- 		-- require("conform").format({ bufnr = args.buf, formatters = { "injected" } })
--- 	end,
--- })
 -- Highlight on yank
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = augroup("highlight_yank"),
@@ -65,23 +58,6 @@ vim.api.nvim_create_autocmd({ "CursorHold" }, {
 				"ModeChanged",
 			},
 		})
-	end,
-})
--- go to last loc when opening a buffer
-vim.api.nvim_create_autocmd("BufReadPost", {
-	group = augroup("last_loc"),
-	callback = function(event)
-		local exclude = { "gitcommit" }
-		local buf = event.buf
-		if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].lazyvim_last_loc then
-			return
-		end
-		vim.b[buf].lazyvim_last_loc = true
-		local mark = vim.api.nvim_buf_get_mark(buf, '"')
-		local lcount = vim.api.nvim_buf_line_count(buf)
-		if mark[1] > 0 and mark[1] <= lcount then
-			pcall(vim.api.nvim_win_set_cursor, 0, mark)
-		end
 	end,
 })
 
@@ -131,7 +107,7 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	end,
 })
 
--- Auto set tab's length to 2, while open yaml or markdown
+-- Auto set tab's length to 2, while open yaml or markdown file
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("yaml_md"),
 	pattern = { "*.md", "*.markdown", "*.yaml", "*.yml" },
@@ -154,18 +130,6 @@ vim.api.nvim_create_autocmd("BufEnter", {
 	end,
 })
 
--- vim.cmd([[autocmd TermOpen term://* startinsert]])
--- vim.cmd([[
--- augroup NVIMRC
---     autocmd!
---     autocmd BufWritePost .vim.lua exec ":so %"
--- augroup END
--- tnoremap <C-N> <C-\><C-N>
--- tnoremap <C-O> <C-\><C-N><C-O>
--- ]])
-
--- vim.cmd([[hi NonText ctermfg=gray guifg=grey10]])
-
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -174,11 +138,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		-- Enable completion triggered by <c-x><c-o>
 		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-		-- Buffer local mappings.
-		-- See `:help vim.lsp.*` for documentation on any of the below functions
-		vim.keymap.set("n", "<c-l>", function()
+		vim.keymap.set("n", "<c-s-l>", function()
 			vim.lsp.buf.format({ buffer = ev.buf, async = true })
-		end, { buffer = ev.buf, desc = "Formt file" })
+		end, { buffer = ev.buf, desc = "Format file" })
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go declaration" })
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go definition" })
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = ev.buf, desc = "Hover" })
@@ -207,14 +169,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- Auto create head message while create new file
+local author, mail = "luyun", "luyun1777@126.com"
 vim.api.nvim_create_autocmd({ "BufNewFile" }, {
 	group = augroup("auto_create_head_c"),
 	pattern = { "*.c", "*.h" },
 	callback = function()
 		vim.fn.setline(1, "/*************************************************************************")
 		vim.fn.setline(2, "    > File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(3, "    > Author: luyun")
-		vim.fn.setline(4, "    > Mail: luyun1777@126.com")
+		vim.fn.setline(3, "    > Author: " .. author)
+		vim.fn.setline(4, "    > Mail: " .. mail)
 		vim.fn.setline(5, "    > Created Time: " .. os.date())
 		vim.fn.setline(6, " ************************************************************************/")
 		vim.fn.setline(7, "")
@@ -229,8 +192,8 @@ vim.api.nvim_create_autocmd({ "BufNewFile" }, {
 	callback = function()
 		vim.fn.setline(1, "/*************************************************************************")
 		vim.fn.setline(2, "    > File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(3, "    > Author: luyun")
-		vim.fn.setline(4, "    > Mail: luyun1777@126.com")
+		vim.fn.setline(3, "    > Author: " .. author)
+		vim.fn.setline(4, "    > Mail: " .. mail)
 		vim.fn.setline(5, "    > Created Time: " .. os.date())
 		vim.fn.setline(6, " ************************************************************************/")
 		vim.fn.setline(7, "")
@@ -247,8 +210,8 @@ vim.api.nvim_create_autocmd({ "BufNewFile" }, {
 		vim.fn.setline(1, "// package")
 		vim.fn.setline(2, "/**")
 		vim.fn.setline(3, "    @File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(4, "    @Author: luyun")
-		vim.fn.setline(5, "    @Mail: luyun1777@126.com")
+		vim.fn.setline(4, "    @Author: " .. author)
+		vim.fn.setline(5, "    @Mail: " .. mail)
 		vim.fn.setline(6, "    @Created Time : " .. os.date())
 		vim.fn.setline(7, "    @Description:")
 		vim.fn.setline(8, "*/")
@@ -263,8 +226,8 @@ vim.api.nvim_create_autocmd({ "BufNewFile" }, {
 		vim.fn.setline(1, "#!/usr/bin/sh")
 		vim.fn.setline(2, "#########################################################################")
 		vim.fn.setline(3, "    File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(4, "    Author: luyun")
-		vim.fn.setline(5, "    Mail: luyun1777@126.com")
+		vim.fn.setline(4, "    Author: " .. author)
+		vim.fn.setline(5, "    Mail: " .. mail)
 		vim.fn.setline(6, "    Created Time : " .. os.date())
 		vim.fn.setline(7, "    @Description:")
 		vim.fn.setline(8, "#########################################################################")
@@ -279,8 +242,8 @@ vim.api.nvim_create_autocmd({ "BufNewFile" }, {
 		vim.fn.setline(1, "# -*- coding:utf8 -*-")
 		vim.fn.setline(2, '"""')
 		vim.fn.setline(3, "    File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(4, "    Author: luyun")
-		vim.fn.setline(5, "    Mail: luyun1777@126.com")
+		vim.fn.setline(4, "    Author: " .. author)
+		vim.fn.setline(5, "    Mail: " .. mail)
 		vim.fn.setline(6, "    Created Time : " .. os.date())
 		vim.fn.setline(7, "    @Description:")
 		vim.fn.setline(8, '"""')

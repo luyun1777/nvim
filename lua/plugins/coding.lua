@@ -4,7 +4,6 @@ return {
 		"numToStr/Comment.nvim",
 		dependencies = {
 			"JoosepAlviste/nvim-ts-context-commentstring",
-			keys = { "<c-/>", "c-s-/" },
 			config = function()
 				vim.g.skip_ts_context_commentstring_module = true --skip backwards compatibility routines and speed up loading.
 				require("ts_context_commentstring").setup({
@@ -12,15 +11,10 @@ return {
 				})
 			end,
 		},
-		keys = {
-			{ "<c-/>", mode = { "n", "v" }, desc = "Comment code (line)" },
-			{ "<c-s-/>", mode = { "n", "v" }, desc = "Comment code (block)" },
-		},
+		keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
 		config = function()
 			require("Comment").setup({
 				ignore = "^$",
-				toggler = { line = "<c-/>", block = "<c-s-/>" },
-				opleader = { line = "<c-/>", block = "<c-s-/>" },
 				pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
 			})
 		end,
@@ -33,7 +27,6 @@ return {
 			vim.keymap.set("n", "]t", function()
 				require("todo-comments").jump_next()
 			end, { desc = "Next todo comment" })
-
 			vim.keymap.set("n", "[t", function()
 				require("todo-comments").jump_prev()
 			end, { desc = "Previous todo comment" })
@@ -55,7 +48,6 @@ return {
 	},
 	-- {
 	-- 	"lukas-reineke/indent-blankline.nvim",
-	-- 	lazy = true,
 	-- 	event = "BufEnter",
 	-- 	main = "ibl",
 	-- 	config = function()
@@ -122,24 +114,15 @@ return {
 		dependencies = { "mason.nvim" },
 		cmd = "ConformInfo",
 		event = "BufWritePre",
+		-- stylua: ignore start
 		keys = {
-			{
-				"<M-l>",
-				function()
-					require("conform").format({ lsp_fallback = true })
-					-- require("conform").format({ formatters = { "injected" } })
-				end,
-				mode = { "n", "v" },
-				desc = "Format file",
-			},
+			{ "<c-l>", function() require("conform").format({ lsp_fallback = true }) end,         mode = { "n", "v" }, desc = "Format file", },
+			{ "<m-l>", function() require("conform").format({ formatters = { "injected" } }) end, mode = { "n", "v" }, desc = "Format Injected File", },
 		},
+		-- stylua: ignore end
 		config = function()
 			require("conform").setup({
-				format_on_save = {
-					timeout_ms = 500,
-					lsp_fallback = true,
-					-- formatters = { "injected" },
-				},
+				format_on_save = { timeout_ms = 500, lsp_fallback = true },
 				formatters_by_ft = {
 					css = { { "prettierd", "prettier" } },
 					html = { { "prettierd", "prettier" } },
@@ -194,7 +177,7 @@ return {
 				{ "n" },
 				"<leader>fp",
 				"<cmd>lua require'telescope'.extensions.projects.projects{}<cr>",
-				{ silent = true, noremap = true, nowait = true, desc = "Find recent projects" }
+				{ silent = true, noremap = true, desc = "Find recent project" }
 			)
 		end,
 	},
@@ -234,7 +217,6 @@ return {
 	},
 	-- {
 	-- 	"hedyhli/outline.nvim",
-	-- 	lazy = true,
 	-- 	cmd = { "Outline", "OutlineOpen" },
 	-- 	keys = { { "<leader>o", "<cmd>Outline<CR>", mode = { "n" }, desc = "Toggle Outline" } },
 	-- 	config = function()
@@ -258,17 +240,17 @@ return {
 		keys = { "<leader>rr", "<leader>rf" },
 		config = function()
 			require("code_runner").setup({
-				filetype = {
-					lua = "lua",
-				},
+				mode = "term", --"toggle", "float", "tab", "toggleterm", "buf"
+				startinsert = true,
+				float = { border = "rounded" },
 			})
 			-- stylua: ignore start
-			vim.keymap.set("n", "<leader>rr", ":RunCode<CR>", { noremap = true, silent = true, desc = "RunCode" })
-			vim.keymap.set("n", "<leader>rf", ":RunFile<CR>", { noremap = true, silent = true, desc = "RunFile" })
-			vim.keymap.set("n", "<leader>rp", ":RunProject<CR>", { noremap = true, silent = true, desc = "RunProject" })
-			vim.keymap.set("n", "<leader>rq", ":RunClose<CR>", { noremap = true, silent = true, desc = "RunClose" })
-			vim.keymap.set("n", "<leader>crf", ":CRFiletype<CR>", { noremap = true, silent = true, desc = "CRFiletype" })
-			vim.keymap.set("n", "<leader>crp", ":CRProjects<CR>", { noremap = true, silent = true, "CRProjects" })
+			vim.keymap.set("n", "<leader>rr", "<cmd>RunCode<CR>", { noremap = true, silent = true, desc = "RunCode" })
+			vim.keymap.set("n", "<leader>rf", "<cmd>RunFile<CR>", { noremap = true, silent = true, desc = "RunFile" })
+			vim.keymap.set("n", "<leader>rp", "<cmd>RunProject<CR>", { noremap = true, silent = true, desc = "RunProject" })
+			vim.keymap.set("n", "<leader>rq", "<cmd>RunClose<CR>", { noremap = true, silent = true, desc = "RunClose" })
+			vim.keymap.set("n", "<leader>crf", "<cmd>CRFiletype<CR>", { noremap = true, silent = true, desc = "CRFiletype" })
+			vim.keymap.set("n", "<leader>crp", "<cmd>CRProjects<CR>", { noremap = true, silent = true, "CRProjects" })
 			-- stylua: ignore end
 		end,
 	},

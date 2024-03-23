@@ -4,7 +4,7 @@
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org) `npm config set registry https://registry.npmmirror.com/`
-- a C compiler for `nvim-treesitter` and more [MinGW-64](https://www.mingw-w64.org/) or [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries)
+- a C compiler for `nvim-treesitter` for `Windows` [MinGW-64](https://www.mingw-w64.org/) or [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries) and more
 - [Python](https://www.python.org) `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
 - [Make](https://www.gnu.org/software/make/) or [cMake](https://cmake.org/download/)
 - A [Nerd Font](https://www.nerdfonts.com/) / [Github](https://github.com/ryanoasis/nerd-fonts) (optional, but strongly recommended)
@@ -27,7 +27,7 @@
   mv ~/.cache/nvim ~/.cache/nvim.bak
 
   git clone https://github.com/luyun1777/nvim.git ~/.config/nvim
-  # or accelerate with gitee
+  # or accelerate by gitee
   git clone https://gitee.com/luyun1777/nvim.git ~/.config/nvim
   ```
 
@@ -41,7 +41,7 @@
   Move-Item $env:LOCALAPPDATA\nvim-data $env:LOCALAPPDATA\nvim-data.bak
 
   git clone https://github.com/luyun1777/nvim.git $env:LOCALAPPDATA\nvim
-  # or accelerate with gitee
+  # or accelerate by gitee
   git clone https://gitee.com/luyun1777/nvim.git $env:LOCALAPPDATA\nvim
   ```
 
