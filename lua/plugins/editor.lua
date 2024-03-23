@@ -11,7 +11,6 @@ return {
 				sync_root_with_cwd = true,
 				respect_buf_cwd = true,
 				update_focused_file = { enable = true, update_root = true },
-				-- sort = { sorter = "case_sensitive" },
 				view = { width = 20 },
 				renderer = { group_empty = true, indent_markers = { enable = true } },
 				filters = { dotfiles = true, git_ignored = true },
@@ -26,23 +25,17 @@ return {
 		end,
 	},
 	{
-		"windwp/nvim-autopairs",
-		event = "InsertEnter",
+		"theniceboy/joshuto.nvim",
+		enabled = vim.fn.executable("joshuto") == 1,
+		keys = { { "n", "R", "<cmd>Joshuto<cr>" } },
+		cmd = "Joshuto",
 		config = function()
-			require("nvim-autopairs").setup({})
+			vim.g.joshuto_floating_window_scaling_factor = 1.0
+			vim.g.joshuto_use_neovim_remote = 1
+			vim.g.joshuto_floating_window_winblend = 0
 		end,
 	},
-	{
-		"kelly-lin/ranger.nvim",
-		enabled = vim.fn.executable("ranger") == 1,
-		keys = { "<leader>ra" },
-		config = function()
-			require("ranger-nvim").setup({ replace_netrw = true, ui = { border = "rounded" } })
-			vim.keymap.set("n", "<leader>ra", function()
-				require("ranger-nvim").open(true)
-			end, { noremap = true, silent = true })
-		end,
-	},
+
 	-- Better move
 	{
 		"folke/flash.nvim",
@@ -57,7 +50,6 @@ return {
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async", "nvim-treesitter/nvim-treesitter" },
 		event = "VeryLazy",
-		-- keys = { "zo", "zO", "zc", "zC", "za", "zA", "zv", "zx", "zX", "zm", "zM", "zr", "zR" },
 		config = function()
 			-- local handler = function(virtText, lnum, endLnum, width, truncate)
 			-- 	local newVirtText = {}
@@ -133,6 +125,14 @@ return {
 	},
 
 	-- Other useful tool
+	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = function()
+			require("nvim-autopairs").setup({})
+		end,
+	},
+
 	{ -- Rainbow delimiters
 		"hiphish/rainbow-delimiters.nvim",
 		event = "BufEnter",

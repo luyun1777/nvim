@@ -39,7 +39,6 @@ vim.o.ttimeoutlen = 300
 vim.o.timeout = true
 vim.o.viewoptions = "cursor,folds,slash,unix"
 vim.o.wrap = true -- enable line wrap
-vim.o.foldcolumn = "1"
 vim.o.foldmethod = "indent"
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99

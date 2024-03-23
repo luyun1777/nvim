@@ -144,27 +144,19 @@ return {
 	},
 
 	-- Linting
-	-- {
-	-- 	"mfussenegger/nvim-lint",
-	-- 	event = "VeryLazy",
-	-- 	opts = {
-	-- 		events = { "BufWritePost", "BufReadPost", "InsertLeave" },
-	-- 		linters_by_ft = {
-	-- 			-- python = { "flake8" },
-	-- 			-- Use the "*" filetype to run linters on all filetypes.
-	-- 			-- ['*'] = { 'global linter' },
-	-- 			-- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
-	-- 			-- ['_'] = { 'fallback linter' },
-	-- 		},
-	-- 	},
-	-- 	config = function()
-	-- 		vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-	-- 			callback = function()
-	-- 				require("lint").try_lint()
-	-- 			end,
-	-- 		})
-	-- 	end,
-	-- },
+	{
+		"mfussenegger/nvim-lint",
+		event = "VeryLazy",
+		opts = { events = { "BufWritePost", "BufReadPost", "InsertLeave" } },
+		config = function()
+			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+				group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
+				callback = function()
+					require("lint").try_lint()
+				end,
+			})
+		end,
+	},
 
 	-- Project mangagement
 	{
