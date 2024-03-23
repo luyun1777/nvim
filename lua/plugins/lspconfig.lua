@@ -44,7 +44,7 @@ return {
 				github = {
 					download_url_template = "https://mirror.ghproxy.com/https://github.com/%s/releases/download/%s/%s",
 				},
-				pip = { install_args = { "-i https://pypi.tuna.tsinghua.edu.cn/simple" } },
+				pip = { install_args = { "-i", "https://pypi.tuna.tsinghua.edu.cn/simple" } },
 			})
 			-- stylua: ignore start
 			local servers = { -- only LSP supported
