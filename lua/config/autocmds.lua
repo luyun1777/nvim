@@ -11,10 +11,10 @@ vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe 
 -- Auto enter insert mode while enter a terminal
 vim.cmd([[autocmd TermOpen term://* startinsert]])
 
--- Auto reload neovim configurations, not works in windows for `source` command is no available
+-- Auto reload Neovim configuration (partially)
 vim.api.nvim_create_autocmd(
 	"BufWritePost",
-	{ group = augroup("auto_reload"), pattern = "*.vim" or "*.lua" or ".vim.lua", command = "silent! so %" }
+	{ group = augroup("auto_reload"), pattern = { "*.lua", "*.vim", ".vim.lua" }, command = "silent! so %" }
 )
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {

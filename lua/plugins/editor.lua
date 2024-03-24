@@ -27,12 +27,23 @@ return {
 	{
 		"theniceboy/joshuto.nvim",
 		enabled = vim.fn.executable("joshuto") == 1,
-		keys = { { "n", "R", "<cmd>Joshuto<cr>" } },
+		keys = { { "<leader>ra", "<cmd>Joshuto<cr>", mode = { "n" } } },
 		cmd = "Joshuto",
 		config = function()
 			vim.g.joshuto_floating_window_scaling_factor = 1.0
 			vim.g.joshuto_use_neovim_remote = 1
 			vim.g.joshuto_floating_window_winblend = 0
+		end,
+	},
+	{
+		"kelly-lin/ranger.nvim",
+		enabled = vim.fn.executable("joshuto") == 0 and vim.fn.executable("ranger") == 1,
+		keys = { "<leader>ra", "<cmd>lua require('ranger-nvim').open(true)<cr>", mode = { "n" } },
+		config = function()
+			require("ranger-nvim").setup({ replace_netrw = true, ui = { border = "rounded" } })
+			vim.keymap.set("n", "<leader>ra", function()
+				require("ranger-nvim").open(true)
+			end, { noremap = true, silent = true })
 		end,
 	},
 

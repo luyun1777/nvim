@@ -2,6 +2,9 @@
 
 local ts = require("vim.treesitter")
 local get_node_text = ts.get_node_text
+if not pcall(require, "nvim-treesitter") then
+	return [[<cmd> lua print("nvim-treesitter is not availale")<cr>]]
+end
 local ts_utils = require("nvim-treesitter.ts_utils") -- requires nvim-treesitter
 local parsers = require("nvim-treesitter.parsers")
 
