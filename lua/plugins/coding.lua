@@ -122,7 +122,7 @@ return {
 		-- stylua: ignore end
 		config = function()
 			require("conform").setup({
-				format_on_save = { timeout_ms = 500, lsp_fallback = true },
+				format_on_save = { timeout_ms = 5000, async = true, lsp_fallback = true },
 				formatters_by_ft = {
 					css = { { "prettierd", "prettier" } },
 					html = { { "prettierd", "prettier" } },
@@ -133,6 +133,7 @@ return {
 					cpp = { "clang-format" },
 					java = { "clang-format" },
 					javascript = { { "prettierd", "prettier" } },
+					rust = { "rustfmt" },
 					typescript = { { "prettierd", "prettier" } },
 					lua = { "stylua" },
 					python = { "isort", "black" },
@@ -149,6 +150,10 @@ return {
 		event = "VeryLazy",
 		opts = { events = { "BufWritePost", "BufReadPost", "InsertLeave" } },
 		config = function()
+			require("lint").linters_by_ft = {
+				lua = { "luacheck" },
+				python = { "flake8", "mypy" },
+			}
 			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 				group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
 				callback = function()
