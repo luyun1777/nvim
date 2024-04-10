@@ -13,6 +13,6 @@ return {
 	},
 	{ "arturgoms/moonbow.nvim", lazy = true },
 	{ "Shatur/neovim-ayu", lazy = true },
-	{ "ajmwagar/vim-deus", lazy = true },
-	-- { "theniceboy/nvim-deus", lazy = true },
+	{ "ajmwagar/vim-deus", lazy = true, enabled = vim.fn.has("win32") == 1 },
+	{ "theniceboy/nvim-deus", lazy = true, enabled = vim.fn.has("win32") ~= 1 },
 }

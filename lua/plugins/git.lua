@@ -14,7 +14,7 @@ return {
 					changedelete = { text = "~" },
 				},
 				preview_config = { border = "rounded" },
-				-- show_deleted = true,
+				current_line_blame = true,
 				on_attach = function(bufnr)
 					local map = vim.keymap.set
 					local opts = { buffer = bufnr, noremap = true, silent = true }

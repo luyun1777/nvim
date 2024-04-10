@@ -14,6 +14,26 @@ return {
 		"hrsh7th/cmp-cmdline",
 		"windwp/nvim-autopairs",
 		{
+			"yehuohan/cmp-im",
+			keys = {
+				{
+					"<M-;>",
+					function()
+						vim.notify(string.format("IM is %s", require("cmp_im").toggle() and "enabled" or "disabled"))
+					end,
+					mode = { "n", "v", "c", "i" },
+					desc = "Toggle cmp-im",
+				},
+			},
+			dependencies = { "yehuohan/cmp-im-zh" },
+			config = function()
+				require("cmp_im").setup({
+					enable = false,
+					tables = require("cmp_im_zh").tables({ "wubi" }),
+				})
+			end,
+		},
+		{
 			"onsails/lspkind.nvim",
 			config = function()
 				require("lspkind").init()
@@ -61,6 +81,7 @@ return {
 			}, {
 				{ name = "buffer" },
 				{ name = "path" },
+				{ name = "IM" },
 			}),
 			window = {
 				completion = cmp.config.window.bordered(border_opts),
@@ -107,6 +128,7 @@ return {
 						fallback()
 					end
 				end, { "i", "s" }),
+				["<Space>"] = cmp.mapping(require("cmp_im").select(), { "i" }),
 				["<CR>"] = cmp.mapping({
 					i = function(fallback)
 						if cmp.visible() and cmp.get_active_entry() then

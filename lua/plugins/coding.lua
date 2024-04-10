@@ -116,13 +116,13 @@ return {
 		event = "BufWritePre",
 		-- stylua: ignore start
 		keys = {
-			{ "<c-l>", function() require("conform").format({ lsp_fallback = true }) end,         mode = { "n", "v" }, desc = "Format file", },
-			{ "<m-l>", function() require("conform").format({ formatters = { "injected" } }) end, mode = { "n", "v" }, desc = "Format Injected File", },
+			{ "<m-l>", function() require("conform").format({ formatters = { "injected" }, async = true }) end, mode = { "n", "v" }, desc = "Format Injected File", },
+			{ "<c-l>", function() require("conform").format({ lsp_fallback = true, async = true }) end,         mode = { "n", "v" }, desc = "Format file", },
 		},
 		-- stylua: ignore end
 		config = function()
 			require("conform").setup({
-				format_on_save = { timeout_ms = 5000, async = true, lsp_fallback = true },
+				format_on_save = { async = true, lsp_fallback = true },
 				formatters_by_ft = {
 					css = { { "prettierd", "prettier" } },
 					html = { { "prettierd", "prettier" } },

@@ -3,7 +3,7 @@ vim.g.localleader = "\\"
 local map = vim.keymap.set
 
 map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { noremap = true, silent = true, desc = "Save file" })
-map({ "v", "n", "s" }, "S", "<cmd>w<cr>", { noremap = true, silent = true, desc = "Save file" })
+map("n", "S", "<cmd>w<cr>", { noremap = true, silent = true, desc = "Save file" })
 map({ "n", "v" }, "Q", "<cmd>q<cr>", { noremap = true, silent = true, desc = "Quit" })
 map({ "n", "v" }, ";", ":", { noremap = true, silent = false })
 map({ "n", "v" }, ":", ";", { noremap = true, silent = false })
@@ -16,12 +16,19 @@ map("n", ">", ">>", { noremap = true, silent = true })
 map("n", "<", "<<", { noremap = true, silent = true })
 map("v", ">", ">gv", { noremap = true, silent = true })
 map("v", "<", "<gv", { noremap = true, silent = true })
-map("n", "x", '"_x', { noremap = true, silent = true })
-map("n", "X", '"_X', { noremap = true, silent = true })
+map("", "x", '"_x', { noremap = true, silent = true })
+map("", "X", '"_X', { noremap = true, silent = true })
 
 -- Better up/down
 map({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+
+-- Add bash shortcuts for command line
+map("c", "<C-a>", "<Home>")
+map("c", "<C-b>", "<Left>")
+-- BASH-style movement in insert mode
+map("i", "<C-a>", "<C-o>^")
+map("i", "<C-e>", "<C-o>$")
 
 -- Move to window using the <leader> hjkl keys
 map("n", "<leader>h", "<c-w>h", { noremap = true, silent = true, desc = "Go to left window" })

@@ -42,9 +42,12 @@ vim.o.wrap = true -- enable line wrap
 vim.o.foldmethod = "indent"
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
-vim.o.grepformat = "%f:%l:%c:%m"
-vim.o.grepprg = "rg --vimgrep"
+if vim.fn.executable("rg") == 1 then
+	vim.o.grepprg = "rg --vimgrep --no-heading --smart-case"
+	vim.o.grepformat = "%f:%l:%c:%m,%f:%l:%m"
+end
 vim.o.splitright = true -- Put new windows right of current
+vim.o.showbreak = "↳ " -- DOWNWARDS ARROW WITH TIP RIGHTWARDS (U+21B3, UTF-8: E2 86 B3)
 vim.o.splitbelow = true -- Put new windows below current
 vim.o.showmode = false -- Don't show the mode, since it's already in status line
 vim.o.shortmess = vim.o.shortmess .. "cCI"
