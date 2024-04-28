@@ -3,7 +3,7 @@ local function augroup(name)
 end
 
 -- Auto change directory to current dir
-vim.api.nvim_create_autocmd("BufEnter", { pattern = "*", command = "silent! lcd %:p:h" })
+vim.api.nvim_create_autocmd("BufReadPost", { pattern = "*", command = "silent! lcd %:p:h" })
 
 -- Auto restore cursor position to last open
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
@@ -19,7 +19,11 @@ vim.api.nvim_create_autocmd(
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	group = augroup("checktime"),
-	command = "checktime",
+	callback = function()
+		if vim.o.buftype ~= "nofile" then
+			vim.cmd("checktime")
+		end
+	end,
 })
 
 -- Highlight on yank
@@ -40,27 +44,6 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 	end,
 })
 
-vim.api.nvim_create_autocmd({ "CursorHold" }, {
-	group = augroup("lsp_diagnostics_hold"),
-	pattern = "*",
-	callback = function()
-		vim.diagnostic.open_float({
-			scope = "cursor",
-			focusable = false,
-			zindex = 10,
-			close_events = {
-				"CursorMoved",
-				"CursorMovedI",
-				"BufHidden",
-				"InsertCharPre",
-				"InsertEnter",
-				"WinLeave",
-				"ModeChanged",
-			},
-		})
-	end,
-})
-
 -- close some filetypes with <q>
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("close_with_q"),
@@ -68,7 +51,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		"PlenaryTestPopup",
 		"help",
 		"lspinfo",
-		"man",
 		"notify",
 		"qf",
 		"query",
@@ -83,6 +65,15 @@ vim.api.nvim_create_autocmd("FileType", {
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false
 		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+	end,
+})
+
+-- make it easier to close man-files when opened inline
+vim.api.nvim_create_autocmd("FileType", {
+	group = augroup("man_unlisted"),
+	pattern = { "man" },
+	callback = function(event)
+		vim.bo[event.buf].buflisted = false
 	end,
 })
 
@@ -133,20 +124,23 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	group = augroup("Lsp"),
 	callback = function(ev)
-		-- Enable completion triggered by <c-x><c-o>
 		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
-		vim.keymap.set("n", "<c-s-l>", function()
+		vim.keymap.set("n", "<leader>cf", function()
 			vim.lsp.buf.format({ buffer = ev.buf, async = true })
 		end, { buffer = ev.buf, desc = "Format file" })
+		vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
+		vim.keymap.set({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, { desc = "Run Codelens" })
+		vim.keymap.set("n", "<leader>cC", vim.lsp.codelens.refresh, { desc = "Refresh & Display Codelens" })
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go declaration" })
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go definition" })
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = ev.buf, desc = "Hover" })
 		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = ev.buf, desc = "GO implementation" })
 		vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = ev.buf, desc = "Go references" })
-		vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, { buffer = ev.buf })
+		vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, { buffer = ev.buf })
+		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, { buffer = ev.buf })
 		vim.keymap.set(
 			"n",
 			"<leader>wa",
@@ -167,94 +161,3 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = ev.buf, desc = "Code action" })
 	end,
 })
-
--- Auto create head message while create new file
-local author, mail = "luyun", "luyun1777@126.com"
-vim.api.nvim_create_autocmd({ "BufNewFile" }, {
-	group = augroup("auto_create_head_c"),
-	pattern = { "*.c", "*.h" },
-	callback = function()
-		vim.fn.setline(1, "/*************************************************************************")
-		vim.fn.setline(2, "    > File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(3, "    > Author: " .. author)
-		vim.fn.setline(4, "    > Mail: " .. mail)
-		vim.fn.setline(5, "    > Created Time: " .. os.date())
-		vim.fn.setline(6, " ************************************************************************/")
-		vim.fn.setline(7, "")
-		vim.fn.setline(8, "#include <stdio.h>")
-		vim.fn.setline(9, "")
-		vim.fn.setline(10, "")
-	end,
-})
-vim.api.nvim_create_autocmd({ "BufNewFile" }, {
-	group = augroup("auto_create_head_cpp"),
-	pattern = { "*.cpp" },
-	callback = function()
-		vim.fn.setline(1, "/*************************************************************************")
-		vim.fn.setline(2, "    > File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(3, "    > Author: " .. author)
-		vim.fn.setline(4, "    > Mail: " .. mail)
-		vim.fn.setline(5, "    > Created Time: " .. os.date())
-		vim.fn.setline(6, " ************************************************************************/")
-		vim.fn.setline(7, "")
-		vim.fn.setline(8, "#include <iostream>")
-		vim.fn.setline(9, "using namespace std;")
-		vim.fn.setline(10, "")
-		vim.fn.setline(11, "")
-	end,
-})
-vim.api.nvim_create_autocmd({ "BufNewFile" }, {
-	group = augroup("auto_create_head_java"),
-	pattern = { "*.java" },
-	callback = function()
-		vim.fn.setline(1, "// package")
-		vim.fn.setline(2, "/**")
-		vim.fn.setline(3, "    @File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(4, "    @Author: " .. author)
-		vim.fn.setline(5, "    @Mail: " .. mail)
-		vim.fn.setline(6, "    @Created Time : " .. os.date())
-		vim.fn.setline(7, "    @Description:")
-		vim.fn.setline(8, "*/")
-		vim.fn.setline(9, "")
-		vim.fn.setline(10, "")
-	end,
-})
-vim.api.nvim_create_autocmd({ "BufNewFile" }, {
-	group = augroup("auto_create_head_sh"),
-	pattern = { "*.sh" },
-	callback = function()
-		vim.fn.setline(1, "#!/usr/bin/sh")
-		vim.fn.setline(2, "#########################################################################")
-		vim.fn.setline(3, "    File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(4, "    Author: " .. author)
-		vim.fn.setline(5, "    Mail: " .. mail)
-		vim.fn.setline(6, "    Created Time : " .. os.date())
-		vim.fn.setline(7, "    @Description:")
-		vim.fn.setline(8, "#########################################################################")
-		vim.fn.setline(9, "")
-		vim.fn.setline(10, "")
-	end,
-})
-vim.api.nvim_create_autocmd({ "BufNewFile" }, {
-	group = augroup("auto_create_head_python"),
-	pattern = { "*.py", "pyc" },
-	callback = function()
-		vim.fn.setline(1, "# -*- coding:utf8 -*-")
-		vim.fn.setline(2, '"""')
-		vim.fn.setline(3, "    File Name: " .. vim.fn.expand("%"))
-		vim.fn.setline(4, "    Author: " .. author)
-		vim.fn.setline(5, "    Mail: " .. mail)
-		vim.fn.setline(6, "    Created Time : " .. os.date())
-		vim.fn.setline(7, "    @Description:")
-		vim.fn.setline(8, '"""')
-		vim.fn.setline(9, "")
-		vim.fn.setline(10, "def main():")
-		vim.fn.setline(11, "    pass")
-		vim.fn.setline(12, "")
-		vim.fn.setline(13, "if __name__ == '__main__':")
-		vim.fn.setline(14, "    main()")
-		vim.fn.setline(15, "")
-		vim.fn.setline(16, "")
-	end,
-})
-vim.cmd([[autocmd BufNewfile * normal G]])

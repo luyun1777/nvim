@@ -1,25 +1,56 @@
 return {
 	"nvim-telescope/telescope.nvim",
 	cmd = "Telescope",
-	keys = { { "<leader>f", desc = "Toggle Telescope" } },
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{
 			"nvim-telescope/telescope-fzf-native.nvim",
-			build = (function()
-				if vim.fn.executable("make") == 0 then
-					return
-				end
-				return "make"
-			end)(),
+			enabled = vim.fn.executable("make") == 1 or vim.fn.executable("cmake") == 1,
+			build = vim.fn.executable("make") == 1 and "make"
+				or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+			config = function()
+				require("telescope").load_extension("fzf")
+			end,
 		},
 		"stevearc/dressing.nvim",
 	},
-	config = function()
-		local ts = require("telescope")
-		local builtin = require("telescope.builtin")
+	keys = {
+		{
+			"<leader>,",
+			"<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>",
+			desc = "Switch Buffer",
+		},
+		{ "<leader>:", "<cmd>Telescope command_history<cr>", desc = "Command History" },
+		-- find
+		{ "<leader>fb", "<cmd>Telescope buffers sort_mru=true sort_lastused=true<cr>", desc = "Buffers" },
+		{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find Files" },
+		{ "<leader>fg", "<cmd>Telescope git_files<cr>", desc = "Find Files (git-files)" },
+		{ "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "Recent" },
+		-- git
+		{ "<leader>gc", "<cmd>Telescope git_commits<CR>", desc = "Commits" },
+		{ "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },
+		-- search
+		{ '<leader>s"', "<cmd>Telescope registers<cr>", desc = "Registers" },
+		{ "<leader>sa", "<cmd>Telescope autocommands<cr>", desc = "Auto Commands" },
+		{ "<leader>sb", "<cmd>Telescope current_buffer_fuzzy_find<cr>", desc = "Buffer" },
+		{ "<leader>sc", "<cmd>Telescope command_history<cr>", desc = "Command History" },
+		{ "<leader>sC", "<cmd>Telescope commands<cr>", desc = "Commands" },
+		{ "<leader>sd", "<cmd>Telescope diagnostics bufnr=0<cr>", desc = "Document Diagnostics" },
+		{ "<leader>sD", "<cmd>Telescope diagnostics<cr>", desc = "Workspace Diagnostics" },
+		{ "<leader>sg", "<cmd>Telescope live_grep<cr>", desc = "Grep" },
+		{ "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "Help Pages" },
+		{ "<leader>sH", "<cmd>Telescope highlights<cr>", desc = "Search Highlight Groups" },
+		{ "<leader>sk", "<cmd>Telescope keymaps<cr>", desc = "Key Maps" },
+		{ "<leader>sM", "<cmd>Telescope man_pages<cr>", desc = "Man Pages" },
+		{ "<leader>sm", "<cmd>Telescope marks<cr>", desc = "Jump to Mark" },
+		{ "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
+		{ "<leader>sR", "<cmd>Telescope resume<cr>", desc = "Resume" },
+		{ "<leader>ss", "<cmd>Telescope aerial<cr>", desc = "Goto Symbol (Aerial)" },
+	},
+	opts = function()
+		require("telescope").load_extension("aerial")
 		local actions = require("telescope.actions")
-		ts.setup({
+		return {
 			defaults = {
 				vimgrep_arguments = {
 					"rg",
@@ -71,28 +102,6 @@ return {
 					case_mode = "smart_case",
 				},
 			},
-		})
-		ts.load_extension("fzf")
-
-		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Find file" })
-		vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Live grep" })
-		vim.keymap.set("n", "<leader>fc", builtin.colorscheme, { desc = "Find colorscheme" })
-		vim.keymap.set("n", "<leader>fr", builtin.registers, { desc = "Find registers" })
-		vim.keymap.set("n", "<leader>fs", builtin.spell_suggest, { desc = "Spell suggestion" })
-		vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "Find keymap" })
-		vim.keymap.set("n", "<leader>f/", builtin.current_buffer_fuzzy_find, { desc = "Find current buffer" })
-		vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Find buffer" })
-		vim.keymap.set("n", "<leader>fo", builtin.oldfiles, { desc = "Find recent file" })
-		vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Find help" })
-		vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Find diagnostics" })
-		vim.keymap.set("n", "<leader>fl", builtin.builtin, { desc = "List built-in pickers" })
-		vim.keymap.set("n", "<leader>ft", builtin.treesitter, { desc = "List symbols from Treesitter" })
-		vim.keymap.set("n", "<leader>fm", builtin.marks, { desc = "Find marks" })
-		vim.keymap.set("n", "<leader>fM", builtin.reloader, { desc = "List lua modules (reload)" })
-
-		vim.keymap.set("n", "<leader>gc", builtin.git_commits, { desc = "List git commits" })
-		vim.keymap.set("n", "<leader>gb", builtin.git_branches, { desc = "List git branches" })
-		vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "List git status" })
-		vim.keymap.set("n", "<leader>gS", builtin.git_stash, { desc = "List git stash" })
+		}
 	end,
 }

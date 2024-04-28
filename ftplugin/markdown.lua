@@ -4,7 +4,7 @@ vim.opt_local.softtabstop = 2
 vim.opt_local.expandtab = false
 
 local function opts(desc)
-	return { noremap = true, silent = true, buffer = 0, nowait = true, desc = desc or "" }
+	return { silent = true, buffer = vim.api.nvim_get_current_buf(), nowait = true, desc = desc or "" }
 end
 local map = vim.keymap.set
 

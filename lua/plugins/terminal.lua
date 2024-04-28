@@ -2,29 +2,18 @@ return {
 	{
 		"akinsho/toggleterm.nvim",
 		cmd = { "ToggleTerm" },
-		keys = { [[<c-\>]], [[<leader>tt]], [[<leader>tf]], [[<leader>th]], [[<leader>tv]], desc = "Toggle ToggleTerm" },
-		config = function()
-			require("toggleterm").setup({
-				open_mapping = [[<c-\>]],
-				direction = "float",
-				shading_factor = 2,
-				float_opts = { border = "curved" },
-			})
-			vim.keymap.set("", "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", { desc = "ToggleTerm float" })
-			vim.keymap.set("", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle ToggleTerm" })
-			vim.keymap.set(
-				"",
-				"<leader>th",
-				"<cmd>ToggleTerm size=15 direction=horizontal<cr>",
-				{ desc = "ToggleTerm horizontal" }
-			)
-			vim.keymap.set(
-				"",
-				"<leader>tv",
-				"<cmd>ToggleTerm size=50 direction=vertical<cr>",
-				{ desc = "ToggleTerm vertical" }
-			)
-		end,
+		keys = {
+			{ "<c-/>", "<cmd>ToggleTerm<cr>", desc = "Toggle ToggleTerm" },
+			{ "<leader>tt", "<cmd>ToggleTerm<cr>", desc = "Toggle ToggleTerm" },
+			{ "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "ToggleTerm float" },
+			{ "<leader>th", "<cmd>ToggleTerm direction=horizontal size=15<cr>", desc = "ToggleTerm horizontal" },
+			{ "<leader>tv", "<cmd>ToggleTerm direction=vertical size=50<cr>", desc = "ToggleTerm vertical" },
+		},
+		opts = {
+			direction = "float",
+			shading_factor = 2,
+			float_opts = { border = "curved" },
+		},
 	},
 	{
 		"Vigemus/iron.nvim",
@@ -49,7 +38,7 @@ return {
 					send_line = "<c-enter>",
 					exit = "<leader>q",
 				},
-				ignore_blank_lines = true, -- ignore blank lines when sending visual select lines
+				ignore_blank_lines = true,
 			})
 		end,
 	},

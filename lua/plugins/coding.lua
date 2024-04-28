@@ -5,7 +5,7 @@ return {
 		dependencies = {
 			"JoosepAlviste/nvim-ts-context-commentstring",
 			config = function()
-				vim.g.skip_ts_context_commentstring_module = true --skip backwards compatibility routines and speed up loading.
+				vim.g.skip_ts_context_commentstring_module = true
 				require("ts_context_commentstring").setup({
 					enable_autocmd = false,
 				})
@@ -19,94 +19,92 @@ return {
 			})
 		end,
 	},
+
 	{
 		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			require("todo-comments").setup({})
-			vim.keymap.set("n", "]t", function()
-				require("todo-comments").jump_next()
-			end, { desc = "Next todo comment" })
-			vim.keymap.set("n", "[t", function()
-				require("todo-comments").jump_prev()
-			end, { desc = "Previous todo comment" })
-		end,
+		cmd = { "TodoTrouble", "TodoTelescope" },
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		config = true,
+        -- stylua: ignore
+        keys = {
+            { "]t",         function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
+            { "[t",         function() require("todo-comments").jump_prev() end, desc = "Previous Todo Comment" },
+            { "<leader>xt", "<cmd>TodoTrouble<cr>",                              desc = "Todo (Trouble)" },
+            { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",      desc = "Todo/Fix/Fixme(Trouble)" },
+            { "<leader>st", "<cmd>TodoTelescope<cr>",                            desc = "Todo" },
+            { "<leader>sT", "<cmd>TodoTelescope keywords=TODO,FIX,FIXME<cr>",    desc = "Todo/Fix/Fixme" },
+        },
 	},
 
 	-- Indent
+	-- {
+	-- 	"shellRaining/hlchunk.nvim",
+	-- 	event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+	-- 	config = function()
+	-- 		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, { pattern = "*", command = "EnableHL" })
+	-- 		require("hlchunk").setup({
+	-- 			indent = { chars = { "│", "¦", "┆", "┊" }, use_treesitter = false },
+	-- 			blank = { enable = false },
+	-- 			line_num = { use_treesitter = true },
+	-- 		})
+	-- 	end,
+	-- },
 	{
-		"shellRaining/hlchunk.nvim",
-		event = "BufEnter",
-		config = function()
-			vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, { pattern = "*", command = "EnableHL" })
-			require("hlchunk").setup({
-				indent = { chars = { "│", "¦", "┆", "┊" }, use_treesitter = false },
-				blank = { enable = false },
-				line_num = { use_treesitter = true },
+		"lukas-reineke/indent-blankline.nvim",
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		main = "ibl",
+		opts = {
+			indent = {
+				char = "|",
+				tab_char = { "│", "¦", "┆", "┊" },
+			},
+			scope = { enabled = false },
+			exclude = {
+				filetypes = {
+					"help",
+					"alpha",
+					"dashboard",
+					"NvimTree",
+					"Trouble",
+					"trouble",
+					"lazy",
+					"mason",
+					"notify",
+					"toggleterm",
+					"lazyterm",
+				},
+			},
+		},
+	},
+	{
+		"echasnovski/mini.indentscope",
+		version = false, -- wait till new 0.7.0 release to put it back on semver
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		opts = {
+			symbol = "│",
+			options = { try_as_border = true },
+		},
+		init = function()
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = {
+					"help",
+					"alpha",
+					"dashboard",
+					"NvimTree",
+					"Trouble",
+					"trouble",
+					"lazy",
+					"mason",
+					"notify",
+					"toggleterm",
+					"lazyterm",
+				},
+				callback = function()
+					vim.b.miniindentscope_disable = true
+				end,
 			})
 		end,
 	},
-	-- {
-	-- 	"lukas-reineke/indent-blankline.nvim",
-	-- 	event = "BufEnter",
-	-- 	main = "ibl",
-	-- 	config = function()
-	-- 		local highlight = {
-	-- 			"RainbowRed",
-	-- 			"RainbowYellow",
-	-- 			"RainbowBlue",
-	-- 			"RainbowOrange",
-	-- 			"RainbowGreen",
-	-- 			"RainbowViolet",
-	-- 			"RainbowCyan",
-	-- 		}
-	-- 		local hooks = require("ibl.hooks")
-	-- 		hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-	-- 			vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
-	-- 			vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
-	-- 			vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
-	-- 			vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
-	-- 			vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
-	-- 			vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
-	-- 			vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-	-- 		end)
-
-	-- 		vim.g.rainbow_delimiters = { highlight = highlight }
-	-- 		require("ibl").setup({
-	-- 			indent = {
-	-- 				char = "|",
-	-- 				tab_char = { "│", "¦", "┆", "┊" },
-	-- 				-- highlight = { "Function", "Label" },
-	-- 				-- highlight = highlight,
-	-- 				smart_indent_cap = true,
-	-- 				priority = 2,
-	-- 				-- repeat_linebreak = false,
-	-- 			},
-	-- 			scope = {
-	-- 				enabled = true,
-	-- 				show_start = true,
-	-- 				show_end = false,
-	-- 				injected_languages = false,
-	-- 				priority = 500,
-	-- 				highlight = highlight,
-	-- 				include = {
-	-- 					node_type = {
-	-- 						["*"] = {
-	-- 							"if_statement",
-	-- 							"for_statement",
-	-- 							"while_statement",
-	-- 							"return_statement",
-	-- 							"table_constructor",
-	-- 						},
-	-- 						-- lua = { "return_statement", "table_constructor" },
-	-- 						-- python = { "if_statement", "for_statement", "while_statement" },
-	-- 					},
-	-- 				},
-	-- 			},
-	-- 		})
-	-- 		hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
-	-- 	end,
-	-- },
 
 	-- Formatting
 	{
@@ -114,46 +112,45 @@ return {
 		dependencies = { "mason.nvim" },
 		cmd = "ConformInfo",
 		event = "BufWritePre",
-		-- stylua: ignore start
-		keys = {
-			{ "<m-l>", function() require("conform").format({ formatters = { "injected" }, async = true }) end, mode = { "n", "v" }, desc = "Format Injected File", },
-			{ "<c-l>", function() require("conform").format({ lsp_fallback = true, async = true }) end,         mode = { "n", "v" }, desc = "Format file", },
+        -- stylua: ignore
+        keys = {
+            { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, async = true }) end, desc = "Format Injected File", },
+            { "<leader>cf", function() require("conform").format({ lsp_fallback = true, async = true }) end, desc = "Format file", },
+        },
+		opts = {
+			format = { timeout_ms = 3000, async = true, quiet = true, lsp_fallback = true },
+			format_on_save = { async = true, lsp_fallback = true },
+			formatters = { injected = { options = { ignore_errors = true } } },
+			formatters_by_ft = {
+				css = { { "prettierd", "prettier" } },
+				html = { { "prettierd", "prettier" } },
+				json = { { "prettierd", "prettier" } },
+				jsonc = { { "prettierd", "prettier" } },
+				markdown = { { "prettierd", "prettier" }, "injected" },
+				c = { "clang-format" },
+				cpp = { "clang-format" },
+				java = { "clang-format" },
+				javascript = { { "prettierd", "prettier" } },
+				rust = { "rustfmt" },
+				typescript = { { "prettierd", "prettier" } },
+				lua = { "stylua" },
+				python = { "isort", "black" },
+				yaml = { "yamlfix" },
+			},
 		},
-		-- stylua: ignore end
-		config = function()
-			require("conform").setup({
-				format_on_save = { async = true, lsp_fallback = true },
-				formatters_by_ft = {
-					css = { { "prettierd", "prettier" } },
-					html = { { "prettierd", "prettier" } },
-					json = { { "prettierd", "prettier" } },
-					jsonc = { { "prettierd", "prettier" } },
-					markdown = { { "prettierd", "prettier" }, "injected" },
-					c = { "clang-format" },
-					cpp = { "clang-format" },
-					java = { "clang-format" },
-					javascript = { { "prettierd", "prettier" } },
-					rust = { "rustfmt" },
-					typescript = { { "prettierd", "prettier" } },
-					lua = { "stylua" },
-					python = { "isort", "black" },
-					yaml = { { "prettierd", "prettier" } },
-				},
-				formatters = { injected = { options = { ignore_errors = true } } },
-			})
-		end,
 	},
 
 	-- Linting
 	{
 		"mfussenegger/nvim-lint",
-		event = "VeryLazy",
-		opts = { events = { "BufWritePost", "BufReadPost", "InsertLeave" } },
-		config = function()
-			require("lint").linters_by_ft = {
-				lua = { "luacheck" },
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		opts = {
+			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
+			linters_by_ft = {
 				python = { "flake8", "mypy" },
-			}
+			},
+		},
+		config = function()
 			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
 				group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
 				callback = function()
@@ -164,20 +161,20 @@ return {
 	},
 
 	-- Project mangagement
-	{
-		"ahmedkhalf/project.nvim",
-		event = "VeryLazy",
-		config = function()
-			require("project_nvim").setup({})
-			require("telescope").load_extension("projects")
-			vim.keymap.set(
-				{ "n" },
-				"<leader>fp",
-				"<cmd>lua require'telescope'.extensions.projects.projects{}<cr>",
-				{ silent = true, noremap = true, desc = "Find recent project" }
-			)
-		end,
-	},
+	-- {
+	-- 	"ahmedkhalf/project.nvim",
+	-- 	event = "VeryLazy",
+	-- 	config = function()
+	-- 		require("project_nvim").setup({})
+	-- 		require("telescope").load_extension("projects")
+	-- 		vim.keymap.set(
+	-- 			{ "n" },
+	-- 			"<leader>fp",
+	-- 			"<cmd>lua require'telescope'.extensions.projects.projects{}<cr>",
+	-- 			{ silent = true, noremap = true, desc = "Find recent project" }
+	-- 		)
+	-- 	end,
+	-- },
 
 	-- Outline
 	{
@@ -188,29 +185,30 @@ return {
 			{ "<leader>O", "<cmd>AerialNavToggle<CR>", desc = "Toggle aerial nav" },
 		},
 		cmd = { "AerialToggle", "AerialNavToggle", "AerialPrev", "AerialNext" },
-		config = function()
-			require("aerial").setup({
-				layout = { width = 30 },
-				close_automatic_events = { "unfocus", "switch_buffer", "unsupported" },
-				-- "Array", "Boolean", "Class", "Constant", "Constructor", "Enum", "EnumMember", "Event", "Field", "File", "Function", "Interface", "Key", "Method", "Module", "Namespace", "Null", "Number", "Object", "Operator", "Package", "Property", "String", "Struct", "TypeParameter", "Variable",
-				filter_kind = {
-					"Class",
-					"Property",
-					"Constructor",
-					"Enum",
-					"Function",
-					"Interface",
-					"Module",
-					"Method",
-					"Struct",
-				},
-				keymaps = { ["<tab>"] = "actions.tree_toggle" },
-				highlight_on_hover = true,
-				autojump = true,
-				close_on_select = false,
-				show_guides = true,
-			})
-		end,
+		opts = {
+			layout = { width = 30 },
+			close_automatic_events = { "unfocus", "switch_buffer", "unsupported" },
+			filter_kind = {
+				"Class",
+				"Constructor",
+				"Enum",
+				"Field",
+				"Function",
+				"Interface",
+				"Method",
+				"Module",
+				"Namespace",
+				"Package",
+				"Property",
+				"Struct",
+				"Trait",
+			},
+			keymaps = { ["<tab>"] = "actions.tree_toggle" },
+			highlight_on_hover = true,
+			autojump = true,
+			close_on_select = false,
+			show_guides = true,
+		},
 	},
 	-- {
 	-- 	"hedyhli/outline.nvim",
@@ -230,25 +228,4 @@ return {
 	-- 		})
 	-- 	end,
 	-- },
-
-	-- Code runner
-	{
-		"CRAG666/code_runner.nvim",
-		keys = { "<leader>rr", "<leader>rf" },
-		config = function()
-			require("code_runner").setup({
-				mode = "term", --"toggle", "float", "tab", "toggleterm", "buf"
-				startinsert = true,
-				float = { border = "rounded" },
-			})
-			-- stylua: ignore start
-			vim.keymap.set("n", "<leader>rr", "<cmd>RunCode<CR>", { noremap = true, silent = true, desc = "RunCode" })
-			vim.keymap.set("n", "<leader>rf", "<cmd>RunFile<CR>", { noremap = true, silent = true, desc = "RunFile" })
-			vim.keymap.set("n", "<leader>rp", "<cmd>RunProject<CR>", { noremap = true, silent = true, desc = "RunProject" })
-			vim.keymap.set("n", "<leader>rq", "<cmd>RunClose<CR>", { noremap = true, silent = true, desc = "RunClose" })
-			vim.keymap.set("n", "<leader>crf", "<cmd>CRFiletype<CR>", { noremap = true, silent = true, desc = "CRFiletype" })
-			vim.keymap.set("n", "<leader>crp", "<cmd>CRProjects<CR>", { noremap = true, silent = true, "CRProjects" })
-			-- stylua: ignore end
-		end,
-	},
 }

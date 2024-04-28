@@ -3,55 +3,27 @@ return {
 	{
 		"nvim-tree/nvim-tree.lua",
 		version = "*",
-		cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeFocus", "NvimTreeFindFileToggle" },
-		keys = { { "tt", desc = "Toggle nvim-tree" } },
+		cmd = { "NvimTreeToggle" },
+		keys = { { "tt", "<cmd>NvimTreeToggle<cr>", desc = "Toggle nvim-tree" } },
 		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("nvim-tree").setup({
-				sync_root_with_cwd = true,
-				respect_buf_cwd = true,
-				update_focused_file = { enable = true, update_root = true },
-				view = { width = 20 },
-				renderer = { group_empty = true, indent_markers = { enable = true } },
-				filters = { dotfiles = true, git_ignored = true },
-			})
-			vim.keymap.set("", "tt", "<cmd>NvimTreeToggle<cr>", { silent = true, nowait = true })
-			local api = require("nvim-tree.api")
-
-			vim.keymap.set("n", "zh", function()
-				api.tree.toggle_hidden_filter()
-				api.tree.toggle_gitignore_filter()
-			end, { noremap = true, silent = true, nowait = true, desc = "Toggle filters" })
-		end,
+		opts = {
+			sync_root_with_cwd = true,
+			respect_buf_cwd = true,
+			update_focused_file = { enable = true, update_root = true },
+			view = { width = 20 },
+			renderer = { group_empty = true, indent_markers = { enable = true } },
+			filters = { dotfiles = true, git_ignored = true },
+		},
 	},
 	{
 		"theniceboy/joshuto.nvim",
 		enabled = vim.fn.executable("joshuto") == 1,
-		keys = { { "<leader>ra", "<cmd>Joshuto<cr>", mode = { "n" } } },
+		keys = { { "<leader>ra", "<cmd>Joshuto<cr>", desc = "Start joshuto" } },
 		cmd = "Joshuto",
-		config = function()
+		init = function()
 			vim.g.joshuto_floating_window_scaling_factor = 1.0
 			vim.g.joshuto_use_neovim_remote = 1
 			vim.g.joshuto_floating_window_winblend = 0
-		end,
-	},
-	{
-		"kelly-lin/ranger.nvim",
-		enabled = vim.fn.executable("joshuto") == 0 and vim.fn.executable("ranger") == 1,
-		keys = { "<leader>ra", "<cmd>lua require('ranger-nvim').open(true)<cr>", mode = { "n" } },
-		config = function()
-			require("ranger-nvim").setup({ replace_netrw = true, ui = { border = "rounded" } })
-			vim.keymap.set("n", "<leader>ra", function()
-				require("ranger-nvim").open(true)
-			end, { noremap = true, silent = true })
-		end,
-	},
-	{
-		"stevearc/oil.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		config = function()
-			require("oil").setup()
-			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 		end,
 	},
 
@@ -60,107 +32,95 @@ return {
 		"folke/flash.nvim",
 		event = "VeryLazy",
 		opts = { rainbow = { enable = true } },
-		-- stylua: ignore start
-		keys = { { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" } },
-		-- stylua: ignore end
+		-- stylua: ignore
+		keys = {
+			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+			{ "S", mode = { "n", }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+		},
 	},
 	-- Better fold
 	{
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async", "nvim-treesitter/nvim-treesitter" },
-		event = "VeryLazy",
-		config = function()
-			-- local handler = function(virtText, lnum, endLnum, width, truncate)
-			-- 	local newVirtText = {}
-			-- 	local suffix = (" 󰁂 %d "):format(endLnum - lnum)
-			-- 	local sufWidth = vim.fn.strdisplaywidth(suffix)
-			-- 	local targetWidth = width - sufWidth
-			-- 	local curWidth = 0
-			-- 	for _, chunk in ipairs(virtText) do
-			-- 		local chunkText = chunk[1]
-			-- 		local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-			-- 		if targetWidth > curWidth + chunkWidth then
-			-- 			table.insert(newVirtText, chunk)
-			-- 		else
-			-- 			chunkText = truncate(chunkText, targetWidth - curWidth)
-			-- 			local hlGroup = chunk[2]
-			-- 			table.insert(newVirtText, { chunkText, hlGroup })
-			-- 			chunkWidth = vim.fn.strdisplaywidth(chunkText)
-			-- 			-- str width returned from truncate() may less than 2nd argument, need padding
-			-- 			if curWidth + chunkWidth < targetWidth then
-			-- 				suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
-			-- 			end
-			-- 			break
-			-- 		end
-			-- 		curWidth = curWidth + chunkWidth
-			-- 	end
-			-- 	table.insert(newVirtText, { suffix, "MoreMsg" })
-			-- 	return newVirtText
-			-- end
-			require("ufo").setup({
-				provider_selector = function(_, filetype, buftype)
-					return (filetype == "" or buftype == "nofile") and "indent" -- only use indent until a file is opened
-						or { "treesitter", "indent" } -- if file opened, try to use treesitter if available
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		opts = {
+			provider_selector = function(_, filetype, buftype)
+				return (filetype == "" or buftype == "nofile") and "indent" or { "treesitter", "indent" }
+			end,
+		},
+	},
+
+	-- better diagnostics list and others
+	{
+		"folke/trouble.nvim",
+		cmd = { "TroubleToggle", "Trouble" },
+		opts = { use_diagnostic_signs = true },
+		keys = {
+			{ "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
+			{ "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
+			{ "<leader>xL", "<cmd>TroubleToggle loclist<cr>", desc = "Location List (Trouble)" },
+			{ "<leader>xQ", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List (Trouble)" },
+			{
+				"[q",
+				function()
+					if require("trouble").is_open() then
+						require("trouble").previous({ skip_groups = true, jump = true })
+					else
+						local ok, err = pcall(vim.cmd.cprev)
+						if not ok then
+							vim.notify(err, vim.log.levels.ERROR)
+						end
+					end
 				end,
-				-- fold_virt_text_handler = handler,
-			})
-		end,
+				desc = "Previous Trouble/Quickfix Item",
+			},
+			{
+				"]q",
+				function()
+					if require("trouble").is_open() then
+						require("trouble").next({ skip_groups = true, jump = true })
+					else
+						local ok, err = pcall(vim.cmd.cnext)
+						if not ok then
+							vim.notify(tostring(err), vim.log.levels.ERROR)
+						end
+					end
+				end,
+				desc = "Next Trouble/Quickfix Item",
+			},
+		},
 	},
 	-- Better surrounding
 	{
 		"kylechui/nvim-surround",
-		event = "VeryLazy",
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
 		version = "*",
-		config = function()
-			require("nvim-surround").setup({})
-		end,
+		opts = {},
 	},
-	-- ZenMode
-	-- {
-	-- 	"folke/zen-mode.nvim",
-	-- 	cmd = "ZenMode",
-	-- 	dependencies = { "folke/twilight.nvim" },
-	-- 	keys = { "<leader>z", desc = "Toggle ZenMode" },
-	-- 	config = function()
-	-- 		vim.keymap.set("n", "<leader>z", "<cmd>ZenMode<cr>", { silent = true, nowait = true })
-	-- 	end,
-	-- },
-	-- Better scroll
-	-- {
-	-- 	"karb94/neoscroll.nvim",
-	-- 	event = "VeryLazy",
-	-- 	config = function()
-	-- 		require("neoscroll").setup({})
-	-- 	end,
-	-- },
 	{
 		"dstein64/nvim-scrollview",
-		event = "VeryLazy",
-		config = function()
-			require("scrollview").setup({
-				-- excluded_filetypes = { "nerdtree" },
-			})
-		end,
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		opts = {},
 	},
 
 	-- Other useful tool
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
-		config = function()
-			require("nvim-autopairs").setup({})
-		end,
+		opts = {},
 	},
 
 	{ -- Rainbow delimiters
 		"hiphish/rainbow-delimiters.nvim",
-		event = "BufEnter",
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
 	},
 	{
 		"RRethy/vim-illuminate",
-		event = "BufEnter",
+		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
 		config = function()
 			require("illuminate").configure({
+				delay = 200,
+				large_file_cutoff = 2000,
 				providers = { "treesitter", "lsp", "regex" },
 			})
 		end,
@@ -168,22 +128,65 @@ return {
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",
 		cmd = { "ColorizerToggle" },
-		config = function()
-			require("colorizer").setup({
-				filetype = { "css", "html", "javascript" },
-				user_default_options = {
-					mode = "virtualtext", -- foreground, background,  virtualtext
-					virtualtext = "■",
-				},
-			})
-		end,
+		keys = { { "<leader>uc", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" } },
+		opts = {
+			user_default_options = {
+				mode = "virtualtext", -- foreground, background,  virtualtext
+				virtualtext = "■",
+			},
+		},
 	},
 	{ -- Undotree
 		"jiaoshijie/undotree",
 		dependencies = "nvim-lua/plenary.nvim",
-		config = true,
+		opts = {},
 		keys = {
 			{ "<leader>u", "<cmd>lua require('undotree').toggle()<cr>", desc = "Toggle undotree" },
 		},
+	},
+	{ -- Translate
+		"voldikss/vim-translator",
+		cmd = { "Translate" },
+		keys = {
+			{ "<leader>tr", "<Plug>TranslateW", desc = "Translate" },
+			{ "<leader>tr", "<Plug>TranslateWV", mode = "v", desc = "Translate" },
+		},
+		init = function()
+			vim.g.translator_default_engines = { "bing", "haici", "youdao" }
+			vim.g.translator_window_borderchars = require("util.static").borders.rounded
+		end,
+	},
+
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			plugins = { spelling = true },
+			defaults = {
+				mode = { "n", "v" },
+				["g"] = { name = "+goto" },
+				["gs"] = { name = "+surround" },
+				["z"] = { name = "+fold" },
+				["]"] = { name = "+next" },
+				["["] = { name = "+prev" },
+				["<leader><tab>"] = { name = "+tabs" },
+				["<leader>b"] = { name = "+buffer" },
+				["<leader>c"] = { name = "+code" },
+				["<leader>f"] = { name = "+file/find" },
+				["<leader>g"] = { name = "+git" },
+				["<leader>gh"] = { name = "+hunks" },
+				["<leader>q"] = { name = "+quit/session" },
+				["<leader>s"] = { name = "+search" },
+				["<leader>t"] = { name = "+terminal/translate" },
+				["<leader>u"] = { name = "+ui" },
+				["<leader>w"] = { name = "+windows" },
+				["<leader>x"] = { name = "+diagnostics/quickfix" },
+			},
+		},
+		config = function(_, opts)
+			local wk = require("which-key")
+			wk.setup(opts)
+			wk.register(opts.defaults)
+		end,
 	},
 }

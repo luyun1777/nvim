@@ -2,6 +2,9 @@ if vim.loader and vim.fn.has("nvim-0.9.1") == 1 then
 	vim.loader.enable()
 end
 
+vim.g.mapleader = " "
+vim.g.localleader = "\\"
+
 vim.o.fileformats = "unix,dos,mac"
 vim.o.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
 vim.o.fileencoding = "utf-8"
@@ -14,7 +17,7 @@ vim.cmd([[set diffopt+=context:3,vertical,followwrap]]) -- better diff
 vim.o.winminwidth = 5 -- Minimum window width
 vim.o.autowrite = true -- Enable auto write
 -- vim.o.clipboard = "unnamedplus" -- Sync with system clipboard
-vim.o.conceallevel = 3 -- Hide * markup for bold and italic
+vim.o.conceallevel = 2 -- Hide * markup for bold and italic
 vim.o.confirm = true -- Confirm to save changes before exiting modified buffer
 vim.o.cursorline = true -- Enable highlighting of the current line
 vim.o.termguicolors = true -- True color support
@@ -35,7 +38,7 @@ vim.o.list = false -- Show some invisible characters (tabs...
 vim.o.listchars = "space:·,tab:··,trail:▫"
 vim.o.scrolloff = 4 -- Lines of context
 vim.o.sidescrolloff = 8 -- Columns of context
-vim.o.ttimeoutlen = 300
+vim.o.timeoutlen = 300
 vim.o.timeout = true
 vim.o.viewoptions = "cursor,folds,slash,unix"
 vim.o.wrap = true -- enable line wrap
@@ -69,21 +72,6 @@ vim.o.wildmode = "longest:full,full" -- Command-line completion mode
 vim.o.pumblend = 10 -- Popup blend
 vim.o.pumheight = 10 -- Maximum number of entries in a popup
 vim.o.showmode = false -- Dont show mode since we have a statusline
-vim.diagnostic.config({ severity_sort = true, virtual_text = false })
-
-vim.g.iskeyword = vim.o.iskeyword .. "_,$,@,%,#,-"
-vim.g.terminal_color_0 = "#000000"
-vim.g.terminal_color_1 = "#FF5555"
-vim.g.terminal_color_2 = "#50FA7B"
-vim.g.terminal_color_3 = "#F1FA8C"
-vim.g.terminal_color_4 = "#BD93F9"
-vim.g.terminal_color_5 = "#FF79C6"
-vim.g.terminal_color_6 = "#8BE9FD"
-vim.g.terminal_color_7 = "#BFBFBF"
-vim.g.terminal_color_8 = "#4D4D4D"
-vim.g.terminal_color_9 = "#FF6E67"
-vim.g.terminal_color_10 = "#5AF78E"
-vim.g.terminal_color_11 = "#F4F99D"
-vim.g.terminal_color_12 = "#CAA9FA"
-vim.g.terminal_color_13 = "#FF92D0"
-vim.g.terminal_color_14 = "#9AEDFE"
+if vim.fn.has("nvim-0.10") == 1 then
+	vim.o.smoothscroll = true
+end

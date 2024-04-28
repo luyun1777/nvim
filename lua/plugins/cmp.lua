@@ -1,8 +1,3 @@
-local has_words_before = function()
-	local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
-	return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
-
 return {
 	"hrsh7th/nvim-cmp",
 	event = { "InsertEnter", "CmdlineEnter" },
@@ -27,10 +22,7 @@ return {
 			},
 			dependencies = { "yehuohan/cmp-im-zh" },
 			config = function()
-				require("cmp_im").setup({
-					enable = false,
-					tables = require("cmp_im_zh").tables({ "wubi" }),
-				})
+				require("cmp_im").setup({ enable = false, tables = require("cmp_im_zh").tables({ "wubi" }) })
 			end,
 		},
 		{
@@ -42,7 +34,7 @@ return {
 		{
 			"L3MON4D3/LuaSnip",
 			build = (function()
-				if vim.fn.executable("make") == 0 then
+				if vim.fn.has("win32") == 1 then
 					return
 				end
 				return "make install_jsregexp"
@@ -56,6 +48,7 @@ return {
 			},
 		},
 	},
+
 	config = function()
 		local luasnip = require("luasnip")
 		local cmp = require("cmp")
@@ -66,9 +59,16 @@ return {
 			border = "rounded",
 			winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
 		}
+		local has_words_before = function()
+			local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
+			return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+		end
 		vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#CCD6DD", fg = "NONE" })
+		-- vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+
 		cmp.setup({
 			preselect = cmp.PreselectMode.None,
+
 			snippet = {
 				expand = function(args)
 					require("luasnip").lsp_expand(args.body)
@@ -83,6 +83,7 @@ return {
 				{ name = "path" },
 				{ name = "IM" },
 			}),
+
 			window = {
 				completion = cmp.config.window.bordered(border_opts),
 				documentation = cmp.config.window.bordered(border_opts),
@@ -91,7 +92,6 @@ return {
 				fields = { "kind", "abbr", "menu" },
 				format = function(entry, vim_item)
 					local kind = lspkind.cmp_format({
-						symbol_map = { Codeium = "" },
 						mode = "symbol_text",
 						maxwidth = 50,
 						ellipsis_char = "...",
@@ -104,8 +104,8 @@ return {
 				end,
 			},
 			mapping = cmp.mapping.preset.insert({
-				["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-				["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+				["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+				["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
 				["<C-Space>"] = cmp.mapping.complete(),
 				["<C-e>"] = cmp.mapping.abort(),
 				["<Tab>"] = cmp.mapping(function(fallback)
@@ -141,6 +141,7 @@ return {
 					c = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
 				}),
 			}),
+			-- experimental = { ghost_text = { hl_group = "CmpGhostText" } },
 		})
 		cmp.setup.cmdline({ "/", "?" }, {
 			mapping = cmp.mapping.preset.cmdline(),
