@@ -115,6 +115,28 @@ map("t", "<c-l>", "<cmd>wincmd l<cr>", { desc = "Go to right window" })
 map("t", "<c-q>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 map("t", "<c-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 
+-- lazy
+map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
+
+-- stylua: ignore start
+
+-- toggle options
+-- map("n", "<leader>uf", function() LazyVim.format.toggle() end, { desc = "Toggle Auto Format (Global)" })
+-- map("n", "<leader>uF", function() LazyVim.format.toggle(true) end, { desc = "Toggle Auto Format (Buffer)" })
+map("n", "<leader>us", function() require("util").toggle("spell") end, { desc = "Toggle Spelling" })
+map("n", "<leader>uw", function() require("util").toggle("wrap") end, { desc = "Toggle Word Wrap" })
+map("n", "<leader>ul", function() require("util").toggle.number() end, { desc = "Toggle Line Numbers" })
+map("n", "<leader>uL", function() require("util").toggle("relativenumber") end, { desc = "Toggle Relative Line Numbers" })
+map("n", "<leader>ud", function() require("util").toggle.diagnostics() end, { desc = "Toggle Diagnostics" })
+local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
+map("n", "<leader>uC", function() require("util").toggle("conceallevel", false, {0, conceallevel}) end, { desc = "Toggle Conceal" })
+if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
+    map( "n", "<leader>uh", function() require("util").toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
+end
+map("n", "<leader>ub", function() require("util").toggle("background", false, {"light", "dark"}) end, { desc = "Toggle Background" })
+
+-- stylua: ignore start
+
 -- Useful actions
 map({ "n", "v" }, ",.", "%", { silent = true })
 map("n", "\\v", "v$h", { silent = true })
@@ -122,5 +144,3 @@ map("n", ",v", "v%", { silent = true })
 map("i", "<s-enter>", "<esc>o", { silent = true })
 map("", "s", "<nop>", { silent = true })
 map("", "S", "<nop>", { silent = true })
--- lazy
-map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })

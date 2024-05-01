@@ -34,10 +34,9 @@ return {
 		"kdheepak/lazygit.nvim",
 		enabled = vim.fn.executable("git") == 1 and vim.fn.executable("lazygit") == 1,
 		cmd = { "LazyGit", "LazyGitConfig", "LazyGitFilter" },
-		keys = { "<leader>gG", { "<leader>gg", "<cmd>LazyGit<CR>", mode = { "" }, desc = "Toggle lazygit" } },
-		config = function()
-			require("telescope").load_extension("lazygit")
-			vim.keymap.set("n", "<leader>gG", "<cmd>lua require('telescope').extensions.lazygit.lazygit()<cr>")
-		end,
+		keys = {
+			{ "<leader>gG", "<cmd>Telescope lazygit<cr>", desc = "Telescope lazygit" },
+			{ "<leader>gg", "<cmd>LazyGit<CR>", desc = "Toggle lazygit" },
+		},
 	},
 }

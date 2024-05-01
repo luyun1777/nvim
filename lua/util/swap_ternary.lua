@@ -1,9 +1,7 @@
--- swap_ternary.lua
-
 local ts = require("vim.treesitter")
 local get_node_text = ts.get_node_text
 if not pcall(require, "nvim-treesitter") then
-	return [[<cmd> lua print("nvim-treesitter is not availale")<cr>]]
+	vim.notify("nvim-treesitter is not availale", vim.log.levels.WARN)
 end
 local ts_utils = require("nvim-treesitter.ts_utils") -- requires nvim-treesitter
 local parsers = require("nvim-treesitter.parsers")
@@ -12,7 +10,6 @@ local function get_ternary_node(node)
 	if not node then
 		return
 	end
-
 	if node:type() ~= "conditional_expression" then
 		node = node:parent()
 		return get_ternary_node(node)

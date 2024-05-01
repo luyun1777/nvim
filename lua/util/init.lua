@@ -1,7 +1,9 @@
 local M = {}
 
--- M.string = require("util.string")
-M.swap_ternary = require("util.swap_ternary")
-M.compile_run = require("util.compile_run")
-M.c = require("util.static")
+setmetatable(M, {
+	__index = function(t, k)
+		t[k] = require("util." .. k)
+		return t[k]
+	end,
+})
 return M
