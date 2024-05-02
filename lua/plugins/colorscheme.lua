@@ -5,7 +5,6 @@ return {
 		priority = 1000,
 		config = function()
 			require("gruvbox").setup({
-				dim_inactive = true,
 				-- transparent_mode = true,
 			})
 			vim.cmd.colorscheme("gruvbox")
@@ -14,13 +13,18 @@ return {
 	{
 		"folke/tokyonight.nvim",
 		lazy = true,
-		opts = { style = "moon" },
+		opts = {
+			style = "moon",
+			-- transparent = true,
+		},
 	},
 	{
 		"catppuccin/nvim",
 		lazy = true,
 		name = "catppuccin",
 		opts = {
+			-- transparent_background = true,
+			term_colors = true,
 			integrations = {
 				aerial = true,
 				alpha = true,

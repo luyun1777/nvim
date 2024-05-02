@@ -30,7 +30,7 @@ return {
 	-- Better move
 	{
 		"folke/flash.nvim",
-		event = "VeryLazy",
+		event = "User LazyLoad",
 		opts = { rainbow = { enable = true } },
 		-- stylua: ignore
 		keys = {
@@ -42,7 +42,7 @@ return {
 	{
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async", "nvim-treesitter/nvim-treesitter" },
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		opts = {
 			provider_selector = function(_, filetype, buftype)
 				return (filetype == "" or buftype == "nofile") and "indent" or { "treesitter", "indent" }
@@ -93,13 +93,13 @@ return {
 	-- Better surrounding
 	{
 		"kylechui/nvim-surround",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		version = "*",
 		opts = {},
 	},
 	{
 		"dstein64/nvim-scrollview",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		opts = {},
 	},
 
@@ -112,11 +112,11 @@ return {
 
 	{ -- Rainbow delimiters
 		"hiphish/rainbow-delimiters.nvim",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 	},
 	{
 		"RRethy/vim-illuminate",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		config = function()
 			require("illuminate").configure({
 				delay = 200,

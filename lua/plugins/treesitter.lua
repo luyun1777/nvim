@@ -8,7 +8,7 @@ return {
 			"TSUpdate",
 			"TSInstallInfo",
 		},
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		keys = {
 			{ "<cr>", desc = "Increment Selection" },
 			{ "<bs>", desc = "Decrement Selection", mode = "x" },

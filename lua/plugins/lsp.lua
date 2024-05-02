@@ -1,9 +1,9 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		dependencies = {
-			"folke/neodev.nvim",
+			{ "folke/neodev.nvim", ft = { "lua" } },
 			"mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 		},
@@ -22,9 +22,7 @@ return {
 					"bashls",
 					"lua_ls",
 					"jsonls",
-					"ltex",
 					"pyright", -- ruff
-					"rust_analyzer",
 					"vimls",
 				},
 				handlers = {

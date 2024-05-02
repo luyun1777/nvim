@@ -55,14 +55,15 @@ return {
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
+		-- event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
 	-- Tabline
 	{
 		"akinsho/bufferline.nvim",
 		version = "*",
-		event = "VeryLazy",
+		event = "User LazyLoad",
 		keys = {
 			{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
 			{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
@@ -99,29 +100,21 @@ return {
 	},
 	{
 		"xiyaowong/transparent.nvim",
-		lazy = false,
+		cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
+		keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Background Transparent" } },
 		config = function()
-			if vim.fn.has("win") == 1 then
-				return
-			end
 			require("transparent").setup({
 				extra_groups = { "NormalFloat", "NvimTreeNormal" },
 			})
 			require("transparent").clear_prefix("BufferLine")
-			require("transparent").clear_prefix("NvimTree")
 			require("transparent").clear_prefix("lualine")
-			vim.g.transparent_groups = vim.list_extend(
-				vim.g.transparent_groups or {},
-				vim.tbl_map(function(v)
-					return v.hl_group
-				end, vim.tbl_values(require("bufferline.config").highlights))
-			)
 		end,
 	},
 
 	-- Better notification
 	{
 		"rcarriga/nvim-notify",
+		event = "VeryLazy",
         -- stylua: ignore
 		keys = {
 			{ "<leader>un", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Dismiss All Notifications", },
@@ -129,7 +122,7 @@ return {
 		},
 		opts = {
 			render = "compact", -- "defalut", "minimal", "simple", "compact","warpped-compact"
-			background_colour = "#000000",
+			-- background_colour = "#000000",
 		},
 		init = function()
 			vim.notify = require("notify")
@@ -137,7 +130,7 @@ return {
 	},
 	{
 		"folke/noice.nvim",
-		event = "BufEnter",
+		event = "VeryLazy",
         -- stylua: ignore
         keys = {
             { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll Forward", mode = {"i", "n", "s"} },

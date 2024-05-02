@@ -23,7 +23,7 @@ return {
 	{
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoTelescope" },
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		config = true,
         -- stylua: ignore
         keys = {
@@ -39,7 +39,7 @@ return {
 	-- Indent
 	-- {
 	-- 	"shellRaining/hlchunk.nvim",
-	-- 	event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+	-- 	event = "User LazyLoad",
 	-- 	config = function()
 	-- 		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, { pattern = "*", command = "EnableHL" })
 	-- 		require("hlchunk").setup({
@@ -51,7 +51,7 @@ return {
 	-- },
 	{
 		"lukas-reineke/indent-blankline.nvim",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		main = "ibl",
 		opts = {
 			indent = {
@@ -79,7 +79,7 @@ return {
 	{
 		"echasnovski/mini.indentscope",
 		version = false, -- wait till new 0.7.0 release to put it back on semver
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		opts = {
 			symbol = "│",
 			options = { try_as_border = true },
@@ -143,7 +143,7 @@ return {
 	-- Linting
 	{
 		"mfussenegger/nvim-lint",
-		event = { "BufReadPost", "BufNewFile", "VeryLazy" },
+		event = "User LazyLoad",
 		opts = {
 			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
 			linters_by_ft = {
@@ -163,7 +163,7 @@ return {
 	-- Project mangagement
 	-- {
 	-- 	"ahmedkhalf/project.nvim",
-	-- 	event = "VeryLazy",
+	-- 	event = "User LazyLoad",
 	-- 	config = function()
 	-- 		require("project_nvim").setup({})
 	-- 		require("telescope").load_extension("projects")
