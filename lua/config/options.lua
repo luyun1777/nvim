@@ -75,13 +75,3 @@ vim.o.showmode = false -- Dont show mode since we have a statusline
 if vim.fn.has("nvim-0.10") == 1 then
 	vim.o.smoothscroll = true
 end
-
-vim.o.shadafile = "NONE"
-vim.api.nvim_create_autocmd("CmdlineEnter", {
-	once = true,
-	callback = function()
-		local shada = vim.fn.stdpath("state") .. "/shada/main.shada"
-		vim.o.shadafile = shada
-		vim.api.nvim_command("rshada! " .. shada)
-	end,
-})

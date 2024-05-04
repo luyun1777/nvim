@@ -15,15 +15,6 @@ vim.api.nvim_create_autocmd("User", {
 		end
 	end,
 })
--- vim.opt.shadafile = "NONE"
-vim.api.nvim_create_autocmd("CmdlineEnter", {
-	once = true,
-	callback = function()
-		local shada = vim.fn.stdpath("state") .. "/shada/main.shada"
-		vim.o.shadafile = shada
-		vim.api.nvim_command("rshada! " .. shada)
-	end,
-})
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then

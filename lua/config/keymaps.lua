@@ -123,7 +123,6 @@ map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 -- toggle options
 map("n", "<leader>ub", function() require("util").toggle("background", false, {"light", "dark"}) end, { desc = "Toggle Background" })
 map("n", "<leader>ud", function() require("util").toggle.diagnostics() end, { desc = "Toggle Diagnostics" })
-map("n", "<leader>ue", function() require("util").toggle("cursorline") end, { desc = "Toggle Cursorline" })
 
 if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
     map( "n", "<leader>uh", function() require("util").toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
