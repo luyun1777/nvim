@@ -1,6 +1,6 @@
 ## <center>The NeoVim Config</center>
 
-## ⚡️ Requirements
+## Requirements
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org) `npm config set registry https://registry.npmmirror.com/`
@@ -13,18 +13,19 @@
   - find files: [fd](https://github.com/sharkdp/fd)
 - [lazygit](https://github.com/jesseduffield/lazygit) (optional)
 
-## 🛠️ Installation
+## Installation
 
 - Linux / MacOS
 
   ```bash
+
   # required
-  mv ~/.config/nvim ~/.config/nvim.bak
+  mv ~/.config/nvim{,.bak}
 
   # optional but recommended
-  mv ~/.local/share/nvim ~/.local/share/nvim.bak
-  mv ~/.local/state/nvim ~/.local/state/nvim.bak
-  mv ~/.cache/nvim ~/.cache/nvim.bak
+  mv ~/.local/share/nvim{,.bak}
+  mv ~/.local/state/nvim{,.bak}
+  mv ~/.cache/nvim{,.bak}
 
   git clone https://github.com/luyun1777/nvim.git ~/.config/nvim
   # or accelerate by gitee
@@ -45,4 +46,4 @@
   git clone https://gitee.com/luyun1777/nvim.git $env:LOCALAPPDATA\nvim
   ```
 
-## 📦 Plugins
+## Plugins

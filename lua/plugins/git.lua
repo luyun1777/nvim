@@ -13,7 +13,7 @@ return {
 				changedelete = { text = "~" },
 			},
 			preview_config = { border = "rounded" },
-			current_line_blame = true,
+			-- current_line_blame = true,
 			on_attach = function(bufnr)
 				local function map(mode, l, r, desc)
 					vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })

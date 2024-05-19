@@ -2,7 +2,6 @@ return {
 	-- File explorer
 	{
 		"nvim-tree/nvim-tree.lua",
-		version = "*",
 		cmd = { "NvimTreeToggle" },
 		keys = { { "tt", "<cmd>NvimTreeToggle<cr>", desc = "Toggle nvim-tree" } },
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -94,7 +93,6 @@ return {
 	{
 		"kylechui/nvim-surround",
 		event = "User LazyLoad",
-		version = "*",
 		opts = {},
 	},
 	{
@@ -176,7 +174,7 @@ return {
 				["<leader>g"] = { name = "+git" },
 				["<leader>gh"] = { name = "+hunks" },
 				["<leader>q"] = { name = "+quit/session" },
-				["<leader>s"] = { name = "+search" },
+				["<leader>s"] = { name = "+search/send" },
 				["<leader>t"] = { name = "+terminal/translate" },
 				["<leader>u"] = { name = "+ui" },
 				["<leader>w"] = { name = "+windows" },

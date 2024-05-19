@@ -125,39 +125,65 @@ vim.api.nvim_create_autocmd("BufEnter", {
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = augroup("Lsp"),
-	callback = function(ev)
-		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+	callback = function(args)
+		local bufnr = args.buf
+		local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+		if client == nil then
+			return
+		end
+
+		if client.server_capabilities.completionProvider then
+			vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
+		end
+		if client.server_capabilities.definitionProvider then
+			vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
+		end
+
+		if vim.fn.has("nvim-0.10") == 1 then
+			if client.supports_method("textDocument/inlayHint") then
+				vim.lsp.inlay_hint.enable()
+			end
+		end
+
+		-- if client.supports_method("textDocument/codeLens") then
+		-- 	vim.lsp.codelens.refresh()
+		-- 	vim.api.nvim_create_autocmd(
+		-- 		{ "BufEnter", "CursorHold", "InsertLeave" },
+		-- 		{ buffer = bufnr, callback = vim.lsp.codelens.refresh }
+		-- 	)
+		-- end
 
 		vim.keymap.set("n", "<leader>cf", function()
-			vim.lsp.buf.format({ buffer = ev.buf, async = true })
-		end, { buffer = ev.buf, desc = "Format file" })
+			vim.lsp.buf.format({ buffer = bufnr, async = true })
+		end, { buffer = bufnr, desc = "Format file" })
 		vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
 		vim.keymap.set({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, { desc = "Run Codelens" })
 		vim.keymap.set("n", "<leader>cC", vim.lsp.codelens.refresh, { desc = "Refresh & Display Codelens" })
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = ev.buf, desc = "Go declaration" })
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf, desc = "Go definition" })
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = ev.buf, desc = "Hover" })
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = ev.buf, desc = "GO implementation" })
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = ev.buf, desc = "Go references" })
-		vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, { buffer = ev.buf })
-		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, { buffer = ev.buf })
+		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go declaration" })
+		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go definition" })
+		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover" })
+		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "GO implementation" })
+		vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go references" })
+		vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, { buffer = bufnr })
+		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, { buffer = bufnr })
 		vim.keymap.set(
 			"n",
 			"<leader>wa",
 			vim.lsp.buf.add_workspace_folder,
-			{ buffer = ev.buf, desc = "Add workspace folder" }
+			{ buffer = bufnr, desc = "Add workspace folder" }
 		)
 		vim.keymap.set(
 			"n",
 			"<leader>wr",
 			vim.lsp.buf.remove_workspace_folder,
-			{ buffer = ev.buf, desc = "Remove workspace folder" }
+			{ buffer = bufnr, desc = "Remove workspace folder" }
 		)
 		vim.keymap.set("n", "<leader>wl", function()
 			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-		end, { buffer = ev.buf, desc = "List workspace folders" })
-		vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { buffer = ev.buf, desc = "Type definition" })
-		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = ev.buf, desc = "Rename variable" })
-		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = ev.buf, desc = "Code action" })
+		end, { buffer = bufnr, desc = "List workspace folders" })
+		vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { buffer = bufnr, desc = "Type definition" })
+		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename variable" })
+		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code action" })
 	end,
 })

@@ -6,9 +6,7 @@ return {
 			"JoosepAlviste/nvim-ts-context-commentstring",
 			config = function()
 				vim.g.skip_ts_context_commentstring_module = true
-				require("ts_context_commentstring").setup({
-					enable_autocmd = false,
-				})
+				require("ts_context_commentstring").setup({ enable_autocmd = false })
 			end,
 		},
 		keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
@@ -78,7 +76,6 @@ return {
 	},
 	{
 		"echasnovski/mini.indentscope",
-		version = false, -- wait till new 0.7.0 release to put it back on semver
 		event = "User LazyLoad",
 		opts = {
 			symbol = "│",
@@ -119,22 +116,22 @@ return {
         },
 		opts = {
 			format = { timeout_ms = 3000, async = true, quiet = true, lsp_fallback = true },
-			format_on_save = { async = true, lsp_fallback = true },
+			format_on_save = { lsp_fallback = true },
 			formatters = { injected = { options = { ignore_errors = true } } },
 			formatters_by_ft = {
-				css = { { "prettierd", "prettier" } },
-				html = { { "prettierd", "prettier" } },
-				json = { { "prettierd", "prettier" } },
-				jsonc = { { "prettierd", "prettier" } },
-				markdown = { { "prettierd", "prettier" }, "injected" },
 				c = { "clang-format" },
 				cpp = { "clang-format" },
+				css = { { "prettierd", "prettier" } },
+				html = { { "prettierd", "prettier" } },
 				java = { "clang-format" },
 				javascript = { { "prettierd", "prettier" } },
+				json = { { "prettierd", "prettier" } },
+				jsonc = { { "prettierd", "prettier" } },
+				lua = { "stylua" },
+				markdown = { { "prettierd", "prettier" }, "injected" },
+				python = { "isort", "black" },
 				rust = { "rustfmt" },
 				typescript = { { "prettierd", "prettier" } },
-				lua = { "stylua" },
-				python = { "isort", "black" },
 				yaml = { "yamlfix" },
 			},
 		},

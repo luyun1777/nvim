@@ -2,8 +2,9 @@ local ts = require("vim.treesitter")
 local get_node_text = ts.get_node_text
 if not pcall(require, "nvim-treesitter") then
 	vim.notify("nvim-treesitter is not availale", vim.log.levels.WARN)
+	return
 end
-local ts_utils = require("nvim-treesitter.ts_utils") -- requires nvim-treesitter
+local ts_utils = require("nvim-treesitter.ts_utils")
 local parsers = require("nvim-treesitter.parsers")
 
 local function get_ternary_node(node)

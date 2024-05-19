@@ -24,7 +24,9 @@ map({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true
 
 -- Add bash shortcuts for command line
 map("c", "<c-a>", "<Home>")
+map("c", "<c-e>", "<End>")
 map("c", "<c-b>", "<Left>")
+map("c", "<c-f>", "<Right>")
 -- BASH-style movement in insert mode
 map("i", "<c-a>", "<c-o>^")
 map("i", "<c-e>", "<c-o>$")
@@ -119,10 +121,9 @@ map("t", "<c-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
 -- stylua: ignore start
-
 -- toggle options
 map("n", "<leader>ub", function() require("util").toggle("background", false, {"light", "dark"}) end, { desc = "Toggle Background" })
-map("n", "<leader>ud", function() require("util").toggle.diagnostics() end, { desc = "Toggle Diagnostics" })
+map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, { desc = "Toggle Diagnostics" })
 
 if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
     map( "n", "<leader>uh", function() require("util").toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
@@ -134,8 +135,7 @@ map("n", "<leader>us", function() require("util").toggle("spell") end, { desc = 
 map("n", "<leader>uw", function() require("util").toggle("wrap") end, { desc = "Toggle Word Wrap" })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map("n", "<leader>uC", function() require("util").toggle("conceallevel", false, {0, conceallevel}) end, { desc = "Toggle Conceal" })
-
--- stylua: ignore start
+-- stylua: ignore end
 
 -- Useful actions
 map({ "n", "v" }, ",.", "%", { silent = true })
@@ -144,3 +144,9 @@ map("n", ",v", "v%", { silent = true })
 map("i", "<s-enter>", "<esc>o", { silent = true })
 map("", "s", "<nop>", { silent = true })
 map("", "S", "<nop>", { silent = true })
+
+local Util = require("util")
+-- stylua: ignore
+map("n", "<f5>", function() Util.compile_run() end, { desc = "Run file" })
+-- stylua: ignore
+map("n", "<leader>st", function() Util.swap_ternary() end, { desc = "Swap ternary" })

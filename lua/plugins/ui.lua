@@ -62,7 +62,6 @@ return {
 	-- Tabline
 	{
 		"akinsho/bufferline.nvim",
-		version = "*",
 		event = "User LazyLoad",
 		keys = {
 			{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
@@ -98,6 +97,13 @@ return {
 			},
 		},
 	},
+	-- Winbar
+	-- {
+	-- 	"Bekaboo/dropbar.nvim",
+	-- 	enabled = vim.fn.has("nvim-0.10") == 1,
+	-- 	dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
+	-- 	opts = {},
+	-- },
 	{
 		"xiyaowong/transparent.nvim",
 		cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },

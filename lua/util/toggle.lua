@@ -37,24 +37,6 @@ function M.number()
 	end
 end
 
-local enabled = true
-function M.diagnostics()
-	-- if this Neovim version supports checking if diagnostics are enabled
-	-- then use that for the current state
-	if vim.diagnostic.is_disabled then
-		enabled = not vim.diagnostic.is_disabled()
-	end
-	enabled = not enabled
-
-	if enabled then
-		vim.diagnostic.enable()
-		vim.notify("Enabled diagnostics", vim.log.levels.INFO, { title = "Diagnostics" })
-	else
-		vim.diagnostic.disable()
-		vim.notify("Disabled diagnostics", vim.log.levels.WARN, { title = "Diagnostics" })
-	end
-end
-
 function M.inlay_hints(buf, value)
 	local ih = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
 	if type(ih) == "function" then
@@ -64,6 +46,7 @@ function M.inlay_hints(buf, value)
 			value = not ih.is_enabled(buf)
 		end
 		ih.enable(value, { bufnr = buf })
+		vim.notify((value and "Enabled" or "Disabled") .. " inlay_hint", vim.log.levels.INFO, { title = "Option" })
 	end
 end
 

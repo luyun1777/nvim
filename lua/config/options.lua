@@ -12,7 +12,10 @@ vim.o.guicursor =
 	"n:block-blinkwait0,i-ci:ver20-iCursor-blinkwait300-blinkon250-blinkoff200,c-r-cr-o:hor10-block-blinkwait300-blinkon250-blinkoff200"
 vim.o.guifont = "FiraCode Nerd Font Mono:h16:qDRAFT,JetBrainsMono Nerd Font Mono:h16:b:cANSI:qDRAFT,Consolas:h16"
 
-vim.cmd([[set diffopt+=context:3,vertical,followwrap]]) -- better diff
+vim.opt.diffopt:append({ "context:3", "vertical", "followwrap" }) -- beterr diff
+vim.opt.fillchars = { foldopen = "", foldclose = "" }
+vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+vim.opt.shortmess:append({ I = true, c = true, C = true })
 
 vim.o.winminwidth = 5 -- Minimum window width
 vim.o.autowrite = true -- Enable auto write
@@ -53,7 +56,6 @@ vim.o.splitright = true -- Put new windows right of current
 vim.o.showbreak = "↳ " -- DOWNWARDS ARROW WITH TIP RIGHTWARDS (U+21B3, UTF-8: E2 86 B3)
 vim.o.splitbelow = true -- Put new windows below current
 vim.o.showmode = false -- Don't show the mode, since it's already in status line
-vim.o.shortmess = vim.o.shortmess .. "cCI"
 vim.o.inccommand = "split" -- preview incremental substitute
 vim.o.completeopt = "menu,menuone,noselect"
 vim.o.colorcolumn = "200"

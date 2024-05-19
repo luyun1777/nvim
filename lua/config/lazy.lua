@@ -28,7 +28,7 @@ require("lazy").setup({
 	defaluts = { version = false },
 	install = { colorscheme = { "gruvbox", "habamax" } },
 	ui = { border = "rounded" },
-	checker = { enabled = true },
+	-- checker = { enabled = true },
 	performance = {
 		rtp = {
 			disabled_plugins = {
@@ -44,7 +44,3 @@ require("lazy").setup({
 		},
 	},
 })
-
-local Util = require("util")
-vim.keymap.set("n", "<f5>", Util.compile_run, { desc = "Run file" })
-vim.keymap.set("n", "<leader>st", Util.swap_ternary, { desc = "Swap ternary" })
