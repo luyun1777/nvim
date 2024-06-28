@@ -22,7 +22,8 @@ return {
 					"bashls",
 					"lua_ls",
 					"jsonls",
-					"pyright", -- ruff
+					"pyright",
+					-- "ruff",
 					"vimls",
 				},
 				handlers = {
@@ -46,7 +47,7 @@ return {
 				border = "rounded",
 				icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" },
 			},
-			ensure_installed = { "black", "isort", "prettierd", "prettier", "stylua", "yamlfix" },
+			ensure_installed = { "prettierd", "prettier", "ruff", "stylua", "yamlfix" },
 		},
 		config = function(_, opts)
 			require("mason").setup(opts)

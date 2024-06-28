@@ -135,6 +135,7 @@ map("n", "<leader>us", function() require("util").toggle("spell") end, { desc = 
 map("n", "<leader>uw", function() require("util").toggle("wrap") end, { desc = "Toggle Word Wrap" })
 local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
 map("n", "<leader>uC", function() require("util").toggle("conceallevel", false, {0, conceallevel}) end, { desc = "Toggle Conceal" })
+map("n", "<leader>uf", function() vim.g.disable_autoformat = not vim.g.disable_autoformat vim.notify( (vim.g.disable_autoformat and "Disabled " or "Enabled ") .. "Autoformat", vim.log.levels.INFO, { title = "Option" }) end, { desc = "Toggle Autoformat" })
 -- stylua: ignore end
 
 -- Useful actions

@@ -112,11 +112,15 @@ return {
         -- stylua: ignore
         keys = {
             { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, async = true }) end, desc = "Format Injected File", },
-            { "<leader>cf", function() require("conform").format({ lsp_fallback = true, async = true }) end, desc = "Format file", },
+            { "<leader>cf", function() require("conform").format({  timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" }) end, desc = "Format file", },
         },
 		opts = {
-			format = { timeout_ms = 3000, async = true, quiet = true, lsp_fallback = true },
-			format_on_save = { lsp_fallback = true },
+			format_after_save = function(bufnr)
+				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+					return
+				end
+				return { timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" }
+			end,
 			formatters = { injected = { options = { ignore_errors = true } } },
 			formatters_by_ft = {
 				c = { "clang-format" },
@@ -129,10 +133,11 @@ return {
 				jsonc = { { "prettierd", "prettier" } },
 				lua = { "stylua" },
 				markdown = { { "prettierd", "prettier" }, "injected" },
-				python = { "isort", "black" },
+				python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
 				rust = { "rustfmt" },
 				typescript = { { "prettierd", "prettier" } },
 				yaml = { "yamlfix" },
+				["_"] = { "trim_whitespace" },
 			},
 		},
 	},
@@ -144,15 +149,60 @@ return {
 		opts = {
 			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
 			linters_by_ft = {
-				python = { "flake8", "mypy" },
+				python = { "ruff" },
+				-- Use the "*" filetype to run linters on all filetypes.
+				-- ['*'] = { 'global linter' },
+				-- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
+				-- ['_'] = { 'fallback linter' },
+				-- ["*"] = { "typos" },
 			},
 		},
-		config = function()
-			vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+		config = function(_, opts)
+			local M = {}
+
+			local lint = require("lint")
+			lint.linters_by_ft = opts.linters_by_ft
+
+			function M.debounce(ms, fn)
+				local timer = vim.uv.new_timer()
+				return function(...)
+					local argv = { ... }
+					timer:start(ms, 0, function()
+						timer:stop()
+						vim.schedule_wrap(fn)(unpack(argv))
+					end)
+				end
+			end
+
+			function M.lint()
+				local names = lint._resolve_linter_by_ft(vim.bo.filetype)
+
+				names = vim.list_extend({}, names)
+
+				if #names == 0 then
+					vim.list_extend(names, lint.linters_by_ft["_"] or {})
+				end
+
+				vim.list_extend(names, lint.linters_by_ft["*"] or {})
+
+				local ctx = { filename = vim.api.nvim_buf_get_name(0) }
+				ctx.dirname = vim.fn.fnamemodify(ctx.filename, ":h")
+				names = vim.tbl_filter(function(name)
+					local linter = lint.linters[name]
+					if not linter then
+						vim.notify("Linter not found: " .. name, vim.log.levels.WARN, { title = "nvim-lint" })
+					end
+					return linter and not (type(linter) == "table" and linter.condition and not linter.condition(ctx))
+				end, names)
+
+				if #names > 0 then
+					lint.try_lint(names)
+				end
+			end
+
+			vim.api.nvim_create_autocmd(opts.events, {
 				group = vim.api.nvim_create_augroup("nvim-lint", { clear = true }),
-				callback = function()
-					require("lint").try_lint()
-				end,
+				callback = M.debounce(100, M.lint),
 			})
 		end,
 	},

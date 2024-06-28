@@ -5,6 +5,8 @@ end
 vim.g.mapleader = " "
 vim.g.localleader = "\\"
 
+vim.g.disable_autoformat = false
+
 vim.o.fileformats = "unix,dos,mac"
 vim.o.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
 vim.o.fileencoding = "utf-8"
