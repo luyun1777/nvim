@@ -18,14 +18,7 @@ return {
 			}
 			require("lspconfig.ui.windows").default_options.border = "rounded"
 			require("mason-lspconfig").setup({
-				ensure_installed = {
-					"bashls",
-					"lua_ls",
-					"jsonls",
-					"pyright",
-					-- "ruff",
-					"vimls",
-				},
+				ensure_installed = { "lua_ls", "ruff", "vimls" },
 				handlers = {
 					function(server_name)
 						require("lspconfig")[server_name].setup({
@@ -47,7 +40,8 @@ return {
 				border = "rounded",
 				icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" },
 			},
-			ensure_installed = { "prettierd", "prettier", "ruff", "stylua", "yamlfix" },
+			github = { download_url_template = "https://gh.sixyin.com/https://github.com/%s/releases/download/%s/%s" },
+			ensure_installed = { "prettierd", "ruff", "stylua" },
 		},
 		config = function(_, opts)
 			require("mason").setup(opts)

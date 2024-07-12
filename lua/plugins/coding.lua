@@ -136,7 +136,7 @@ return {
 				python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
 				rust = { "rustfmt" },
 				typescript = { { "prettierd", "prettier" } },
-				yaml = { "yamlfix" },
+				yaml = { { "prettierd", "prettier" } },
 				["_"] = { "trim_whitespace" },
 			},
 		},
