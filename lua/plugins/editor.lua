@@ -57,13 +57,15 @@ return {
 		keys = {
 			{ "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
 			{ "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
+			{ "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
+			{ "<leader>cS", "<cmd>Trouble lsp toggle<cr>", desc = "LSP references/definitions/... (Trouble)" },
 			{ "<leader>xL", "<cmd>TroubleToggle loclist<cr>", desc = "Location List (Trouble)" },
 			{ "<leader>xQ", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List (Trouble)" },
 			{
 				"[q",
 				function()
 					if require("trouble").is_open() then
-						require("trouble").previous({ skip_groups = true, jump = true })
+						require("trouble").prev({ skip_groups = true, jump = true })
 					else
 						local ok, err = pcall(vim.cmd.cprev)
 						if not ok then
@@ -158,33 +160,36 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
-		opts = {
-			plugins = { spelling = true },
-			defaults = {
-				mode = { "n", "v" },
-				["g"] = { name = "+goto" },
-				["gs"] = { name = "+surround" },
-				["z"] = { name = "+fold" },
-				["]"] = { name = "+next" },
-				["["] = { name = "+prev" },
-				["<leader><tab>"] = { name = "+tabs" },
-				["<leader>b"] = { name = "+buffer" },
-				["<leader>c"] = { name = "+code" },
-				["<leader>f"] = { name = "+file/find" },
-				["<leader>g"] = { name = "+git" },
-				["<leader>gh"] = { name = "+hunks" },
-				["<leader>q"] = { name = "+quit/session" },
-				["<leader>s"] = { name = "+search/send" },
-				["<leader>t"] = { name = "+terminal/translate" },
-				["<leader>u"] = { name = "+ui" },
-				["<leader>w"] = { name = "+windows" },
-				["<leader>x"] = { name = "+diagnostics/quickfix" },
+		keys = {
+			{
+				"<leader>?",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
 			},
 		},
-		config = function(_, opts)
-			local wk = require("which-key")
-			wk.setup(opts)
-			wk.register(opts.defaults)
-		end,
+		opts = {
+			spec = {
+				{
+					mode = { "n", "v" },
+					{ "<leader>b", group = "buffer" },
+					{ "<leader>c", group = "code" },
+					{ "<leader>f", group = "file/find" },
+					{ "<leader>g", group = "git" },
+					{ "<leader>gh", group = "hunks" },
+					{ "<leader>q", group = "quit/session" },
+					{ "<leader>s", group = "search" },
+					{ "<leader>t", group = "terminal/translate" },
+					{ "<leader>u", group = "ui" },
+					{ "<leader>w", group = "windows" },
+					{ "<leader>x", group = "diagnostics/quickfix" },
+					{ "[", group = "prev" },
+					{ "]", group = "next" },
+					{ "g", group = "goto" },
+					{ "z", group = "fold" },
+				},
+			},
+		},
 	},
 }

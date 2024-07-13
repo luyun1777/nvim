@@ -15,18 +15,37 @@ return {
 			preview_config = { border = "rounded" },
 			-- current_line_blame = true,
 			on_attach = function(bufnr)
+				local gs = package.loaded.gitsigns
+
 				local function map(mode, l, r, desc)
 					vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
 				end
-				map("n", "<leader>g-", "<cmd>Gitsigns prev_hunk<CR>", "Prev hunk")
-				map("n", "<leader>g=", "<cmd>Gitsigns next_hunk<CR>", "Next hunk")
-				map("n", "[h", "<cmd>Gitsigns prev_hunk<CR>", "Prev hunk")
-				map("n", "]h", "<cmd>Gitsigns next_hunk<CR>", "Next hunk")
-				map("n", "<leader>gb", "<cmd>Gitsigns blame_line<CR>", "Blame line")
-				map("n", "<leader>gl", "<cmd>Gitsigns toggle_linehl<CR>")
-				map("n", "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", "Reset hunk")
-				map("n", "<leader>gp", "<cmd>Gitsigns preview_hunk<CR>", "Preview hunk")
-				map("n", "<leader>gd", "<cmd>Gitsigns toggle_deleted<CR>")
+
+                -- stylua: ignore start
+				map("n", "]h", function()
+					if vim.wo.diff then
+						vim.cmd.normal({ "]c", bang = true })
+					else
+						gs.nav_hunk("next")
+					end
+				end, "Next Hunk")
+				map("n", "[h", function()
+					if vim.wo.diff then
+						vim.cmd.normal({ "[c", bang = true })
+					else
+						gs.nav_hunk("prev")
+					end
+				end, "Prev Hunk")
+				map("n", "]H", function() gs.nav_hunk("last") end, "Last Hunk")
+				map("n", "[H", function() gs.nav_hunk("first") end, "First Hunk")
+				map({ "n", "v" }, "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", "Reset hunk")
+				map({ "n", "v" }, "<leader>gR", gs.reset_buffer, "Reset Buffer")
+				map("n", "<leader>gp", gs.preview_hunk_inline, "Preview Hunk Inline")
+				map("n", "<leader>gb", function() gs.blame_line({ full = true }) end, "Blame Line")
+                map("n", "<leader>gB", function() gs.blame() end, "Blame Buffer")
+				map("n", "<leader>gd", gs.diffthis, "Diff This")
+				map("n", "<leader>gD", function() gs.diffthis("~") end, "Diff This ~")
+				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
 			end,
 		},
 	},
