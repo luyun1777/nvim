@@ -49,13 +49,13 @@ return {
 			end,
 		},
 	},
-	{
-		"kdheepak/lazygit.nvim",
-		enabled = vim.fn.executable("git") == 1 and vim.fn.executable("lazygit") == 1,
-		cmd = { "LazyGit", "LazyGitConfig", "LazyGitFilter" },
-		keys = {
-			{ "<leader>gG", "<cmd>Telescope lazygit<cr>", desc = "Telescope lazygit" },
-			{ "<leader>gg", "<cmd>LazyGit<CR>", desc = "Toggle lazygit" },
-		},
-	},
+	-- {
+	-- 	"kdheepak/lazygit.nvim",
+	-- 	enabled = vim.fn.executable("git") == 1 and vim.fn.executable("lazygit") == 1,
+	-- 	cmd = { "LazyGit", "LazyGitConfig", "LazyGitFilter" },
+	-- 	keys = {
+	-- 		{ "<leader>gG", "<cmd>Telescope lazygit<cr>", desc = "Telescope lazygit" },
+	-- 		{ "<leader>gg", "<cmd>LazyGit<CR>", desc = "Toggle lazygit" },
+	-- 	},
+	-- },
 }

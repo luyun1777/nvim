@@ -139,10 +139,9 @@ map("n", "<leader>uf", function() vim.g.disable_autoformat = not vim.g.disable_a
 -- stylua: ignore end
 
 -- Useful actions
-map({ "n", "v" }, ",.", "%", { silent = true })
-map("n", "\\v", "v$h", { silent = true })
-map("n", ",v", "v%", { silent = true })
 map("i", "<s-enter>", "<esc>o", { silent = true })
+
+-- Disable `s`、`S`
 map("", "s", "<nop>", { silent = true })
 map("", "S", "<nop>", { silent = true })
 
@@ -150,4 +149,4 @@ local Util = require("util")
 -- stylua: ignore
 map("n", "<f5>", function() Util.compile_run() end, { desc = "Run file" })
 -- stylua: ignore
-map("n", "<leader>st", function() Util.swap_ternary() end, { desc = "Swap ternary" })
+map("n", "<leader><leader>st", function() Util.swap_ternary() end, { desc = "Swap ternary" })
