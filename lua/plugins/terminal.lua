@@ -22,7 +22,7 @@ return {
 			local _lazygit = Terminal:new({ cmd = "lazygit", hidden = true, dir = "git_dir", direction = "float" })
 
 			function Toggle_Lazygit()
-				if vim.fn.executable("lazygit") then
+				if vim.fn.executable("lazygit") == 1 then
 					_lazygit:toggle()
 				else
 					vim.notify("**lazygit** is not founded in PATH, please install it.", vim.log.levels.WARN)
