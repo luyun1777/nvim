@@ -111,32 +111,33 @@ return {
 		event = "BufWritePre",
         -- stylua: ignore
         keys = {
-            { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, async = true }) end, desc = "Format Injected File", },
-            { "<leader>cf", function() require("conform").format({  timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" }) end, desc = "Format file", },
+            { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, }) end, desc = "Format Injected File", },
+            { "<leader>cf", function() require("conform").format() end, desc = "Format file", },
         },
 		opts = {
+			default_format_opts = { timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" },
 			format_after_save = function(bufnr)
 				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
 					return
 				end
-				return { timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" }
+				return {}
 			end,
 			formatters = { injected = { options = { ignore_errors = true } } },
 			formatters_by_ft = {
 				c = { "clang-format" },
 				cpp = { "clang-format" },
-				css = { { "prettierd", "prettier" } },
-				html = { { "prettierd", "prettier" } },
+				css = { "prettierd" },
+				html = { "prettierd" },
 				java = { "clang-format" },
-				javascript = { { "prettierd", "prettier" } },
-				json = { { "prettierd", "prettier" } },
-				jsonc = { { "prettierd", "prettier" } },
+				javascript = { "prettierd" },
+				json = { "prettierd" },
+				jsonc = { "prettierd" },
 				lua = { "stylua" },
-				markdown = { { "prettierd", "prettier" }, "injected" },
-				python = { "ruff_organize_imports", "ruff_format", "ruff_fix" },
+				markdown = { "prettierd", "injected" },
+				python = { "ruff_organize_imports", "ruff_format" },
 				rust = { "rustfmt" },
-				typescript = { { "prettierd", "prettier" } },
-				yaml = { { "prettierd", "prettier" } },
+				typescript = { "prettierd" },
+				yaml = { "prettierd" },
 				["_"] = { "trim_whitespace" },
 			},
 		},
