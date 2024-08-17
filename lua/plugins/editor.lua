@@ -52,15 +52,23 @@ return {
 	-- better diagnostics list and others
 	{
 		"folke/trouble.nvim",
-		cmd = { "TroubleToggle", "Trouble" },
+		cmd = { "Trouble" },
 		opts = { use_diagnostic_signs = true },
 		keys = {
-			{ "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Document Diagnostics (Trouble)" },
-			{ "<leader>xX", "<cmd>TroubleToggle workspace_diagnostics<cr>", desc = "Workspace Diagnostics (Trouble)" },
-			{ "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
-			{ "<leader>cS", "<cmd>Trouble lsp toggle<cr>", desc = "LSP references/definitions/... (Trouble)" },
-			{ "<leader>xL", "<cmd>TroubleToggle loclist<cr>", desc = "Location List (Trouble)" },
-			{ "<leader>xQ", "<cmd>TroubleToggle quickfix<cr>", desc = "Quickfix List (Trouble)" },
+			{ "<leader>xx", "<cmd>Trouble diagnostics toggle focus=true<cr>", desc = "Diagnostics (Trouble)" },
+			{
+				"<leader>xX",
+				"<cmd>Trouble diagnostics toggle focus=true filter.buf=0<cr>",
+				desc = "Buffer Diagnostics (Trouble)",
+			},
+			{ "<leader>cs", "<cmd>Trouble symbols toggle focus=true<cr>", desc = "Symbols (Trouble)" },
+			{
+				"<leader>cS",
+				"<cmd>Trouble lsp toggle focus=true<cr>",
+				desc = "LSP references/definitions/... (Trouble)",
+			},
+			{ "<leader>xL", "<cmd>Trouble loclist toggle focus=true<cr>", desc = "Location List (Trouble)" },
+			{ "<leader>xQ", "<cmd>Trouble qflist toggle focus=true<cr>", desc = "Quickfix List (Trouble)" },
 			{
 				"[q",
 				function()
@@ -83,7 +91,7 @@ return {
 					else
 						local ok, err = pcall(vim.cmd.cnext)
 						if not ok then
-							vim.notify(tostring(err), vim.log.levels.ERROR)
+							vim.notify(err, vim.log.levels.ERROR)
 						end
 					end
 				end,
