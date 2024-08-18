@@ -40,7 +40,7 @@ return {
 				border = "rounded",
 				icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" },
 			},
-			github = { download_url_template = "https://gh.sixyin.com/https://github.com/%s/releases/download/%s/%s" },
+			github = { download_url_template = "https://ghproxy.cc/https://github.com/%s/releases/download/%s/%s" },
 			ensure_installed = {},
 		},
 		config = function(_, opts)
