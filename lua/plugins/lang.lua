@@ -9,7 +9,7 @@ return {
 			snippet_engine = "luasnip",
 			languages = {
 				lua = { template = { annotation_convention = "emmylua" } }, -- "emmylua", "ldoc"
-				python = { template = { annotation_convention = "numpydoc" } }, -- "google_docstrings", "numpydoc", "reST"
+				python = { template = { annotation_convention = "reST" } }, -- "google_docstrings", "numpydoc", "reST"
 				rust = { template = { annotation_convention = "rustdoc" } }, -- "rustdoc", "rust_alternative"
 			},
 		},
@@ -18,6 +18,7 @@ return {
 	-- markdown
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
+		ft = "markdown",
 		opts = {
 			sign = { enabled = false },
 			indent = { enabled = true },
