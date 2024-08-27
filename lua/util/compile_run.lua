@@ -6,9 +6,7 @@ end
 local compileRun = function()
 	vim.cmd("w")
 	local ft = vim.bo.filetype
-	if ft == "markdown" then
-		vim.cmd("MarkdownPreviewToggle")
-	elseif ft == "c" then
+	if ft == "c" then
 		split()
 		vim.cmd("term gcc % -o %< && ./%< && rm %<")
 	elseif ft == "javascript" then

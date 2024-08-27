@@ -17,20 +17,28 @@ return {
 
 	-- markdown
 	{
-		"tadmccorkle/markdown.nvim",
-		ft = { "markdown" },
-		opts = {},
+		"MeanderingProgrammer/render-markdown.nvim",
+		opts = {
+			sign = { enabled = false },
+			indent = { enabled = true },
+		},
+		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
 	},
-	{
-		"iamcco/markdown-preview.nvim",
-		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-		ft = { "markdown" },
-		keys = { { "<leader>cp", ft = "markdown", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" } },
-		build = "cd app && npm install",
-		config = function()
-			vim.cmd([[do FileType]])
-		end,
-	},
+	-- {
+	-- 	"tadmccorkle/markdown.nvim",
+	-- 	ft = { "markdown" },
+	-- 	opts = {},
+	-- },
+	-- {
+	-- 	"iamcco/markdown-preview.nvim",
+	-- 	cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+	-- 	ft = { "markdown" },
+	-- 	keys = { { "<leader>cp", ft = "markdown", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" } },
+	-- 	build = "cd app && npm install",
+	-- 	config = function()
+	-- 		vim.cmd([[do FileType]])
+	-- 	end,
+	-- },
 
 	-- Tex
 	-- {

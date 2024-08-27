@@ -1,4 +1,4 @@
-## <center>The NeoVim Config</center>
+# <center>The NeoVim Config</center>
 
 ## Requirements
 
