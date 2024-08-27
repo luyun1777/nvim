@@ -3,12 +3,13 @@ return {
 		"neovim/nvim-lspconfig",
 		event = "User LazyLoad",
 		dependencies = {
-			{ "folke/neodev.nvim", ft = { "lua" } },
+			{ "folke/lazydev.nvim", opts = {} },
+			-- { "folke/neodev.nvim", ft = { "lua" } },
 			"mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 		},
 		config = function()
-			require("neodev").setup({ library = { plugins = {} } })
+			-- require("neodev").setup({ library = { plugins = {} } })
 
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
