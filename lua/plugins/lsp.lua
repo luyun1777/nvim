@@ -5,7 +5,6 @@ return {
 		dependencies = {
 			{ "folke/lazydev.nvim", opts = {} },
 			-- { "folke/neodev.nvim", ft = { "lua" } },
-			"mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
 		},
 		config = function()

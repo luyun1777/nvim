@@ -8,12 +8,7 @@ return {
 		"hrsh7th/cmp-path",
 		"hrsh7th/cmp-cmdline",
 		"windwp/nvim-autopairs",
-		{
-			"onsails/lspkind.nvim",
-			config = function()
-				require("lspkind").init()
-			end,
-		},
+		"onsails/lspkind.nvim",
 		{
 			"L3MON4D3/LuaSnip",
 			build = (function()
@@ -71,6 +66,7 @@ return {
 				documentation = cmp.config.window.bordered(border_opts),
 			},
 			formatting = {
+				expandable_indicator = true,
 				fields = { "kind", "abbr", "menu" },
 				format = function(entry, vim_item)
 					local kind = lspkind.cmp_format({

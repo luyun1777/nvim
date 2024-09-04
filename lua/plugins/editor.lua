@@ -4,7 +4,6 @@ return {
 		"nvim-tree/nvim-tree.lua",
 		cmd = { "NvimTreeToggle" },
 		keys = { { "tt", "<cmd>NvimTreeToggle<cr>", desc = "Toggle nvim-tree" } },
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {
 			sync_root_with_cwd = true,
 			respect_buf_cwd = true,
@@ -40,7 +39,7 @@ return {
 	-- Better fold
 	{
 		"kevinhwang91/nvim-ufo",
-		dependencies = { "kevinhwang91/promise-async", "nvim-treesitter/nvim-treesitter" },
+		dependencies = { "kevinhwang91/promise-async" },
 		event = "User LazyLoad",
 		opts = {
 			provider_selector = function(_, filetype, buftype)
@@ -125,13 +124,6 @@ return {
 	{
 		"RRethy/vim-illuminate",
 		event = "User LazyLoad",
-		config = function()
-			require("illuminate").configure({
-				delay = 200,
-				large_file_cutoff = 2000,
-				providers = { "treesitter", "lsp", "regex" },
-			})
-		end,
 	},
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",
@@ -146,7 +138,6 @@ return {
 	},
 	{ -- Undotree
 		"jiaoshijie/undotree",
-		dependencies = "nvim-lua/plenary.nvim",
 		opts = {},
 		keys = {
 			{ "<leader>U", "<cmd>lua require('undotree').toggle()<cr>", desc = "Toggle undotree" },

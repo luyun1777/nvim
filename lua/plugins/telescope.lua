@@ -2,17 +2,12 @@ return {
 	"nvim-telescope/telescope.nvim",
 	cmd = "Telescope",
 	dependencies = {
-		"nvim-lua/plenary.nvim",
 		{
 			"nvim-telescope/telescope-fzf-native.nvim",
 			enabled = vim.fn.executable("make") == 1 or vim.fn.executable("cmake") == 1,
 			build = vim.fn.executable("make") == 1 and "make"
 				or "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-			config = function()
-				require("telescope").load_extension("fzf")
-			end,
 		},
-		"stevearc/dressing.nvim",
 	},
 	keys = {
 		{
@@ -49,6 +44,7 @@ return {
 	},
 	opts = function()
 		require("telescope").load_extension("aerial")
+		require("telescope").load_extension("fzf")
 		local actions = require("telescope.actions")
 		return {
 			defaults = {

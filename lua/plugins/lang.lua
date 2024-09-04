@@ -2,7 +2,6 @@ return {
 	-- python
 	{
 		"danymat/neogen",
-		dependencies = "nvim-treesitter/nvim-treesitter",
 		cmd = { "Neogen" },
 		keys = { { "<leader>cd", "<cmd>Neogen<cr>", desc = "Docstrings" } },
 		opts = {
@@ -23,7 +22,6 @@ return {
 			sign = { enabled = false },
 			indent = { enabled = true },
 		},
-		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
 	},
 	-- {
 	-- 	"tadmccorkle/markdown.nvim",
@@ -36,9 +34,6 @@ return {
 	-- 	ft = { "markdown" },
 	-- 	keys = { { "<leader>cp", ft = "markdown", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview" } },
 	-- 	build = "cd app && npm install",
-	-- 	config = function()
-	-- 		vim.cmd([[do FileType]])
-	-- 	end,
 	-- },
 
 	-- Tex
@@ -58,13 +53,11 @@ return {
 	-- 			desc = "Fun",
 	-- 		},
 	-- 	},
-	-- 	config = function() end,
+	-- 	opts = {},
 	-- },
 
 	-- {
 	-- 	"sontungexpt/url-open",
-	-- 	config = function()
-	-- 		require("url-open").setup({})
-	-- 	end,
+	-- 	opts = {},
 	-- },
 }

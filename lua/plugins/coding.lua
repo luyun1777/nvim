@@ -2,27 +2,15 @@ return {
 	-- Comment
 	{
 		"numToStr/Comment.nvim",
-		dependencies = {
-			"JoosepAlviste/nvim-ts-context-commentstring",
-			config = function()
-				vim.g.skip_ts_context_commentstring_module = true
-				require("ts_context_commentstring").setup({ enable_autocmd = false })
-			end,
-		},
 		keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
-		config = function()
-			require("Comment").setup({
-				ignore = "^$",
-				pre_hook = require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook(),
-			})
-		end,
+		opts = { ignore = "^$" },
 	},
 
 	{
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoTelescope" },
 		event = "User LazyLoad",
-		config = true,
+		opts = {},
         -- stylua: ignore
         keys = {
             { "]t",         function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
@@ -38,14 +26,11 @@ return {
 	-- {
 	-- 	"shellRaining/hlchunk.nvim",
 	-- 	event = "User LazyLoad",
-	-- 	config = function()
-	-- 		vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, { pattern = "*", command = "EnableHL" })
-	-- 		require("hlchunk").setup({
-	-- 			indent = { chars = { "│", "¦", "┆", "┊" }, use_treesitter = false },
-	-- 			blank = { enable = false },
-	-- 			line_num = { use_treesitter = true },
-	-- 		})
-	-- 	end,
+	-- 	opts = {
+	-- 		indent = { enable = true, chars = { "│", "¦", "┆", "┊" }, use_treesitter = false },
+	-- 		blank = { enable = false },
+	-- 		line_num = { use_treesitter = true },
+	-- 	},
 	-- },
 	{
 		"lukas-reineke/indent-blankline.nvim",
@@ -106,7 +91,6 @@ return {
 	-- Formatting
 	{
 		"stevearc/conform.nvim",
-		dependencies = { "mason.nvim" },
 		cmd = "ConformInfo",
 		event = "BufWritePre",
         -- stylua: ignore
@@ -227,7 +211,6 @@ return {
 	-- Outline
 	{
 		"stevearc/aerial.nvim",
-		dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
 		keys = {
 			{ "<leader>o", "<cmd>AerialToggle<CR>", desc = "Toggle aerial" },
 			{ "<leader>O", "<cmd>AerialNavToggle<CR>", desc = "Toggle aerial nav" },
@@ -262,18 +245,16 @@ return {
 	-- 	"hedyhli/outline.nvim",
 	-- 	cmd = { "Outline", "OutlineOpen" },
 	-- 	keys = { { "<leader>o", "<cmd>Outline<CR>", mode = { "n" }, desc = "Toggle Outline" } },
-	-- 	config = function()
-	-- 		require("outline").setup({
-	-- 			outline_window = {
-	-- 				position = "right",
-	-- 				auto_close = true,
-	-- 				auto_jump = true,
-	-- 				focus_on_open = true,
-	-- 			},
-	-- 			outline_items = { show_symbol_details = false },
-	-- 			providers = { priority = { "lsp", "markdown", "coc", "norg" } },
-	-- 			symbols = { icon_source = "lspkind" },
-	-- 		})
-	-- 	end,
+	-- 	opts = {
+	-- 		outline_window = {
+	-- 			position = "right",
+	-- 			auto_close = true,
+	-- 			auto_jump = true,
+	-- 			focus_on_open = true,
+	-- 		},
+	-- 		outline_items = { show_symbol_details = false },
+	-- 		providers = { priority = { "lsp", "markdown", "coc", "norg" } },
+	-- 		symbols = { icon_source = "lspkind" },
+	-- 	},
 	-- },
 }

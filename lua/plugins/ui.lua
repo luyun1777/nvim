@@ -54,9 +54,7 @@ return {
 	-- Statusline
 	{
 		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 		event = "User LazyLoad",
-		-- event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
 	-- Tabline
@@ -70,7 +68,6 @@ return {
 			{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
 			{ "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete Buffers to the Left" },
 		},
-		dependencies = "nvim-tree/nvim-web-devicons",
 		opts = {
 			options = {
 				diagnostics = "nvim_lsp",
@@ -170,7 +167,7 @@ return {
 		event = "VeryLazy",
 		opts = {
 			input = { default_prompt = "➤ " },
-			select = { backend = { "telescope", "builtin", "nui" } },
+			select = { backend = { "telescope", "nui", "builtin" } },
 		},
 	},
 }
