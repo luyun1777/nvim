@@ -14,15 +14,24 @@ return {
 		},
 	},
 	{
-		"theniceboy/joshuto.nvim",
-		enabled = vim.fn.executable("joshuto") == 1,
-		keys = { { "<leader>ra", "<cmd>Joshuto<cr>", desc = "Start joshuto" } },
-		cmd = "Joshuto",
-		init = function()
-			vim.g.joshuto_floating_window_scaling_factor = 1.0
-			vim.g.joshuto_use_neovim_remote = 1
-			vim.g.joshuto_floating_window_winblend = 0
-		end,
+		"mikavilpas/yazi.nvim",
+		enabled = vim.fn.executable("yazi") == 1,
+		event = "User LazyLoad",
+		keys = {
+			{
+				"<leader>-",
+				"<cmd>Yazi<cr>",
+				desc = "Open yazi at the current file",
+			},
+			{
+				"<leader>cw",
+				"<cmd>Yazi cwd<cr>",
+				desc = "Open the file manager in nvim's working directory",
+			},
+		},
+		opts = {
+			open_for_directories = false,
+		},
 	},
 
 	-- Better move
