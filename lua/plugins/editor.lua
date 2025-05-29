@@ -16,6 +16,7 @@ return {
 	{
 		"mikavilpas/yazi.nvim",
 		enabled = vim.fn.executable("yazi") == 1,
+		cmd = "Yazi",
 		event = "User LazyLoad",
 		keys = {
 			{
@@ -57,56 +58,6 @@ return {
 		},
 	},
 
-	-- better diagnostics list and others
-	{
-		"folke/trouble.nvim",
-		cmd = { "Trouble" },
-		opts = { use_diagnostic_signs = true },
-		keys = {
-			{ "<leader>xx", "<cmd>Trouble diagnostics toggle focus=true<cr>", desc = "Diagnostics (Trouble)" },
-			{
-				"<leader>xX",
-				"<cmd>Trouble diagnostics toggle focus=true filter.buf=0<cr>",
-				desc = "Buffer Diagnostics (Trouble)",
-			},
-			{ "<leader>cs", "<cmd>Trouble symbols toggle focus=true<cr>", desc = "Symbols (Trouble)" },
-			{
-				"<leader>cS",
-				"<cmd>Trouble lsp toggle focus=true<cr>",
-				desc = "LSP references/definitions/... (Trouble)",
-			},
-			{ "<leader>xL", "<cmd>Trouble loclist toggle focus=true<cr>", desc = "Location List (Trouble)" },
-			{ "<leader>xQ", "<cmd>Trouble qflist toggle focus=true<cr>", desc = "Quickfix List (Trouble)" },
-			{
-				"[q",
-				function()
-					if require("trouble").is_open() then
-						require("trouble").prev({ skip_groups = true, jump = true })
-					else
-						local ok, err = pcall(vim.cmd.cprev)
-						if not ok then
-							vim.notify(err, vim.log.levels.ERROR)
-						end
-					end
-				end,
-				desc = "Previous Trouble/Quickfix Item",
-			},
-			{
-				"]q",
-				function()
-					if require("trouble").is_open() then
-						require("trouble").next({ skip_groups = true, jump = true })
-					else
-						local ok, err = pcall(vim.cmd.cnext)
-						if not ok then
-							vim.notify(err, vim.log.levels.ERROR)
-						end
-					end
-				end,
-				desc = "Next Trouble/Quickfix Item",
-			},
-		},
-	},
 	-- Better surrounding
 	{
 		"kylechui/nvim-surround",
@@ -137,7 +88,7 @@ return {
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",
 		cmd = { "ColorizerToggle" },
-		keys = { { "<leader>uc", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" } },
+		keys = { { "<leader>uC", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" } },
 		opts = {
 			user_default_options = {
 				mode = "virtualtext", -- foreground, background,  virtualtext
@@ -145,13 +96,13 @@ return {
 			},
 		},
 	},
-	{ -- Undotree
-		"jiaoshijie/undotree",
-		opts = {},
-		keys = {
-			{ "<leader>U", "<cmd>lua require('undotree').toggle()<cr>", desc = "Toggle undotree" },
-		},
-	},
+	-- { -- Undotree
+	-- 	"jiaoshijie/undotree",
+	-- 	opts = {},
+	-- 	keys = {
+	-- 		{ "<leader>U", "<cmd>lua require('undotree').toggle()<cr>", desc = "Toggle undotree" },
+	-- 	},
+	-- },
 	{ -- Translate
 		"voldikss/vim-translator",
 		cmd = { "Translate" },
@@ -161,7 +112,7 @@ return {
 		},
 		init = function()
 			vim.g.translator_default_engines = { "bing", "haici", "youdao" }
-			vim.g.translator_window_borderchars = require("util.static").borders.rounded
+			vim.g.translator_window_borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" }
 		end,
 	},
 
@@ -178,6 +129,7 @@ return {
 			},
 		},
 		opts = {
+			preset = "helix",
 			spec = {
 				{
 					mode = { "n", "v" },
@@ -185,8 +137,6 @@ return {
 					{ "<leader>c", group = "code" },
 					{ "<leader>f", group = "file/find" },
 					{ "<leader>g", group = "git" },
-					{ "<leader>gh", group = "hunks" },
-					{ "<leader>q", group = "quit/session" },
 					{ "<leader>s", group = "search" },
 					{ "<leader>t", group = "terminal/translate" },
 					{ "<leader>u", group = "ui" },

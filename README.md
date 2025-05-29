@@ -6,12 +6,11 @@
 - [Node.js](https://nodejs.org) `npm config set registry https://registry.npmmirror.com/`
 - a C compiler for `nvim-treesitter` for `Windows` [MinGW-64](https://www.mingw-w64.org/) or [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries) and more
 - [Python](https://www.python.org) `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
-- [Make](https://www.gnu.org/software/make/) or [cMake](https://cmake.org/download/)
-- A [Nerd Font](https://www.nerdfonts.com/) / [Github](https://github.com/ryanoasis/nerd-fonts) (optional, but strongly recommended)
-- for [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) (optional)
+- A [Nerd Font](https://www.nerdfonts.com/) (optional, but strongly recommended)
+- optional
   - live grep: [ripgrep](https://github.com/BurntSushi/ripgrep)
   - find files: [fd](https://github.com/sharkdp/fd)
-- [lazygit](https://github.com/jesseduffield/lazygit) (optional)
+  - [lazygit](https://github.com/jesseduffield/lazygit)
 
 ## Installation
 

@@ -25,7 +25,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	spec = { import = "plugins" },
-	defaluts = { version = false },
 	install = { colorscheme = { "gruvbox", "habamax" } },
 	ui = { border = "rounded" },
 	-- checker = { enabled = true },

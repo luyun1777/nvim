@@ -8,11 +8,9 @@ return {
 		opts = function()
 			local dashboard = require("alpha.themes.dashboard")
 			dashboard.section.buttons.val = {
-				dashboard.button("f", " " .. " Find file", "<cmd>Telescope find_files<cr>"),
+				dashboard.button("f", " " .. " Find file", "<cmd>FzfLua files<cr>"),
 				dashboard.button("n", " " .. " New file", "<cmd>ene<BAR>startinsert<cr>"),
-				dashboard.button("r", " " .. " Recent files", "<cmd>Telescope oldfiles<cr>"),
-				dashboard.button("g", " " .. " Find text", "<cmd>Telescope live_grep<cr>"),
-				dashboard.button("s", " " .. " Restore Session", [[<cmd>lua require("persistence").load()<cr>]]),
+				dashboard.button("r", " " .. " Recent files", "<cmd>FzfLua oldfiles<cr>"),
 				dashboard.button("l", "󰒲 " .. " Lazy", "<cmd>Lazy<cr>"),
 				dashboard.button("q", " " .. " Quit", "<cmd>qa<cr>"),
 			}
@@ -72,7 +70,7 @@ return {
 			options = {
 				diagnostics = "nvim_lsp",
 				diagnostics_indicator = function(_, _, diag)
-					local icons = require("util.static").icons.diagnostics
+					local icons = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 					local ret = (diag.error and icons.Error .. diag.error .. " " or "")
 						.. (diag.warning and icons.Warn .. diag.warning or "")
 					return vim.trim(ret)
@@ -121,7 +119,6 @@ return {
         -- stylua: ignore
 		keys = {
 			{ "<leader>un", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Dismiss All Notifications", },
-			{ "<leader>fn", function() require("telescope").extensions.notify.notify({}) end, desc = "Find notification", },
 		},
 		opts = {
 			render = "compact", -- "defalut", "minimal", "simple", "compact","warpped-compact"
@@ -138,6 +135,7 @@ return {
         keys = {
             { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll Forward", mode = {"i", "n", "s"} },
             { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll Backward", mode = {"i", "n", "s"}},
+			{ "<leader>sn", "<cmd>NoiceHistory ", desc = "Show Notifications History", },
         },
 		dependencies = {
 			"MunifTanjim/nui.nvim",
@@ -167,7 +165,7 @@ return {
 		event = "VeryLazy",
 		opts = {
 			input = { default_prompt = "➤ " },
-			select = { backend = { "telescope", "nui", "builtin" } },
+			select = { backend = { "nui", "builtin" } },
 		},
 	},
 }

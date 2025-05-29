@@ -90,22 +90,14 @@ map("n", "[q", vim.cmd.cprev, { silent = true, desc = "Previous quickfix" })
 map("n", "]q", vim.cmd.cnext, { silent = true, desc = "Next quickfix" })
 
 -- diagnostic
-local diagnostic_goto = function(next, severity)
-	local go = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
-	severity = severity and vim.diagnostic.severity[severity] or nil
-	return function()
-		go({ severity = severity })
-	end
-end
--- -- See `:help vim.diagnostic.*` for documentation on any of the below functions
--- map("n", "<leader>e", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
-map("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostic list" })
-map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
-map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
-map("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
-map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
-map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
-map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
+-- stylua: ignore start
+map("n", "<leader>e", vim.diagnostic.setloclist, { desc = "Diagnostic list" })
+map("n", "]d", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true })<cr>", { desc = "Next Diagnostic" })
+map("n", "[d", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true })<cr>", { desc = "Next Diagnostic" })
+map("n", "[e", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Next Error" })
+map("n", "[e", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Prev Error" })
+map("n", "[w", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Next Warning" })
+map("n", "[w", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Prev Warning" })
 
 -- Terminal Mappings
 map("t", "<esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
@@ -133,8 +125,6 @@ map("n", "<leader>ul", function() require("util").toggle.number() end, { desc = 
 map("n", "<leader>uL", function() require("util").toggle("relativenumber") end, { desc = "Toggle Relative Line Numbers" })
 map("n", "<leader>us", function() require("util").toggle("spell") end, { desc = "Toggle Spelling" })
 map("n", "<leader>uw", function() require("util").toggle("wrap") end, { desc = "Toggle Word Wrap" })
-local conceallevel = vim.o.conceallevel > 0 and vim.o.conceallevel or 3
-map("n", "<leader>uC", function() require("util").toggle("conceallevel", false, {0, conceallevel}) end, { desc = "Toggle Conceal" })
 map("n", "<leader>uf", function() vim.g.disable_autoformat = not vim.g.disable_autoformat vim.notify( (vim.g.disable_autoformat and "Disabled " or "Enabled ") .. "Autoformat", vim.log.levels.INFO, { title = "Option" }) end, { desc = "Toggle Autoformat" })
 -- stylua: ignore end
 
@@ -148,5 +138,3 @@ map("", "S", "<nop>", { silent = true })
 local Util = require("util")
 -- stylua: ignore
 map("n", "<f5>", function() Util.compile_run() end, { desc = "Run file" })
--- stylua: ignore
-map("n", "<leader><leader>st", function() Util.swap_ternary() end, { desc = "Swap ternary" })

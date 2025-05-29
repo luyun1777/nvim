@@ -88,18 +88,6 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 	end,
 })
 
--- Auto create dir when saving a file, in case some intermediate directory does not exist
-vim.api.nvim_create_autocmd({ "BufWritePre" }, {
-	group = augroup("auto_create_dir"),
-	callback = function(event)
-		if event.match:match("^%w%w+:[\\/][\\/]") then
-			return
-		end
-		local file = vim.loop.fs_realpath(event.match) or event.match
-		vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
-	end,
-})
-
 -- Auto set tab's length to 2, while open yaml or markdown file
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("yaml_md"),
@@ -142,24 +130,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
 		end
 
-		if vim.fn.has("nvim-0.10") == 1 then
-			if client.supports_method("textDocument/inlayHint") then
-				vim.lsp.inlay_hint.enable()
-			end
-		end
-
-		-- if client.supports_method("textDocument/codeLens") then
-		-- 	vim.lsp.codelens.refresh()
-		-- 	vim.api.nvim_create_autocmd(
-		-- 		{ "BufEnter", "CursorHold", "InsertLeave" },
-		-- 		{ buffer = bufnr, callback = vim.lsp.codelens.refresh }
-		-- 	)
-		-- end
-
-		vim.keymap.set("n", "<leader>cf", function()
+		vim.keymap.set("n", "<leader>cl", function()
 			vim.lsp.buf.format({ buffer = bufnr, async = true })
-		end, { buffer = bufnr, desc = "Format file" })
-		vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
+		end, { buffer = bufnr, desc = "Format file (Lsp)" })
+		vim.keymap.set("n", "<leader>cL", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
 		vim.keymap.set({ "n", "v" }, "<leader>cc", vim.lsp.codelens.run, { desc = "Run Codelens" })
 		vim.keymap.set("n", "<leader>cC", vim.lsp.codelens.refresh, { desc = "Refresh & Display Codelens" })
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go declaration" })
@@ -167,8 +141,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover" })
 		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "GO implementation" })
 		vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go references" })
-		vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, { buffer = bufnr })
-		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, { buffer = bufnr })
+		vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "signature help" })
+		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "signature help" })
 		vim.keymap.set(
 			"n",
 			"<leader>wa",

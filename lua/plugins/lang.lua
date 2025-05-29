@@ -5,7 +5,7 @@ return {
 		cmd = { "Neogen" },
 		keys = { { "<leader>cd", "<cmd>Neogen<cr>", desc = "Docstrings" } },
 		opts = {
-			snippet_engine = "luasnip",
+			-- snippet_engine = "luasnip",
 			languages = {
 				lua = { template = { annotation_convention = "emmylua" } }, -- "emmylua", "ldoc"
 				python = { template = { annotation_convention = "reST" } }, -- "google_docstrings", "numpydoc", "reST"

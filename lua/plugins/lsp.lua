@@ -11,7 +11,7 @@ return {
 			-- require("neodev").setup({ library = { plugins = {} } })
 
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+			-- capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 			capabilities.textDocument.foldingRange = { -- For nvim-ufo  use
 				dynamicRegistration = false,
 				lineFoldingOnly = true,
@@ -40,7 +40,7 @@ return {
 				border = "rounded",
 				icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" },
 			},
-			github = { download_url_template = "https://ghproxy.cc/https://github.com/%s/releases/download/%s/%s" },
+			github = { download_url_template = "https://ghproxy.net/https://github.com/%s/releases/download/%s/%s" },
 			ensure_installed = {},
 		},
 		config = function(_, opts)

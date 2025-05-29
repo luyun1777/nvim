@@ -20,6 +20,7 @@ vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "
 vim.opt.shortmess:append({ I = true, c = true, C = true })
 
 vim.o.winminwidth = 5 -- Minimum window width
+vim.o.winborder = "rounded"
 vim.o.autowrite = true -- Enable auto write
 -- vim.o.clipboard = "unnamedplus" -- Sync with system clipboard
 vim.o.conceallevel = 2 -- Hide * markup for bold and italic

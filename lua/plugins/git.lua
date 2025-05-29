@@ -45,7 +45,6 @@ return {
                 map("n", "<leader>gB", function() gs.blame() end, "Blame Buffer")
 				map("n", "<leader>gd", gs.diffthis, "Diff This")
 				map("n", "<leader>gD", function() gs.diffthis("~") end, "Diff This ~")
-				map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
 			end,
 		},
 	},
