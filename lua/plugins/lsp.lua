@@ -5,7 +5,7 @@ return {
 		dependencies = {
 			{ "folke/lazydev.nvim", opts = {} },
 			-- { "folke/neodev.nvim", ft = { "lua" } },
-			"williamboman/mason-lspconfig.nvim",
+			"mason-org/mason-lspconfig.nvim",
 		},
 		config = function()
 			-- require("neodev").setup({ library = { plugins = {} } })
@@ -19,19 +19,20 @@ return {
 			require("lspconfig.ui.windows").default_options.border = "rounded"
 			require("mason-lspconfig").setup({
 				ensure_installed = {},
-				handlers = {
-					function(server_name)
-						require("lspconfig")[server_name].setup({
-							capabilities = capabilities,
-						})
-					end,
-				},
+				automatic_enable = true,
+				-- handlers = {
+				-- 	function(server_name)
+				-- 		require("lspconfig")[server_name].setup({
+				-- 			capabilities = capabilities,
+				-- 		})
+				-- 	end,
+				-- },
 			})
 		end,
 	},
 	{
 
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
 		cmd = "Mason",
 		keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
 		build = ":MasonUpdate",

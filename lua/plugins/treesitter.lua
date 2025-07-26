@@ -2,6 +2,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
+		-- TODO:分支将更必为`main`与之前不兼容
 		cmd = {
 			"TSInstall",
 			"TSUninstall",
