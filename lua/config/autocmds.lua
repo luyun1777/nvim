@@ -50,6 +50,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
 		"PlenaryTestPopup",
 		"help",
+		"grug-far",
 		"lspinfo",
 		"notify",
 		"qf",
@@ -62,7 +63,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		"neotest-summary",
 		"neotest-output-panel",
 		"dbout",
-		"gitsigns.blame",
+		"gitsigns-blame",
 	},
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false

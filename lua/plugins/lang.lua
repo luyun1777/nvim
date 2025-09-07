@@ -3,7 +3,7 @@ return {
 	{
 		"danymat/neogen",
 		cmd = { "Neogen" },
-		keys = { { "<leader>cd", "<cmd>Neogen<cr>", desc = "Docstrings" } },
+		keys = { { "<leader>cn", "<cmd>Neogen<cr>", desc = "Generate Annotations (Neogen)" } },
 		opts = {
 			-- snippet_engine = "luasnip",
 			languages = {

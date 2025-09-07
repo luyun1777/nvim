@@ -99,35 +99,35 @@ return {
 	-- 	dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
 	-- 	opts = {},
 	-- },
-	{
-		"xiyaowong/transparent.nvim",
-		cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
-		keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Background Transparent" } },
-		config = function()
-			require("transparent").setup({
-				extra_groups = { "NormalFloat", "NvimTreeNormal" },
-			})
-			require("transparent").clear_prefix("BufferLine")
-			-- require("transparent").clear_prefix("lualine")
-		end,
-	},
+	-- {
+	-- 	"xiyaowong/transparent.nvim",
+	-- 	cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
+	-- 	keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Background Transparent" } },
+	-- 	config = function()
+	-- 		require("transparent").setup({
+	-- 			extra_groups = { "NormalFloat", "NvimTreeNormal" },
+	-- 		})
+	-- 		require("transparent").clear_prefix("BufferLine")
+	-- 		-- require("transparent").clear_prefix("lualine")
+	-- 	end,
+	-- },
 
 	-- Better notification
-	{
-		"rcarriga/nvim-notify",
-		event = "VeryLazy",
-        -- stylua: ignore
-		keys = {
-			{ "<leader>un", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Dismiss All Notifications", },
-		},
-		opts = {
-			render = "compact", -- "defalut", "minimal", "simple", "compact","warpped-compact"
-			-- background_colour = "#000000",
-		},
-		init = function()
-			vim.notify = require("notify")
-		end,
-	},
+	-- {
+	-- 	"rcarriga/nvim-notify",
+	-- 	event = "VeryLazy",
+	--        -- stylua: ignore
+	-- 	keys = {
+	-- 		{ "<leader>un", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Dismiss All Notifications", },
+	-- 	},
+	-- 	opts = {
+	-- 		render = "compact", -- "defalut", "minimal", "simple", "compact","warpped-compact"
+	-- 		-- background_colour = "#000000",
+	-- 	},
+	-- 	init = function()
+	-- 		vim.notify = require("notify")
+	-- 	end,
+	-- },
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
@@ -135,12 +135,13 @@ return {
         keys = {
             { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll Forward", mode = {"i", "n", "s"} },
             { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll Backward", mode = {"i", "n", "s"}},
-			{ "<leader>sn", "<cmd>NoiceHistory ", desc = "Show Notifications History", },
+			{ "<leader>sn", "<cmd>Noice history<cr>", desc = "Show Notifications History", },
+			{ "<leader>un", "<cmd>Noice dismiss<cr>", desc = "Dismiss all messages", },
         },
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
+		-- dependencies = {
+		-- 	"MunifTanjim/nui.nvim",
+		-- "rcarriga/nvim-notify",
+		-- },
 		opts = {
 			lsp = {
 				override = {
@@ -160,12 +161,12 @@ return {
 			vim.o.cmdheight = 0
 		end,
 	},
-	{
-		"stevearc/dressing.nvim",
-		event = "VeryLazy",
-		opts = {
-			input = { default_prompt = "➤ " },
-			select = { backend = { "nui", "builtin" } },
-		},
-	},
+	-- {  -- has been archived
+	-- 	"stevearc/dressing.nvim",
+	-- 	event = "VeryLazy",
+	-- 	opts = {
+	-- 		input = { default_prompt = "➤ " },
+	-- 		select = { backend = { "nui", "builtin" } },
+	-- 	},
+	-- },
 }

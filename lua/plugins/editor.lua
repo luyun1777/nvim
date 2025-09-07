@@ -17,7 +17,6 @@ return {
 		"mikavilpas/yazi.nvim",
 		enabled = vim.fn.executable("yazi") == 1,
 		cmd = "Yazi",
-		event = "User LazyLoad",
 		keys = {
 			{
 				"<leader>-",
@@ -38,19 +37,18 @@ return {
 	-- Better move
 	{
 		"folke/flash.nvim",
-		event = "User LazyLoad",
 		opts = { rainbow = { enable = true } },
 		-- stylua: ignore
 		keys = {
-			{ "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-			{ "S", mode = { "n", }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "s", function() require("flash").jump() end, desc = "Flash" },
+			{ "S", function() require("flash").treesitter() end, desc = "Flash Treesitter" },
 		},
 	},
 	-- Better fold
 	{
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async" },
-		event = "User LazyLoad",
+		keys = { { "za", "za" }, { "zA", "zA" } },
 		opts = {
 			provider_selector = function(_, filetype, buftype)
 				return (filetype == "" or buftype == "nofile") and "indent" or { "treesitter", "indent" }
@@ -75,6 +73,29 @@ return {
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		opts = {},
+	},
+	-- search/replace in multiple files
+	{
+		"MagicDuck/grug-far.nvim",
+		opts = { headerMaxWidth = 80 },
+		cmd = "GrugFar",
+		keys = {
+			{
+				"<leader>sr",
+				function()
+					local grug = require("grug-far")
+					local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
+					grug.open({
+						transient = true,
+						prefills = {
+							filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+						},
+					})
+				end,
+				mode = { "n", "v" },
+				desc = "Search and Replace",
+			},
+		},
 	},
 
 	{ -- Rainbow delimiters

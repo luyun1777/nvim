@@ -8,7 +8,7 @@ return {
 			{ "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "ToggleTerm float" },
 			{ "<leader>th", "<cmd>ToggleTerm direction=horizontal size=15<cr>", desc = "ToggleTerm horizontal" },
 			{ "<leader>tv", "<cmd>ToggleTerm direction=vertical size=50<cr>", desc = "ToggleTerm vertical" },
-			{ "<leader>gg", "<cmd>lua Toggle_Lazygit()<cr>", desc = "ToggleTerm Lazygit" },
+			-- { "<leader>gg", "<cmd>lua Toggle_Lazygit()<cr>", desc = "ToggleTerm Lazygit" },
 		},
 		opts = {
 			direction = "float",
@@ -16,19 +16,19 @@ return {
 			float_opts = { border = "curved" },
 			open_mapping = [[<c-t>]],
 		},
-		init = function()
-			local Terminal = require("toggleterm.terminal").Terminal
+		-- init = function()
+		-- 	local Terminal = require("toggleterm.terminal").Terminal
 
-			local _lazygit = Terminal:new({ cmd = "lazygit", hidden = true, dir = "git_dir", direction = "float" })
+		-- 	local _lazygit = Terminal:new({ cmd = "lazygit", hidden = true, dir = "git_dir", direction = "float" })
 
-			function Toggle_Lazygit()
-				if vim.fn.executable("lazygit") == 1 then
-					_lazygit:toggle()
-				else
-					vim.notify("**lazygit** is not founded in PATH, please install it.", vim.log.levels.WARN)
-				end
-			end
-		end,
+		-- 	function Toggle_Lazygit()
+		-- 		if vim.fn.executable("lazygit") == 1 then
+		-- 			_lazygit:toggle()
+		-- 		else
+		-- 			vim.notify("**lazygit** is not founded in PATH, please install it.", vim.log.levels.WARN)
+		-- 		end
+		-- 	end
+		-- end,
 	},
 	-- {
 	-- 	"Vigemus/iron.nvim",

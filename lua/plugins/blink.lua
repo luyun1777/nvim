@@ -3,7 +3,13 @@ return {
 	envent = "User LazyLoad",
 	version = "1.*",
 	dependencies = {
-		-- { "L3MON4D3/LuaSnip", version = "v2.*" },
+		-- {
+		-- 	"L3MON4D3/LuaSnip",
+		-- 	version = "v2.*",
+		-- 	config = function()
+		-- 		require("luasnip.loaders.from_vscode").lazy_load()
+		-- 	end,
+		-- },
 		{ "rafamadriz/friendly-snippets" },
 		{ "onsails/lspkind.nvim" },
 	},

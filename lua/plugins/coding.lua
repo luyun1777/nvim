@@ -32,61 +32,61 @@ return {
 	-- 		line_num = { use_treesitter = true },
 	-- 	},
 	-- },
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		event = "User LazyLoad",
-		main = "ibl",
-		opts = {
-			indent = {
-				char = "|",
-				tab_char = { "│", "¦", "┆", "┊" },
-			},
-			scope = { enabled = false },
-			exclude = {
-				filetypes = {
-					"help",
-					"alpha",
-					"dashboard",
-					"NvimTree",
-					"Trouble",
-					"trouble",
-					"lazy",
-					"mason",
-					"notify",
-					"toggleterm",
-					"lazyterm",
-				},
-			},
-		},
-	},
-	{
-		"echasnovski/mini.indentscope",
-		event = "User LazyLoad",
-		opts = {
-			symbol = "│",
-			options = { try_as_border = true },
-		},
-		init = function()
-			vim.api.nvim_create_autocmd("FileType", {
-				pattern = {
-					"help",
-					"alpha",
-					"dashboard",
-					"NvimTree",
-					"Trouble",
-					"trouble",
-					"lazy",
-					"mason",
-					"notify",
-					"toggleterm",
-					"lazyterm",
-				},
-				callback = function()
-					vim.b.miniindentscope_disable = true
-				end,
-			})
-		end,
-	},
+	-- {
+	-- 	"lukas-reineke/indent-blankline.nvim",
+	-- 	event = "User LazyLoad",
+	-- 	main = "ibl",
+	-- 	opts = {
+	-- 		indent = {
+	-- 			char = "|",
+	-- 			tab_char = { "│", "¦", "┆", "┊" },
+	-- 		},
+	-- 		scope = { enabled = false },
+	-- 		exclude = {
+	-- 			filetypes = {
+	-- 				"help",
+	-- 				"alpha",
+	-- 				"dashboard",
+	-- 				"NvimTree",
+	-- 				"Trouble",
+	-- 				"trouble",
+	-- 				"lazy",
+	-- 				"mason",
+	-- 				"notify",
+	-- 				"toggleterm",
+	-- 				"lazyterm",
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
+	-- {
+	-- 	"echasnovski/mini.indentscope",
+	-- 	event = "User LazyLoad",
+	-- 	opts = {
+	-- 		symbol = "│",
+	-- 		options = { try_as_border = true },
+	-- 	},
+	-- 	init = function()
+	-- 		vim.api.nvim_create_autocmd("FileType", {
+	-- 			pattern = {
+	-- 				"help",
+	-- 				"alpha",
+	-- 				"dashboard",
+	-- 				"NvimTree",
+	-- 				"Trouble",
+	-- 				"trouble",
+	-- 				"lazy",
+	-- 				"mason",
+	-- 				"notify",
+	-- 				"toggleterm",
+	-- 				"lazyterm",
+	-- 			},
+	-- 			callback = function()
+	-- 				vim.b.miniindentscope_disable = true
+	-- 			end,
+	-- 		})
+	-- 	end,
+	-- },
 
 	-- Formatting
 	{
