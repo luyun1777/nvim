@@ -48,7 +48,7 @@ return {
 	{
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async" },
-		keys = { { "za", "za" }, { "zA", "zA" } },
+		event = "VeryLazy",
 		opts = {
 			provider_selector = function(_, filetype, buftype)
 				return (filetype == "" or buftype == "nofile") and "indent" or { "treesitter", "indent" }
@@ -59,12 +59,12 @@ return {
 	-- Better surrounding
 	{
 		"kylechui/nvim-surround",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		opts = {},
 	},
 	{
 		"dstein64/nvim-scrollview",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		opts = {},
 	},
 
@@ -100,11 +100,11 @@ return {
 
 	{ -- Rainbow delimiters
 		"hiphish/rainbow-delimiters.nvim",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 	},
 	{
 		"RRethy/vim-illuminate",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 	},
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",
@@ -158,6 +158,7 @@ return {
 					{ "<leader>c", group = "code" },
 					{ "<leader>f", group = "file/find" },
 					{ "<leader>g", group = "git" },
+					{ "<leader>gh", group = "hunks" },
 					{ "<leader>s", group = "search" },
 					{ "<leader>t", group = "terminal/translate" },
 					{ "<leader>u", group = "ui" },

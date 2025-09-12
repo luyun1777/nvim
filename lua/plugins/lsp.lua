@@ -1,10 +1,9 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		dependencies = {
 			{ "folke/lazydev.nvim", opts = {} },
-			-- { "folke/neodev.nvim", ft = { "lua" } },
 			"mason-org/mason-lspconfig.nvim",
 		},
 		config = function()
@@ -20,13 +19,6 @@ return {
 			require("mason-lspconfig").setup({
 				ensure_installed = {},
 				automatic_enable = true,
-				-- handlers = {
-				-- 	function(server_name)
-				-- 		require("lspconfig")[server_name].setup({
-				-- 			capabilities = capabilities,
-				-- 		})
-				-- 	end,
-				-- },
 			})
 		end,
 	},

@@ -9,23 +9,23 @@ return {
 	{
 		"folke/todo-comments.nvim",
 		cmd = { "TodoTrouble", "TodoFzfLua" },
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		opts = {},
         -- stylua: ignore
         keys = {
             { "]t",         function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
             { "[t",         function() require("todo-comments").jump_prev() end, desc = "Previous Todo Comment" },
-            { "<leader>xt", "<cmd>TodoTrouble<cr>",                              desc = "Todo (Trouble)" },
-            { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",      desc = "Todo/Fix/Fixme(Trouble)" },
-            { "<leader>st", "<cmd>TodoFzfLua<cr>",                            desc = "Todo" },
-            { "<leader>sT", "<cmd>TodoFzfLua keywords=TODO,FIX,FIXME<cr>",    desc = "Todo/Fix/Fixme" },
+            -- { "<leader>xt", "<cmd>TodoTrouble<cr>",                              desc = "Todo (Trouble)" },
+            -- { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",      desc = "Todo/Fix/Fixme(Trouble)" },
+            -- { "<leader>st", "<cmd>TodoFzfLua<cr>",                            desc = "Todo" },
+            -- { "<leader>sT", "<cmd>TodoFzfLua keywords=TODO,FIX,FIXME<cr>",    desc = "Todo/Fix/Fixme" },
         },
 	},
 
 	-- Indent
 	-- {
 	-- 	"shellRaining/hlchunk.nvim",
-	-- 	event = "User LazyLoad",
+	-- 	event = "VeryLazy",
 	-- 	opts = {
 	-- 		indent = { enable = true, chars = { "│", "¦", "┆", "┊" }, use_treesitter = false },
 	-- 		blank = { enable = false },
@@ -34,7 +34,7 @@ return {
 	-- },
 	-- {
 	-- 	"lukas-reineke/indent-blankline.nvim",
-	-- 	event = "User LazyLoad",
+	-- 	event = "VeryLazy",
 	-- 	main = "ibl",
 	-- 	opts = {
 	-- 		indent = {
@@ -61,7 +61,7 @@ return {
 	-- },
 	-- {
 	-- 	"echasnovski/mini.indentscope",
-	-- 	event = "User LazyLoad",
+	-- 	event = "VeryLazy",
 	-- 	opts = {
 	-- 		symbol = "│",
 	-- 		options = { try_as_border = true },
@@ -130,7 +130,7 @@ return {
 	-- Linting
 	{
 		"mfussenegger/nvim-lint",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		opts = {
 			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
 			linters_by_ft = {
@@ -195,7 +195,7 @@ return {
 	-- Project mangagement
 	-- {
 	-- 	"ahmedkhalf/project.nvim",
-	-- 	event = "User LazyLoad",
+	-- 	event = "VeryLazy",
 	-- 	config = function()
 	-- 		require("project_nvim").setup({})
 	-- 		require("telescope").load_extension("projects")

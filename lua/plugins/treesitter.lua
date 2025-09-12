@@ -11,7 +11,7 @@ return {
 			"TSInstallInfo",
 			"TSInstallFromGrammar",
 		},
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		keys = {
 			{ "<cr>", desc = "Increment Selection" },
 			{ "<bs>", desc = "Decrement Selection", mode = "x" },
@@ -142,7 +142,7 @@ return {
 	},
 	{
 		"windwp/nvim-ts-autotag",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		opts = {},
 	},
 }

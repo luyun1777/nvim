@@ -94,9 +94,9 @@ map("n", "]q", vim.cmd.cnext, { silent = true, desc = "Next quickfix" })
 map("n", "<leader>e", vim.diagnostic.setloclist, { desc = "Diagnostic list" })
 map("n", "]d", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true })<cr>", { desc = "Next Diagnostic" })
 map("n", "[d", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true })<cr>", { desc = "Next Diagnostic" })
-map("n", "[e", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Next Error" })
+map("n", "]e", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Next Error" })
 map("n", "[e", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Prev Error" })
-map("n", "[w", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Next Warning" })
+map("n", "]w", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Next Warning" })
 map("n", "[w", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Prev Warning" })
 
 -- Terminal Mappings

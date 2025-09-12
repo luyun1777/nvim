@@ -1,64 +1,14 @@
 return {
-	-- Dashboard
-	{
-		"goolord/alpha-nvim",
-		event = "VimEnter",
-		enabled = true,
-		init = false,
-		opts = function()
-			local dashboard = require("alpha.themes.dashboard")
-			dashboard.section.buttons.val = {
-				dashboard.button("f", " " .. " Find file", "<cmd>FzfLua files<cr>"),
-				dashboard.button("n", " " .. " New file", "<cmd>ene<BAR>startinsert<cr>"),
-				dashboard.button("r", " " .. " Recent files", "<cmd>FzfLua oldfiles<cr>"),
-				dashboard.button("l", "󰒲 " .. " Lazy", "<cmd>Lazy<cr>"),
-				dashboard.button("q", " " .. " Quit", "<cmd>qa<cr>"),
-			}
-			dashboard.opts.layout[1].val = 5
-			return dashboard
-		end,
-		config = function(_, dashboard)
-			if vim.o.filetype == "lazy" then
-				vim.cmd.close()
-				vim.api.nvim_create_autocmd("User", {
-					once = true,
-					pattern = "AlphaReady",
-					callback = function()
-						require("lazy").show()
-					end,
-				})
-			end
-
-			require("alpha").setup(dashboard.opts)
-
-			vim.api.nvim_create_autocmd("User", {
-				once = true,
-				pattern = "LazyVimStarted",
-				callback = function()
-					local stats = require("lazy").stats()
-					local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-					dashboard.section.footer.val = "⚡ Neovim loaded "
-						.. stats.loaded
-						.. "/"
-						.. stats.count
-						.. " plugins in "
-						.. ms
-						.. "ms"
-					pcall(vim.cmd.AlphaRedraw)
-				end,
-			})
-		end,
-	},
 	-- Statusline
 	{
 		"nvim-lualine/lualine.nvim",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		opts = {},
 	},
 	-- Tabline
 	{
 		"akinsho/bufferline.nvim",
-		event = "User LazyLoad",
+		event = "VeryLazy",
 		keys = {
 			{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
 			{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
@@ -161,12 +111,4 @@ return {
 			vim.o.cmdheight = 0
 		end,
 	},
-	-- {  -- has been archived
-	-- 	"stevearc/dressing.nvim",
-	-- 	event = "VeryLazy",
-	-- 	opts = {
-	-- 		input = { default_prompt = "➤ " },
-	-- 		select = { backend = { "nui", "builtin" } },
-	-- 	},
-	-- },
 }

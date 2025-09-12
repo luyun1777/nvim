@@ -1,6 +1,6 @@
 return {
 	"saghen/blink.cmp",
-	envent = "User LazyLoad",
+	envent = "VeryLazy",
 	version = "1.*",
 	dependencies = {
 		-- {
