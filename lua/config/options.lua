@@ -17,7 +17,7 @@ vim.o.guifont = "FiraCode Nerd Font Mono:h16:qDRAFT,JetBrainsMono Nerd Font Mono
 vim.opt.diffopt:append({ "context:3", "vertical", "followwrap" }) -- beterr diff
 vim.opt.fillchars = { foldopen = "", foldclose = "" }
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
-vim.opt.shortmess:append({ I = true, c = true, C = true })
+vim.opt.shortmess:append({ c = true, C = true })
 
 vim.o.winminwidth = 5 -- Minimum window width
 vim.o.winborder = "rounded"
