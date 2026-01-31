@@ -3,14 +3,10 @@ return {
 		"neovim/nvim-lspconfig",
 		event = "VeryLazy",
 		dependencies = {
-			{ "folke/lazydev.nvim", opts = {} },
 			"mason-org/mason-lspconfig.nvim",
 		},
 		config = function()
-			-- require("neodev").setup({ library = { plugins = {} } })
-
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			-- capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 			capabilities.textDocument.foldingRange = { -- For nvim-ufo  use
 				dynamicRegistration = false,
 				lineFoldingOnly = true,
@@ -47,19 +43,26 @@ return {
 					})
 				end, 100)
 			end)
-			local function ensure_installed()
+			mr.refresh(function()
 				for _, tool in ipairs(opts.ensure_installed) do
 					local p = mr.get_package(tool)
 					if not p:is_installed() then
 						p:install()
 					end
 				end
-			end
-			if mr.refresh then
-				mr.refresh(ensure_installed)
-			else
-				ensure_installed()
-			end
+			end)
 		end,
+	},
+	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		cmd = "LazyDev",
+		opts = {
+			library = {
+				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				{ path = "snacks.nvim", words = { "Snacks" } },
+				{ path = "lazy.nvim", words = { "LazyVim" } },
+			},
+		},
 	},
 }

@@ -12,8 +12,8 @@ map("n", "<leader>rc", "<cmd>e $MYVIMRC<cr>,", { silent = true, desc = "Edit con
 -- better indent
 map("n", ">", ">>", { silent = true })
 map("n", "<", "<<", { silent = true })
-map("v", ">", ">gv", { silent = true })
-map("v", "<", "<gv", { silent = true })
+map({ "v", "x" }, ">", ">gv", { silent = true })
+map({ "v", "x" }, "<", "<gv", { silent = true })
 
 map("", "x", '"_x', { silent = true })
 map("", "X", '"_X', { silent = true })
@@ -91,6 +91,7 @@ map("n", "]q", vim.cmd.cnext, { silent = true, desc = "Next quickfix" })
 
 -- diagnostic
 -- stylua: ignore start
+map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "<leader>e", vim.diagnostic.setloclist, { desc = "Diagnostic list" })
 map("n", "]d", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true })<cr>", { desc = "Next Diagnostic" })
 map("n", "[d", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true })<cr>", { desc = "Next Diagnostic" })

@@ -67,7 +67,16 @@ vim.api.nvim_create_autocmd("FileType", {
 	},
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false
-		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+		vim.schedule(function()
+			vim.keymap.set("n", "q", function()
+				vim.cmd("close")
+				pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+			end, {
+				buffer = event.buf,
+				silent = true,
+				desc = "Quit buffer",
+			})
+		end)
 	end,
 })
 
@@ -98,17 +107,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt_local.shiftwidth = 2
 		vim.opt_local.softtabstop = 2
 		vim.opt_local.expandtab = false
-	end,
-})
-
--- 用o换行不要延续注释
-vim.api.nvim_create_autocmd("BufEnter", {
-	group = augroup("NoCommentWithO"),
-	pattern = "*",
-	callback = function()
-		vim.opt.formatoptions = vim.opt.formatoptions
-			- "o" -- O and o, don't continue comments
-			+ "r" -- But do continue when pressing enter.
 	end,
 })
 

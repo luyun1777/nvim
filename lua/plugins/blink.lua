@@ -51,17 +51,12 @@ return {
 										icon = dev_icon
 									end
 								else
-									icon = require("lspkind").symbolic(ctx.kind, {
-										mode = "symbol",
-									})
+									icon = require("lspkind").symbol_map[ctx.kind] or ""
 								end
 
 								return icon .. ctx.icon_gap
 							end,
 
-							-- Optionally, use the highlight groups from nvim-web-devicons
-							-- You can also add the same function for `kind.highlight` if you want to
-							-- keep the highlight groups in sync with the icons.
 							highlight = function(ctx)
 								local hl = ctx.kind_hl
 								if vim.tbl_contains({ "Path" }, ctx.source_name) then
