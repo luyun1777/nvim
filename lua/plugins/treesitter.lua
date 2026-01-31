@@ -2,142 +2,120 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		-- TODO:主分支将由`master`更变为`main`与之前不兼容
-		branch = "master",
+		branch = "main",
 		cmd = {
 			"TSInstall",
-			"TSUninstall",
-			"TSUpdate",
-			"TSInstallInfo",
 			"TSInstallFromGrammar",
+			"TSUpdate",
+			"TSUninstall",
+			"TSLog",
 		},
 		event = "VeryLazy",
-		keys = {
-			{ "<cr>", desc = "Increment Selection" },
-			{ "<bs>", desc = "Decrement Selection", mode = "x" },
+		opts = {
+			highlight = { enable = true },
+			folds = { enable = true },
+			indent = { enabled = true },
 		},
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter-textobjects",
-		},
-		-- config = function()
-		-- 	local nvim_treesitter = require("nvim-treesitter")
-		-- 	nvim_treesitter.setup()
+		config = function(_, opts)
+			local nvim_treesitter = require("nvim-treesitter")
+			nvim_treesitter.setup(opts)
 
-		-- 	local ensure_installed = {
-		-- 		"lua",
-		-- 		"toml",
-		-- 		"bash",
-		-- 		"c",
-		-- 		"lua",
-		-- 		"json",
-		-- 		"jsonc",
-		-- 		"markdown",
-		-- 		"markdown_inline",
-		-- 		"python",
-		-- 		"rust",
-		-- 		"query",
-		-- 		"regex",
-		-- 		"vim",
-		-- 		"vimdoc",
-		-- 		"yaml",
-		-- 	}
-		-- 	local pattern = {}
-		-- 	for _, parser in ipairs(ensure_installed) do
-		-- 		-- neovim 自己的 api，找不到这个 parser 会报错
-		-- 		local has_parser, _ = pcall(vim.treesitter.language.inspect, parser)
+			local ensure_installed = {
+				"lua",
+				"toml",
+				"bash",
+				"c",
+				"lua",
+				"json",
+				"jsonc",
+				"markdown",
+				"markdown_inline",
+				"python",
+				"rust",
+				"query",
+				"regex",
+				"vim",
+				"vimdoc",
+				"yaml",
+			}
+			local pattern = {}
+			for _, parser in ipairs(ensure_installed) do
+				local has_parser, _ = pcall(vim.treesitter.language.inspect, parser)
 
-		-- 		if not has_parser then
-		-- 			-- install 是 nvim-treesitter 的新 api，默认情况下无论是否安装 parser 都会执行，所以这里我们做一个判断
-		-- 			nvim_treesitter.install(parser)
-		-- 		else
-		-- 			-- 新版本需要手动启动高亮，但没有安装相应 parser会导致报错
-		-- 			pattern = vim.tbl_extend("keep", pattern, vim.treesitter.language.get_filetypes(parser))
-		-- 		end
-		-- 	end
-		-- 	vim.api.nvim_create_autocmd("FileType", {
-		-- 		pattern = pattern,
-		-- 		callback = function()
-		-- 			vim.treesitter.start()
-		-- 			vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-		-- 		end,
-		-- 	})
-		-- 	-- VeryLazy 晚于 FileType，所以需要手动触发一下
-		-- 	vim.api.nvim_exec_autocmds("FileType", {})
-		-- end,
-		config = function()
-			-- vim.o.foldmethod = "expr"
-			-- vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-			require("nvim-treesitter.configs").setup({
-				modules = {},
-				sync_install = false,
-				ignore_install = {},
-				auto_install = false,
-				autotag = { enable = true },
-				highlight = { enable = true },
-				indent = { enable = true },
-				incremental_selection = {
-					enable = true,
-					keymaps = {
-						init_selection = "<cr>",
-						node_incremental = "<cr>",
-						node_decremental = "<bs>",
-						scope_incremental = "<tab>",
-					},
-				},
-				textobjects = {
-					select = {
-						enable = true,
-						keymaps = {
-							["af"] = "@function.outer",
-							["if"] = "@function.inner",
-							["ac"] = "@class.outer",
-							["ic"] = "@class.inner",
-							["aa"] = "@parameter.outer",
-							["ia"] = "@parameter.inner",
-						},
-					},
-					move = {
-						enable = true,
-						goto_next_start = { ["]m"] = "@function.outer", ["]z"] = "@fold" },
-						goto_next_end = { ["]M"] = "@function.outer", ["]Z"] = "@fold" },
-						goto_previous_start = { ["[m"] = "@function.outer", ["[z"] = "@fold" },
-						goto_previous_end = { ["[M"] = "@function.outer", ["[Z"] = "@fold" },
-						goto_next = { ["]C"] = "@class.outer" },
-						goto_previous = { ["[C"] = "@class.outer" },
-					},
-					swap = {
-						enable = true,
-						swap_next = { ["<leader>a"] = "@parameter.inner" },
-						swap_previous = { ["<leader>A"] = "@parameter.inner" },
-					},
-					lsp_interop = {
-						enable = true,
-						border = "rounded",
-						peek_definition_code = {
-							["<leader>df"] = "@function.outer",
-							["<leader>dF"] = "@class.outer",
-						},
-					},
-				},
-				ensure_installed = {
-					"bash",
-					"c",
-					"html",
-					"json",
-					"jsonc",
-					"lua",
-					"markdown",
-					"markdown_inline",
-					"python",
-					"rust",
-					"query",
-					"regex",
-					"vim",
-					"vimdoc",
-					"xml",
-					"yaml",
-				},
+				if not has_parser then
+					nvim_treesitter.install(parser, { summary = true })
+				else
+					pattern = vim.tbl_extend("keep", pattern, vim.treesitter.language.get_filetypes(parser))
+				end
+			end
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = pattern,
+				callback = function()
+					vim.treesitter.start()
+					vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+					vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+					vim.wo[0][0].foldmethod = "expr"
+				end,
 			})
+			-- vim.api.nvim_exec_autocmds("FileType", {})
+		end,
+	},
+	{
+		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
+		config = function()
+			require("nvim-treesitter-textobjects").setup({
+				move = { set_jumps = true },
+			})
+
+			-- select
+			vim.keymap.set({ "x", "o" }, "af", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+			end)
+			vim.keymap.set({ "x", "o" }, "if", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+			end)
+			vim.keymap.set({ "x", "o" }, "ac", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+			end)
+			vim.keymap.set({ "x", "o" }, "ic", function()
+				require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+			end)
+
+			-- swap
+			vim.keymap.set("n", "<leader>a", function()
+				require("nvim-treesitter-textobjects.swap").swap_next("@parameter.inner")
+			end)
+			vim.keymap.set("n", "<leader>A", function()
+				require("nvim-treesitter-textobjects.swap").swap_previous("@parameter.outer")
+			end)
+
+            -- stylua: ignore
+            local moves = {  -- textobjects
+                goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+                goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+                goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+                goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner", },
+            }
+			for method, keymaps in pairs(moves) do
+				for key, query in pairs(keymaps) do
+					local queries = type(query) == "table" and query or { query }
+					local parts = {}
+					for _, q in ipairs(queries) do
+						local part = q:gsub("@", ""):gsub("%..*", "")
+						part = part:sub(1, 1):upper() .. part:sub(2)
+						table.insert(parts, part)
+					end
+					local desc = table.concat(parts, " or ")
+					desc = (key:sub(1, 1) == "[" and "Prev " or "Next ") .. desc
+					desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and " End" or " Start")
+					if not (vim.wo.diff and key:find("[cC]")) then
+						vim.keymap.set({ "n", "x", "o" }, key, function()
+							require("nvim-treesitter-textobjects.move")[method](query, "textobjects")
+						end, { desc = desc, silent = true })
+					end
+				end
+			end
 		end,
 	},
 	{

@@ -6,11 +6,6 @@ return {
 			"mason-org/mason-lspconfig.nvim",
 		},
 		config = function()
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities.textDocument.foldingRange = { -- For nvim-ufo  use
-				dynamicRegistration = false,
-				lineFoldingOnly = true,
-			}
 			require("lspconfig.ui.windows").default_options.border = "rounded"
 			require("mason-lspconfig").setup({
 				ensure_installed = {},
