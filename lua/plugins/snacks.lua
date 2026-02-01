@@ -1,9 +1,3 @@
-local shell = vim.fn.executable("fish") == 1 and "fish"
-	or vim.fn.executable("zsh") == 1 and "zsh"
-	or (vim.fn.executable("bash") and "bash" or vim.fn.executable("pwsh") and "pwsh")
-	or vim.fn.executable("cmd") and "cmd"
-	or nil
-
 return {
 	"folke/snacks.nvim",
 	priority = 1000,
@@ -36,7 +30,7 @@ return {
 		scope = { enabled = true },
 		scroll = { enabled = true },
 		statuscolumn = { enabled = true },
-		terminal = { enabled = true, win = { position = "float", border = "rounded" }, shell = shell },
+		terminal = { enabled = true, win = { position = "float", border = "rounded" } },
 		words = { enabled = true },
 	},
 	keys = {
@@ -111,8 +105,8 @@ return {
         { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
         { "<leader>tt", function() Snacks.terminal() end, desc = "Terminal (Float)" },
         { "<leader>tf", function() Snacks.terminal() end, desc = "Terminal (Float)" },
-        { "<leader>th", function() Snacks.terminal(shell, {count = 2, win={position="bottom", height = 0.4}}) end, desc = "Terminal (Bottom)" },
-        { "<leader>tv", function() Snacks.terminal(shell, {count = 3, win={position="right", width = 0.3}}) end, desc = "Terminal (Right)" },
+        { "<leader>th", function() Snacks.terminal(nil, { count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom)" },
+        { "<leader>tv", function() Snacks.terminal(nil, { count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right)" },
         { "<c-/>",      function() Snacks.terminal.toggle() end, desc = "Terminal (Toggle)" },
         { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore", mode = { "n", "t" } },
         { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },

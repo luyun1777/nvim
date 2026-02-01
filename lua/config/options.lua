@@ -7,6 +7,12 @@ vim.g.localleader = "\\"
 
 vim.g.disable_autoformat = false
 
+vim.o.shell = vim.fn.executable("fish") == 1 and "fish"
+	or vim.fn.executable("zsh") == 1 and "zsh"
+	or vim.fn.executable("bash") and "bash"
+	or vim.fn.executable("pwsh") and "pwsh"
+	or vim.fn.executable("cmd") and "cmd"
+	or nil
 vim.o.fileformats = "unix,dos,mac"
 vim.o.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
 vim.o.fileencoding = "utf-8"

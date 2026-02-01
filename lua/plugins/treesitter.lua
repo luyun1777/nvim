@@ -21,21 +21,21 @@ return {
 			nvim_treesitter.setup(opts)
 
 			local ensure_installed = {
-				"lua",
-				"toml",
 				"bash",
 				"c",
-				"lua",
+				"html",
 				"json",
-				"jsonc",
+				"lua",
 				"markdown",
 				"markdown_inline",
 				"python",
-				"rust",
 				"query",
 				"regex",
+				"rust",
+				"toml",
 				"vim",
 				"vimdoc",
+				"xml",
 				"yaml",
 			}
 			local pattern = {}
@@ -43,7 +43,7 @@ return {
 				local has_parser, _ = pcall(vim.treesitter.language.inspect, parser)
 
 				if not has_parser then
-					nvim_treesitter.install(parser, { summary = true })
+					nvim_treesitter.install(parser)
 				else
 					pattern = vim.tbl_extend("keep", pattern, vim.treesitter.language.get_filetypes(parser))
 				end
@@ -53,11 +53,10 @@ return {
 				callback = function()
 					vim.treesitter.start()
 					vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-					vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-					vim.wo[0][0].foldmethod = "expr"
+					vim.wo.foldmethod = "expr"
+					vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 				end,
 			})
-			-- vim.api.nvim_exec_autocmds("FileType", {})
 		end,
 	},
 	{

@@ -4,14 +4,13 @@
 
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org) `npm config set registry https://registry.npmmirror.com/`
-- a C compiler for `nvim-treesitter`
 - [Python](https://www.python.org) `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
 - A [Nerd Font](https://www.nerdfonts.com/) (optional, but strongly recommended)
 - for `nvim-treesitter`
-  Neovim 0.11.0 or later (nightly)
-  tar and curl in your path
-  tree-sitter-cli (0.26.1 or later)
-  a C compiler in your path (see https://docs.rs/cc/latest/cc/#compile-time-requirements) for `Windows` [MinGW-64](https://www.mingw-w64.org/) or [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries) and more
+  - Neovim 0.11.0 or later (nightly)
+  - tar and curl in your path
+  - tree-sitter-cli (0.26.1 or later)
+  - a C compiler in your path (see https://docs.rs/cc/latest/cc/#compile-time-requirements) for `Windows` see [MinGW-64](https://www.mingw-w64.org/) or [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries)
 
 - optional
   - live grep: [ripgrep](https://github.com/BurntSushi/ripgrep)
