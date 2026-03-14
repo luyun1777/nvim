@@ -113,20 +113,23 @@ map("t", "<c-/>", "<cmd>close<cr>", { desc = "Hide Terminal" })
 -- lazy
 map("n", "<leader>l", "<cmd>Lazy<cr>", { desc = "Lazy" })
 
+local Util = require("util")
 -- stylua: ignore start
 -- toggle options
-map("n", "<leader>ub", function() require("util").toggle("background", false, {"light", "dark"}) end, { desc = "Toggle Background" })
+map("n", "<leader>ub", function() Util.toggle("background", false, {"light", "dark"}) end, { desc = "Toggle Background" })
+map("n", "<leader>ul", function() Util.toggle.number() end, { desc = "Toggle Line Numbers" })
+map("n", "<leader>uL", function() Util.toggle("relativenumber") end, { desc = "Toggle Relative Line Numbers" })
+map("n", "<leader>us", function() Util.toggle("spell") end, { desc = "Toggle Spelling" })
+map("n", "<leader>uw", function() Util.toggle("wrap") end, { desc = "Toggle Word Wrap" })
+
 map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, { desc = "Toggle Diagnostics" })
-
 if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
-    map( "n", "<leader>uh", function() require("util").toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
+    vim.lsp.inlay_hint.enable()
+    map("n", "<leader>uh", function() Util.toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
 end
-
-map("n", "<leader>ul", function() require("util").toggle.number() end, { desc = "Toggle Line Numbers" })
-map("n", "<leader>uL", function() require("util").toggle("relativenumber") end, { desc = "Toggle Relative Line Numbers" })
-map("n", "<leader>us", function() require("util").toggle("spell") end, { desc = "Toggle Spelling" })
-map("n", "<leader>uw", function() require("util").toggle("wrap") end, { desc = "Toggle Word Wrap" })
 map("n", "<leader>uf", function() vim.g.disable_autoformat = not vim.g.disable_autoformat vim.notify( (vim.g.disable_autoformat and "Disabled " or "Enabled ") .. "Autoformat", vim.log.levels.INFO, { title = "Option" }) end, { desc = "Toggle Autoformat" })
+
+map("n", "<f5>", function() Util.compile_run() end, { desc = "Run file" })
 -- stylua: ignore end
 
 -- Useful actions
@@ -135,7 +138,3 @@ map("i", "<s-enter>", "<esc>o", { silent = true })
 -- Disable `s`、`S`
 map("", "s", "<nop>", { silent = true })
 map("", "S", "<nop>", { silent = true })
-
-local Util = require("util")
--- stylua: ignore
-map("n", "<f5>", function() Util.compile_run() end, { desc = "Run file" })

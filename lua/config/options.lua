@@ -7,18 +7,28 @@ vim.g.localleader = "\\"
 
 vim.g.disable_autoformat = false
 
-vim.o.shell = vim.fn.executable("fish") == 1 and "fish"
-	or vim.fn.executable("zsh") == 1 and "zsh"
-	or vim.fn.executable("bash") and "bash"
-	or vim.fn.executable("pwsh") and "pwsh"
-	or vim.fn.executable("cmd") and "cmd"
-	or nil
+vim.o.shell = vim.fn.executable("fish") == 1 and "fish" or vim.fn.executable("pwsh") and "pwsh" or nil
+if vim.o.shell == "pwsh" then
+	vim.o.shellcmdflag =
+		"-NoProfile -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues['Out-File:Encoding']='utf8';$PSStyle.OutputRendering='plaintext';Remove-Alias -Force -ErrorAction SilentlyContinue tee;"
+
+	-- Setting shell redirection
+	vim.o.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
+
+	-- Setting shell pipe
+	vim.o.shellpipe = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
+
+	-- Setting shell quote options
+	vim.o.shellquote = ""
+	vim.o.shellxquote = ""
+end
+
 vim.o.fileformats = "unix,dos,mac"
 vim.o.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
 vim.o.fileencoding = "utf-8"
 vim.o.guicursor =
 	"n:block-blinkwait0,i-ci:ver20-iCursor-blinkwait300-blinkon250-blinkoff200,c-r-cr-o:hor10-block-blinkwait300-blinkon250-blinkoff200"
-vim.o.guifont = "FiraCode Nerd Font Mono:h16:qDRAFT,JetBrainsMono Nerd Font Mono:h16:b:cANSI:qDRAFT,Consolas:h16"
+vim.o.guifont = "FiraCode Nerd Font Mono:h16:qDRAFT,LXGW WenKai Mono:16,Consolas:h16"
 
 vim.opt.diffopt:append({ "context:3", "vertical", "followwrap" }) -- beterr diff
 vim.opt.fillchars = { foldopen = "", foldclose = "", fold = " ", foldsep = " ", diff = "╱", eob = " " }
