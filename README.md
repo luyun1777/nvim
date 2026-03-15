@@ -2,17 +2,11 @@
 
 ## Requirements
 
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org) `npm config set registry https://registry.npmmirror.com/`
-- [Python](https://www.python.org) `pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple`
-- A [Nerd Font](https://www.nerdfonts.com/) (optional, but strongly recommended)
-- for `nvim-treesitter`
-  - Neovim 0.11.0 or later (nightly)
-  - tar and curl in your path
-  - tree-sitter-cli (0.26.1 or later)
-  - a C compiler in your path (see https://docs.rs/cc/latest/cc/#compile-time-requirements) for `Windows` see [MinGW-64](https://www.mingw-w64.org/) or [MinGW-W64-binaries](https://github.com/niXman/mingw-builds-binaries)
-
-- optional
+- Neovim >=0.11.2
+- [Git](https://git-scm.com/) >= 2.19.0 (for partial clones support)
+- `nvim-treesitter` requirements. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
+- optional (but strongly recommended)
+  - A [Nerd Font](https://www.nerdfonts.com/)
   - live grep: [ripgrep](https://github.com/BurntSushi/ripgrep)
   - find files: [fd](https://github.com/sharkdp/fd)
   - [lazygit](https://github.com/jesseduffield/lazygit)

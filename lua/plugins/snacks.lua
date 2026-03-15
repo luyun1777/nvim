@@ -1,3 +1,5 @@
+local rooter = require("util.root")
+
 return {
 	"folke/snacks.nvim",
 	priority = 1000,
@@ -6,7 +8,7 @@ return {
 		animate = { enabled = true },
 		bigfile = { enabled = true },
 		dashboard = { enabled = true },
-		-- image = { enabled = true },
+		image = { enabled = true },
 		indent = { enabled = true },
 		input = { enabled = true },
 		notifier = {
@@ -26,6 +28,7 @@ return {
 				},
 			},
 		},
+
 		quickfile = { enabled = true },
 		scope = { enabled = true },
 		scroll = { enabled = true },
@@ -38,14 +41,17 @@ return {
         -- stylua: ignore start 
         { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
         { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
-        { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
+        { "<leader>/", function() Snacks.picker.grep({ cwd = rooter.get_root() }) end, desc = "Grep (Root Dir)" },
         { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
         { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
         -- { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
         -- find
         { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+        { "<leader>fB", function() Snacks.picker.buffers({ hidden = true, nofile = true }) end, desc = "Buffers (all)" },
+
         { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-        { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+        { "<leader>ff", function() Snacks.picker.files({ cwd = rooter.get_root() }) end, desc = "Find Files (Root Dir)" },
+        { "<leader>fF", function() Snacks.picker.files({ cwd = vim.uv.cwd() }) end, desc = "Find Files (cwd)" },
         { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
         { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
         { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
@@ -60,8 +66,10 @@ return {
         -- Grep
         { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
         { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
-        { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
-        { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
+        { "<leader>sg", function() Snacks.picker.grep({ cwd = rooter.get_root() }) end, desc = "Grep (Root Dir)" },
+        { "<leader>sG", function() Snacks.picker.grep({ cwd = vim.uv.cwd()}) end, desc = "Grep (cwd)" },
+        { "<leader>sw", function() Snacks.picker.grep_word({ cwd = rooter.get_root() }) end, desc = "Visual selection or word (Root Dir)", mode = { "n", "x" } },
+        { "<leader>sW", function() Snacks.picker.grep_word({ cwd = vim.uv.cwd()}) end, desc = "Visual selection or word (cwd)", mode = { "n", "x" } },
         -- search
         { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
         { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
