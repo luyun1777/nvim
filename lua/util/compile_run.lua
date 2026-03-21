@@ -3,22 +3,29 @@ local split = function()
 	vim.cmd("sp")
 	vim.cmd("res -5")
 end
-local compileRun = function()
+local compile_run = function()
 	if vim.bo.modified then
 		vim.cmd("write")
 	end
 	local ft = vim.bo.filetype
+	local is_win = vim.uv.os_uname().sysname == "Windows_NT"
 	if ft == "c" then
 		split()
-		vim.cmd("term gcc % -o %< && ./%< && rm %<")
+		if is_win then
+			vim.cmd("term gcc % -o %< && ./%< && rm %<" .. ".exe")
+		else
+			vim.cmd("term gcc % -o %< && ./%< && rm %<")
+		end
 	elseif ft == "cpp" then
 		split()
-		vim.cmd("term g++ % -o %< && ./%< && rm %<")
+		if is_win then
+			vim.cmd("term g++ % -o %< && ./%< && rm %<" .. ".exe")
+		else
+			vim.cmd("term g++ % -o %< && ./%< && rm %<")
+		end
 	elseif ft == "java" then
 		split()
-		local filename = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf())
-		local classfile = vim.fn.fnamemodify(filename, ":t:r") .. ".class"
-		vim.cmd("term javac % && java ./% && rm " .. classfile)
+		vim.cmd("term javac % && java ./% && rm %<" .. ".class")
 	elseif ft == "javascript" then
 		split()
 		vim.cmd("term node %")
@@ -34,11 +41,17 @@ local compileRun = function()
 		vim.cmd("term python %")
 	elseif ft == "rust" then
 		split()
-		vim.cmd("term rustc % && ./%< && rm %<")
+		if is_win then
+			vim.cmd("term rustc -C link-arg=/DEBUG:NONE % && ./%< && rm %<" .. ".exe")
+		else
+			vim.cmd("term rustc % && ./%< && rm %<")
+		end
 	elseif ft == "sh" then
 		split()
 		vim.cmd("term bash %")
+	else
+		vim.notify("Current file type is not supported!", vim.log.levels.WARN, { title = "Compile and Run" })
 	end
 end
 
-return compileRun
+return compile_run
