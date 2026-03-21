@@ -25,7 +25,8 @@ local compile_run = function()
 		end
 	elseif ft == "java" then
 		split()
-		vim.cmd("term javac % && java ./% && rm %<" .. ".class")
+		vim.cmd("term java %") -- need java >= 11
+		-- vim.cmd("term javac % && java ./% && rm %<" .. ".class")
 	elseif ft == "javascript" then
 		split()
 		vim.cmd("term node %")
