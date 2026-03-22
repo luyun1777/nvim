@@ -1,6 +1,6 @@
 return {
 	"saghen/blink.cmp",
-	envent = "VeryLazy",
+	event = { "InsertEnter", "CmdlineEnter" },
 	version = "1.*",
 	dependencies = {
 		-- {

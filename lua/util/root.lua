@@ -11,39 +11,25 @@ function M.get_root()
 	end
 
 	-- LSP无结果时，通过文件系统检测项目标记
-	-- 定义默认的标记文件列表，通常 vim.fs.find 会返回最近的一个
-	local root_files = {
+	local root_marker = {
 		".git", -- Git仓库
 		".svn", -- SVN 仓库
 		".hg", -- Mercurial仓库
-		"package.json", -- Node.js项目
+		{ "pyproject.toml", "setup.py", "requirements.txt" }, -- Python
 		"Cargo.toml", -- Rust项目
-		"pyproject.toml", -- Python项目
-		"setup.py", -- Python (传统)
-		"requirements.txt", -- Python
+		"package.json", -- Node.js项目
 		"go.mod", -- Go
 		"pom.xml", -- Java (Maven)
 		"build.gradle", -- Java (Gradle)
-		"Makefile", -- C/C++/通用
-		"CMakeLists.txt", -- C/C++ (CMake)
+		{ "Makefile", "CMakeLists.txt" }, -- C/C++ (通用)
 	}
 
-	local found = vim.fs.find(root_files, {
-		upward = true, -- 向上搜索
-		path = vim.fs.dirname(buf_path),
-		-- type = "directory", -- 优先目录类型
-	})
-
-	if found and #found > 0 then
-		local found_path = found[1]
-		if vim.fn.isdirectory(found_path) == 1 then
-			return vim.fs.dirname(found_path)
-		else
-			return vim.fn.fnamemodify(found_path, ":h")
-		end
+	local found = vim.fs.root(buf_path or 0, root_marker)
+	if found then
+		return found
 	end
 
-	return vim.fn.getcwd()
+	return vim.uv.cwd()
 end
 
 return M

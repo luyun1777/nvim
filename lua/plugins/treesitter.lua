@@ -10,7 +10,7 @@ return {
 			"TSUninstall",
 			"TSLog",
 		},
-		event = "VeryLazy",
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
 			highlight = { enable = true },
 			folds = { enable = true },
@@ -62,6 +62,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		branch = "main",
+		event = { "BufRead", "BufNewFile" },
 		config = function()
 			require("nvim-treesitter-textobjects").setup({
 				move = { set_jumps = true },
@@ -119,7 +120,7 @@ return {
 	},
 	{
 		"windwp/nvim-ts-autotag",
-		event = "VeryLazy",
+		event = { "InsertEnter" },
 		opts = {},
 	},
 }

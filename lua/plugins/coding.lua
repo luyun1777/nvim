@@ -2,26 +2,78 @@ return {
 	-- Comment
 	{
 		"numToStr/Comment.nvim",
+		enabled = vim.fn.has("nvim-0.10.0") == 0,
 		keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
 		opts = { ignore = "^$" },
 	},
-
+	{
+		"folke/ts-comments.nvim",
+		enabled = vim.fn.has("nvim-0.10.0") == 1,
+		event = { "BufRead", "BufNewFile" },
+		opts = {},
+	},
 	{
 		"folke/todo-comments.nvim",
-		cmd = { "TodoTrouble", "TodoFzfLua" },
-		event = "VeryLazy",
+		cmd = { "TodoTrouble" },
+		event = { "BufRead", "BufNewFile" },
 		opts = {},
         -- stylua: ignore
         keys = {
             { "]t",         function() require("todo-comments").jump_next() end, desc = "Next Todo Comment" },
             { "[t",         function() require("todo-comments").jump_prev() end, desc = "Previous Todo Comment" },
-            -- { "<leader>xt", "<cmd>TodoTrouble<cr>",                              desc = "Todo (Trouble)" },
-            -- { "<leader>xT", "<cmd>TodoTrouble keywords=TODO,FIX,FIXME<cr>",      desc = "Todo/Fix/Fixme(Trouble)" },
-            -- { "<leader>st", "<cmd>TodoFzfLua<cr>",                            desc = "Todo" },
-            -- { "<leader>sT", "<cmd>TodoFzfLua keywords=TODO,FIX,FIXME<cr>",    desc = "Todo/Fix/Fixme" },
+            { "<leader>xt", "<cmd>Trouble todo toggle<cr>", desc = "Todo (Trouble)" },
+            { "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
         },
 	},
-
+	-- better diagnostics list and others
+	{
+		"folke/trouble.nvim",
+		cmd = { "Trouble" },
+		opts = {
+			win = {},
+			modes = {
+				lsp = {
+					win = { position = "right" },
+				},
+			},
+		},
+		keys = {
+			{ "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
+			{ "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)" },
+			{ "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
+			{ "<leader>cS", "<cmd>Trouble lsp toggle<cr>", desc = "LSP references/definitions/... (Trouble)" },
+			{ "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
+			{ "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
+			{
+				"[q",
+				function()
+					if require("trouble").is_open() then
+						require("trouble").prev({ skip_groups = true, jump = true })
+					else
+						local ok, err = pcall(vim.cmd.cprev)
+						if not ok then
+							vim.notify(err, vim.log.levels.ERROR)
+						end
+					end
+				end,
+				desc = "Previous Trouble/Quickfix Item",
+			},
+			{
+				"]q",
+				function()
+					if require("trouble").is_open() then
+						require("trouble").next({ skip_groups = true, jump = true })
+					else
+						local ok, err = pcall(vim.cmd.cnext)
+						if not ok then
+							vim.notify(err, vim.log.levels.ERROR)
+						end
+					end
+				end,
+				desc = "Next Trouble/Quickfix Item",
+			},
+		},
+	},
 	-- Indent
 	-- {
 	-- 	"shellRaining/hlchunk.nvim",
@@ -111,7 +163,7 @@ return {
 				c = { "clang-format" },
 				cpp = { "clang-format" },
 				css = { "prettier" },
-				fish = { "fish-indent" },
+				fish = { "fish_indent" },
 				html = { "prettier" },
 				java = { "clang-format" },
 				javascript = { "prettier" },
@@ -125,7 +177,7 @@ return {
 				rust = { "rustfmt" },
 				sh = { "shfmt" },
 				tex = { "tex-fmt" },
-				toml = { "taplo" },
+				toml = { "tombi" },
 				typescript = { "prettier" },
 				yaml = { "prettier" },
 				["_"] = { "trim_whitespace" },
@@ -136,16 +188,17 @@ return {
 	-- Linting
 	{
 		"mfussenegger/nvim-lint",
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 		opts = {
 			events = { "BufWritePost", "BufReadPost", "InsertLeave" },
 			linters_by_ft = {
+				fish = { "fish" },
 				python = { "ruff" },
+				rust = { "clippy" },
 				-- Use the "*" filetype to run linters on all filetypes.
-				-- ['*'] = { 'global linter' },
+				["*"] = { "typos" },
 				-- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
 				-- ['_'] = { 'fallback linter' },
-				-- ["*"] = { "typos" },
 			},
 		},
 		config = function(_, opts)

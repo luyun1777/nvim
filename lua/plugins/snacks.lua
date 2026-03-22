@@ -8,7 +8,7 @@ return {
 		animate = { enabled = true },
 		bigfile = { enabled = true },
 		dashboard = { enabled = true },
-		image = { enabled = true },
+		-- image = { enabled = true },
 		indent = { enabled = true },
 		input = { enabled = true },
 		notifier = {
@@ -44,14 +44,15 @@ return {
         { "<leader>/", function() Snacks.picker.grep({ cwd = rooter.get_root() }) end, desc = "Grep (Root Dir)" },
         { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
         { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
-        -- { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+        { "<leader>fe", function() Snacks.explorer({ cwd = rooter.get_root() }) end, desc = "Explorer Snacks (Root Dir)" },
+        { "<leader>fE", function() Snacks.explorer() end, desc = "Explorer Snacks (Cwd)" },
         -- find
         { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
         { "<leader>fB", function() Snacks.picker.buffers({ hidden = true, nofile = true }) end, desc = "Buffers (all)" },
 
         { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
         { "<leader>ff", function() Snacks.picker.files({ cwd = rooter.get_root() }) end, desc = "Find Files (Root Dir)" },
-        { "<leader>fF", function() Snacks.picker.files({ cwd = vim.uv.cwd() }) end, desc = "Find Files (cwd)" },
+        { "<leader>fF", function() Snacks.picker.files({ cwd = vim.uv.cwd() }) end, desc = "Find Files (Cwd)" },
         { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
         { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
         { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
@@ -67,9 +68,9 @@ return {
         { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
         { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
         { "<leader>sg", function() Snacks.picker.grep({ cwd = rooter.get_root() }) end, desc = "Grep (Root Dir)" },
-        { "<leader>sG", function() Snacks.picker.grep({ cwd = vim.uv.cwd()}) end, desc = "Grep (cwd)" },
+        { "<leader>sG", function() Snacks.picker.grep({ cwd = vim.uv.cwd()}) end, desc = "Grep (Cwd)" },
         { "<leader>sw", function() Snacks.picker.grep_word({ cwd = rooter.get_root() }) end, desc = "Visual selection or word (Root Dir)", mode = { "n", "x" } },
-        { "<leader>sW", function() Snacks.picker.grep_word({ cwd = vim.uv.cwd()}) end, desc = "Visual selection or word (cwd)", mode = { "n", "x" } },
+        { "<leader>sW", function() Snacks.picker.grep_word({ cwd = vim.uv.cwd()}) end, desc = "Visual selection or word (Cwd)", mode = { "n", "x" } },
         -- search
         { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
         { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
@@ -101,21 +102,26 @@ return {
         { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
         { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
         -- Other
-        { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
-        { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
+        { "<leader>uz",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
+        { "<leader>uZ",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
         { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
         { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
         { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
         { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
         { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
         { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-        { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+        { "<leader>gg", function() Snacks.lazygit({ cwd = rooter.get_root() }) end, desc = "Lazygit (Root Dir)" },
+        { "<leader>gG", function() Snacks.lazygit() end, desc = "Lazygit (Cwd)" },
         { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
-        { "<leader>tt", function() Snacks.terminal() end, desc = "Terminal (Float)" },
-        { "<leader>tf", function() Snacks.terminal() end, desc = "Terminal (Float)" },
-        { "<leader>th", function() Snacks.terminal(nil, { count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom)" },
-        { "<leader>tv", function() Snacks.terminal(nil, { count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right)" },
-        { "<c-/>",      function() Snacks.terminal.toggle() end, desc = "Terminal (Toggle)" },
+        { "<leader>tt", function() Snacks.terminal(nil, { cwd = rooter.get_root() }) end, desc = "Terminal (Float & Root Dir)" },
+        { "<leader>tT", function() Snacks.terminal() end, desc = "Terminal (Float & Cwd)" },
+        { "<leader>tf", function() Snacks.terminal(nil, { cwd = rooter.get_root() } ) end, desc = "Terminal (Float & Root Dir)" },
+        { "<leader>tF", function() Snacks.terminal() end, desc = "Terminal (Float & Cwd)" },
+        { "<leader>tv", function() Snacks.terminal(nil, { cwd = rooter.get_root(), count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom & Root Dir)" },
+        { "<leader>tV", function() Snacks.terminal(nil, { count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom & Cwd)" },
+        { "<leader>th", function() Snacks.terminal(nil, { cwd = rooter.get_root(), count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right & Root Dir)" },
+        { "<leader>tH", function() Snacks.terminal(nil, { count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right & Cwd)" },
+        { "<c-/>",      function() Snacks.terminal.toggle(nil, { cwd = rooter.get_root() }) end, desc = "Terminal (Toggle)" },
         { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore", mode = { "n", "t" } },
         { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
         { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
@@ -166,9 +172,24 @@ return {
 				Snacks.toggle
 					.option("background", { off = "light", on = "dark", name = "Dark Background" })
 					:map("<leader>ub")
-				Snacks.toggle.inlay_hints():map("<leader>uh")
+				Snacks.toggle.animate():map("<leader>ua")
 				Snacks.toggle.indent():map("<leader>ug")
 				Snacks.toggle.dim():map("<leader>uD")
+				Snacks.toggle.scroll():map("<leader>uS")
+
+				local prev = { new_name = "", old_name = "" } -- Prevents duplicate events
+				vim.api.nvim_create_autocmd("User", {
+					pattern = "NvimTreeSetup",
+					callback = function()
+						local events = require("nvim-tree.api").events
+						events.subscribe(events.Event.NodeRenamed, function(data)
+							if prev.new_name ~= data.new_name or prev.old_name ~= data.old_name then
+								data = data
+								Snacks.rename.on_rename_file(data.old_name, data.new_name)
+							end
+						end)
+					end,
+				})
 			end,
 		})
 	end,

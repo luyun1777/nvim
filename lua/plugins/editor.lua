@@ -3,13 +3,20 @@ return {
 	{
 		"nvim-tree/nvim-tree.lua",
 		cmd = { "NvimTreeToggle" },
-		keys = { { "tt", "<cmd>NvimTreeToggle<cr>", desc = "Toggle nvim-tree" } },
+		keys = {
+			{
+				"tt",
+				"<cmd>lua require('nvim-tree.api').tree.toggle( {path = require('util.root').get_root(), find_file = true })<cr>",
+				desc = "Toggle NvimTree (Root Dir)",
+			},
+			{
+				"te",
+				"<cmd>lua require('nvim-tree.api').tree.toggle( { find_file = true, update_root = true })<cr>",
+				desc = "Toggle NvimTree (Cwd)",
+			},
+		},
 		opts = {
-			sync_root_with_cwd = true,
-			respect_buf_cwd = true,
-			update_focused_file = { enable = true, update_root = true },
-			view = { width = 20 },
-			renderer = { group_empty = true, indent_markers = { enable = true } },
+			renderer = { indent_markers = { enable = true } },
 			filters = { dotfiles = true, git_ignored = true },
 		},
 	},
@@ -53,7 +60,7 @@ return {
                     ["<CR>"] = "next",
                     ["<BS>"] = "prev"
                     }
-                }) 
+                })
                 end, desc = "Treesitter Incremental Selection" },
 		},
 	},
@@ -61,7 +68,7 @@ return {
 	{
 		"kevinhwang91/nvim-ufo",
 		dependencies = { "kevinhwang91/promise-async" },
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 		opts = {
 			provider_selector = function(_, filetype, buftype)
 				return (filetype == "" or buftype == "nofile") and "indent" or { "treesitter", "indent" }
@@ -72,12 +79,12 @@ return {
 	-- Better surrounding
 	{
 		"kylechui/nvim-surround",
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
 	{
 		"dstein64/nvim-scrollview",
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
 
@@ -113,11 +120,11 @@ return {
 
 	{ -- Rainbow delimiters
 		"hiphish/rainbow-delimiters.nvim",
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 	},
 	{
 		"RRethy/vim-illuminate",
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 	},
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",

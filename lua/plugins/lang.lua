@@ -1,11 +1,19 @@
 return {
-	-- python
+	-- Annotations
 	{
 		"danymat/neogen",
 		cmd = { "Neogen" },
-		keys = { { "<leader>cn", "<cmd>Neogen<cr>", desc = "Generate Annotations (Neogen)" } },
+		keys = {
+			{
+				"<leader>cn",
+				function()
+					require("neogen").generate()
+				end,
+				desc = "Generate Annotations (Neogen)",
+			},
+		},
 		opts = {
-			-- snippet_engine = "luasnip",
+			snippet_engine = "nvim",
 			languages = {
 				lua = { template = { annotation_convention = "emmylua" } }, -- "emmylua", "ldoc"
 				python = { template = { annotation_convention = "reST" } }, -- "google_docstrings", "numpydoc", "reST"

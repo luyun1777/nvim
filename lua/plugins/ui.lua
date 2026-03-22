@@ -2,15 +2,17 @@ return {
 	-- Statusline
 	{
 		"nvim-lualine/lualine.nvim",
-		event = "VeryLazy",
+		-- event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
 	-- Tabline
 	{
 		"akinsho/bufferline.nvim",
-		event = "VeryLazy",
+		event = { "BufRead", "BufNewFile" },
 		keys = {
 			{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
+			{ "<leader>bb", "<Cmd>BufferLinePick<CR>", desc = "BufferLine Pick" },
 			{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
 			{ "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete Other Buffers" },
 			{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },

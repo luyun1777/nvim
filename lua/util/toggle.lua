@@ -25,16 +25,9 @@ end
 
 local nu = { number = true, relativenumber = true }
 function M.number()
-	if vim.opt_local.number:get() or vim.opt_local.relativenumber:get() then
-		nu = { number = vim.opt_local.number:get(), relativenumber = vim.opt_local.relativenumber:get() }
-		vim.opt_local.number = false
-		vim.opt_local.relativenumber = false
-		vim.notify("Disabled line numbers", vim.log.levels.WARN, { title = "Option" })
-	else
-		vim.opt_local.number = nu.number
-		vim.opt_local.relativenumber = nu.relativenumber
-		vim.notify("Enabled line numbers", vim.log.levels.INFO, { title = "Option" })
-	end
+	vim.opt_local.number = nu.number
+	vim.opt_local.relativenumber = nu.relativenumber
+	vim.notify("Enabled line numbers", vim.log.levels.INFO, { title = "Option" })
 end
 
 function M.inlay_hints(buf, value)
