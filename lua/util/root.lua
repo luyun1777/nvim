@@ -1,5 +1,7 @@
 local M = {}
 
+--- search root directory
+---@return string?
 function M.get_root()
 	local buf = vim.api.nvim_get_current_buf()
 	local buf_path = vim.api.nvim_buf_get_name(buf)

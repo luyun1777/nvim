@@ -3,6 +3,7 @@ local split = function()
 	vim.cmd("sp")
 	vim.cmd("res -5")
 end
+--- execute single file
 local compile_run = function()
 	if vim.bo.modified then
 		vim.cmd("write")

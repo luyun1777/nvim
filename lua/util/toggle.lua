@@ -1,5 +1,9 @@
 local M = {}
 
+--- Toggle options
+---@param option vim.Option
+---@param silent boolean?
+---@param values table?
 function M.option(option, silent, values)
 	if values then
 		if vim.opt_local[option]:get() == values[1] then
@@ -23,13 +27,22 @@ function M.option(option, silent, values)
 	end
 end
 
-local nu = { number = true, relativenumber = true }
+--- Toggle line numbers
 function M.number()
-	vim.opt_local.number = nu.number
-	vim.opt_local.relativenumber = nu.relativenumber
-	vim.notify("Enabled line numbers", vim.log.levels.INFO, { title = "Option" })
+	if vim.wo.number or vim.wo.relativenumber then
+		vim.wo.number = false
+		vim.wo.relativenumber = false
+		vim.notify("Disabled line numbers", vim.log.levels.WARN, { title = "Option" })
+	else
+		vim.wo.number = true
+		vim.wo.relativenumber = true
+		vim.notify("Enabled line numbers", vim.log.levels.INFO, { title = "Option" })
+	end
 end
 
+--- Toggle inlay_hints
+---@param buf integer?
+---@param value boolean?
 function M.inlay_hints(buf, value)
 	local ih = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
 	if type(ih) == "function" then
