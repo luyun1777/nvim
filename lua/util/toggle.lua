@@ -45,14 +45,28 @@ end
 ---@param value boolean?
 function M.inlay_hints(buf, value)
 	local ih = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
+	buf = buf or 0
 	if type(ih) == "function" then
 		ih(buf, value)
 	elseif type(ih) == "table" and ih.enable then
 		if value == nil then
-			value = not ih.is_enabled(buf)
+			value = not ih.is_enabled({ bufnr = buf })
 		end
 		ih.enable(value, { bufnr = buf })
-		vim.notify((value and "Enabled" or "Disabled") .. " inlay_hint", vim.log.levels.INFO, { title = "Option" })
+		vim.notify((value and "Enabled" or "Disabled") .. " inlay_hint", vim.log.levels.INFO, { title = "Inlay Hints" })
+	end
+end
+function M.codelens(buf, value)
+	local ih = vim.lsp.buf.codelens or vim.lsp.codelens
+	buf = buf or 0
+	if type(ih) == "function" then
+		ih(buf, value)
+	elseif type(ih) == "table" and ih.enable then
+		if value == nil then
+			value = not ih.is_enabled({ bufnr = buf })
+		end
+		ih.enable(value, { bufnr = buf })
+		vim.notify((value and "Enabled" or "Disabled") .. " CodeLens", vim.log.levels.INFO, { title = "CodeLens" })
 	end
 end
 

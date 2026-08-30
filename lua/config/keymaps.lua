@@ -121,20 +121,33 @@ map("n", "<leader>ul", function() Util.toggle.number() end, { desc = "Toggle Lin
 map("n", "<leader>uL", function() Util.toggle("relativenumber") end, { desc = "Toggle Relative Line Numbers" })
 map("n", "<leader>us", function() Util.toggle("spell") end, { desc = "Toggle Spelling" })
 map("n", "<leader>uw", function() Util.toggle("wrap") end, { desc = "Toggle Word Wrap" })
+-- stylua: ignore end
 
-map("n", "<leader>ud", function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, { desc = "Toggle Diagnostics" })
-if vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint then
-    map("n", "<leader>uh", function() Util.toggle.inlay_hints() end, { desc = "Toggle Inlay Hints" })
-end
-map("n", "<leader>uf", function() vim.g.disable_autoformat = not vim.g.disable_autoformat vim.notify( (vim.g.disable_autoformat and "Disabled " or "Enabled ") .. "Autoformat", vim.log.levels.INFO, { title = "Option" }) end, { desc = "Toggle Autoformat" })
+map("n", "<leader>ud", function()
+	local value = not vim.diagnostic.is_enabled()
+	vim.diagnostic.enable(value)
+	vim.notify((value and "Enabled " or "Disabled ") .. "Diagnostics", vim.log.levels.INFO, { title = "Diagnostics" })
+end, { desc = "Toggle Diagnostics" })
+
+map("n", "<leader>uf", function()
+	vim.g.disable_autoformat = not vim.g.disable_autoformat
+	vim.notify(
+		(vim.g.disable_autoformat and "Disabled " or "Enabled ") .. "Auto Format",
+		vim.log.levels.INFO,
+		{ title = "Auto Format" }
+	)
+end, { desc = "Toggle Auto Format" })
 
 -- highlights under cursor
 map("n", "<leader>ui", vim.show_pos, { desc = "Inspect Pos" })
-map("n", "<leader>uI", function() vim.treesitter.inspect_tree() vim.api.nvim_input("I") end, { desc = "Inspect Tree" })
+map("n", "<leader>uI", function()
+	vim.treesitter.inspect_tree()
+	vim.api.nvim_input("I")
+end, { desc = "Inspect Tree" })
 
-
-map("n", "<f5>", function() Util.compile_run() end, { desc = "Run file" })
--- stylua: ignore end
+map("n", "<f5>", function()
+	Util.compile_run()
+end, { desc = "Run file" })
 
 -- Useful actions
 map("i", "<s-enter>", "<esc>o", { silent = true })

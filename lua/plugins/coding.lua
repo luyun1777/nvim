@@ -2,13 +2,13 @@ return {
 	-- Comment
 	{
 		"numToStr/Comment.nvim",
-		enabled = vim.fn.has("nvim-0.10.0") == 0,
+		enabled = not vim.fn.has("nvim-0.10"),
 		keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
 		opts = { ignore = "^$" },
 	},
 	{
 		"folke/ts-comments.nvim",
-		enabled = vim.fn.has("nvim-0.10.0") == 1,
+		enabled = vim.fn.has("nvim-0.10"),
 		event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
@@ -209,6 +209,9 @@ return {
 
 			function M.debounce(ms, fn)
 				local timer = vim.uv.new_timer()
+				if timer == nil then
+					return
+				end
 				return function(...)
 					local argv = { ... }
 					timer:start(ms, 0, function()
@@ -251,7 +254,7 @@ return {
 		end,
 	},
 
-	-- Project mangagement
+	-- Project management
 	-- {
 	-- 	"ahmedkhalf/project.nvim",
 	-- 	event = "VeryLazy",

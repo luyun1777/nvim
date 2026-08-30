@@ -73,7 +73,7 @@ return {
 	-- 		{ "<leader>un", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Dismiss All Notifications", },
 	-- 	},
 	-- 	opts = {
-	-- 		render = "compact", -- "defalut", "minimal", "simple", "compact","warpped-compact"
+	-- 		render = "compact", -- "default", "minimal", "simple", "compact","wrapped-compact"
 	-- 		-- background_colour = "#000000",
 	-- 	},
 	-- 	init = function()
@@ -90,10 +90,10 @@ return {
 			{ "<leader>sn", "<cmd>Noice history<cr>", desc = "Show Notifications History", },
 			{ "<leader>un", "<cmd>Noice dismiss<cr>", desc = "Dismiss all messages", },
         },
-		-- dependencies = {
-		-- 	"MunifTanjim/nui.nvim",
-		-- "rcarriga/nvim-notify",
-		-- },
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			-- "rcarriga/nvim-notify",
+		},
 		opts = {
 			lsp = {
 				override = {

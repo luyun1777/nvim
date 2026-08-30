@@ -46,4 +46,4 @@
 
 ## Plugins
 
-<!-- TODO: Plugins descrption -->
+<!-- TODO: Plugins description -->

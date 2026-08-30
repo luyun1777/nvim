@@ -4,14 +4,7 @@ end
 
 -- Auto change directory to current dir
 vim.api.nvim_create_autocmd("BufReadPost", { pattern = "*", command = "silent! lcd %:p:h" })
--- vim.api.nvim_create_autocmd("BufEnter", {
--- 	callback = function()
--- 		local root = require("util.root").get_root()
--- 		if root and root ~= "." and root ~= vim.uv.cwd() then
--- 			vim.cmd.cd(root)
--- 		end
--- 	end,
--- })
+
 -- Auto restore cursor position to last open
 vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
 
@@ -130,16 +123,17 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 		if client:supports_method("textDocument/inlayHint", bufnr) then
 			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+			vim.keymap.set("n", "<leader>uh", function()
+				require("util").toggle.inlay_hints()
+			end, { desc = "Toggle Inlay Hints" })
 		end
-		-- if client:supports_method("textDocument/codeLens", bufnr) then
-		-- 	vim.lsp.codelens.refresh({ bufnr = bufnr })
-		-- 	vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
-		-- 		buffer = bufnr,
-		-- 		callback = function()
-		-- 			vim.lsp.codelens.refresh({ bufnr = bufnr })
-		-- 		end,
-		-- 	})
-		-- end
+		if client:supports_method("textDocument/codeLens", bufnr) then
+			vim.lsp.codelens.enable(true, { bufnr = bufnr })
+			vim.keymap.set("n", "<leader>cc", vim.lsp.codelens.run, { desc = "Run CodeLens" })
+			vim.keymap.set("n", "<leader>cC", function()
+				require("util").toggle.codelens()
+			end, { buffer = bufnr, desc = "Toggle CodeLens" })
+		end
 
 		if client.server_capabilities.completionProvider then
 			vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
@@ -148,17 +142,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
 		end
 
-		vim.keymap.set("n", "<leader>cl", function()
+		vim.keymap.set("n", "<leader>cL", function()
 			vim.lsp.buf.format({ buffer = bufnr, async = true })
 		end, { buffer = bufnr, desc = "Format file (Lsp)" })
-		vim.keymap.set("n", "<leader>cL", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
-		vim.keymap.set(
-			"n",
-			"<leader>cc",
-			vim.lsp.codelens.refresh,
-			{ buffer = bufnr, desc = "Refresh & Display Codelens" }
-		)
-		vim.keymap.set({ "n", "v" }, "<leader>cC", vim.lsp.codelens.run, { desc = "Run Codelens" })
+		if vim.fn.has("nvim-0.12") then
+			vim.keymap.set("n", "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", { desc = "Lsp Info" })
+		else
+			vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
+		end
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go declaration" })
 		vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { buffer = bufnr, desc = "Type definition" })
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go definition" })
