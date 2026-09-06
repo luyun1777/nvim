@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Neovim >=0.11.2
+- Neovim >=0.12
 - [Git](https://git-scm.com/) >= 2.19.0 (for partial clones support)
 - `nvim-treesitter` requirements. See [here](https://github.com/nvim-treesitter/nvim-treesitter#requirements)
 - optional (but strongly recommended)

@@ -110,6 +110,13 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- create file headers while creating a python file
+vim.api.nvim_create_autocmd("BufNewFile", {
+	group = augroup("create_python_header"),
+	pattern = "*.py",
+	callback = require("util.create_header").create_python_header,
+})
+
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
