@@ -31,7 +31,7 @@ vim.o.grepformat = "%f:%l:%c:%m,%f:%l:%m"
 vim.o.grepprg = vim.fn.executable("rg") == 1 and "rg --vimgrep --no-heading --smart-case"
 vim.o.guicursor =
 	"n-v:block-nCursor,i-c-ci-t:ver20-iCursor-blinkwait200-blinkoff200-blinkon200,r-cr-o:hor20-Cursor-blinkwait200-blinkoff200-blinkon200"
-vim.o.guifont = "FiraCode Nerd Font Mono:h16,LXGW WenKai Mono:16,Consolas:h16"
+vim.o.guifont = "FiraCode Nerd Font Mono,LXGW WenKai Mono,Consolas"
 vim.o.hlsearch = false
 vim.o.ignorecase = true -- Ignore case
 vim.o.inccommand = "nosplit" -- preview incremental substitute
