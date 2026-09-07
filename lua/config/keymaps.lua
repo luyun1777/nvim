@@ -83,9 +83,22 @@ map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result
 
 --keywordprg
 map("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
+-- location list
+map("n", "<leader>xl", function()
+	local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
+	if not success and err then
+		vim.notify(err, vim.log.levels.ERROR)
+	end
+end, { desc = "Location List" })
 
-map("n", "<leader>xl", "<cmd>lopen<cr>", { desc = "Location List" })
-map("n", "<leader>xq", "<cmd>copen<cr>", { desc = "Quickfix List" })
+-- quickfix list
+map("n", "<leader>xq", function()
+	local success, err = pcall(vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose or vim.cmd.copen)
+	if not success and err then
+		vim.notify(err, vim.log.levels.ERROR)
+	end
+end, { desc = "Quickfix List" })
+
 map("n", "[q", vim.cmd.cprev, { silent = true, desc = "Previous quickfix" })
 map("n", "]q", vim.cmd.cnext, { silent = true, desc = "Next quickfix" })
 
@@ -130,9 +143,9 @@ map("n", "<leader>ud", function()
 end, { desc = "Toggle Diagnostics" })
 
 map("n", "<leader>uf", function()
-	vim.g.disable_autoformat = not vim.g.disable_autoformat
+	vim.g.autoformat = not vim.g.autoformat
 	vim.notify(
-		(vim.g.disable_autoformat and "Disabled " or "Enabled ") .. "Auto Format",
+		(vim.g.autoformat and "Enabled " or "Disabled ") .. "Auto Format",
 		vim.log.levels.INFO,
 		{ title = "Auto Format" }
 	)

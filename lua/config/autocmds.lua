@@ -3,19 +3,46 @@ local function augroup(name)
 end
 
 -- Auto change directory to current dir
-vim.api.nvim_create_autocmd("BufReadPost", { pattern = "*", command = "silent! lcd %:p:h" })
+-- vim.api.nvim_create_autocmd("BufReadPost", { pattern = "*", command = "silent! lcd %:p:h" })
 
 -- Auto restore cursor position to last open
-vim.cmd([[au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif]])
+vim.api.nvim_create_autocmd("BufReadPre", {
+	group = augroup("restore_cursor"),
+	pattern = "*",
+	callback = function()
+		vim.api.nvim_create_autocmd("FileType", {
+			buffer = 0,
+			once = true,
+			callback = function()
+				local line = vim.fn.line("'\"")
+				local last_line = vim.fn.line("$")
+				local ft = vim.bo.filetype
+
+				if
+					line >= 1
+					and line <= last_line
+					and not ft:match("commit")
+					and not vim.tbl_contains({ "xxd", "gitrebase" }, ft)
+					and not vim.opt.diff:get()
+				then
+					vim.cmd('normal! g`"')
+				end
+			end,
+		})
+	end,
+})
 
 -- Auto enter insert mode while enter a terminal
-vim.cmd([[autocmd TermOpen term://* startinsert]])
+vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
+	group = augroup("startinsert"),
+	pattern = "term://*",
+	callback = function()
+		if vim.opt.buftype:get() == "terminal" then
+			vim.cmd("startinsert")
+		end
+	end,
+})
 
--- Auto reload Neovim configuration (partially)
-vim.api.nvim_create_autocmd(
-	"BufWritePost",
-	{ group = augroup("auto_reload"), pattern = { "*.lua", "*.vim", ".vim.lua" }, command = "silent! so %" }
-)
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	group = augroup("checktime"),
@@ -30,7 +57,11 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 vim.api.nvim_create_autocmd("TextYankPost", {
 	group = augroup("highlight_yank"),
 	callback = function()
-		vim.highlight.on_yank()
+		if vim.fn.has("nvim-0.13") == 1 then
+			vim.hl.hl_op()
+		else
+			(vim.hl or vim.highlight).on_yank()
+		end
 	end,
 })
 
@@ -49,21 +80,21 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("close_with_q"),
 	pattern = {
 		"PlenaryTestPopup",
-		"help",
+		"checkhealth",
+		"dap-float",
+		"dbout",
+		"gitsigns-blame",
 		"grug-far",
+		"help",
 		"lspinfo",
+		"neotest-output",
+		"neotest-output-panel",
+		"neotest-summary",
 		"notify",
 		"qf",
-		"query",
 		"spectre_panel",
 		"startuptime",
 		"tsplayground",
-		"neotest-output",
-		"checkhealth",
-		"neotest-summary",
-		"neotest-output-panel",
-		"dbout",
-		"gitsigns-blame",
 	},
 	callback = function(event)
 		vim.bo[event.buf].buflisted = false
@@ -89,12 +120,22 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- wrap and check for spell in text filetypes
+vim.api.nvim_create_autocmd("FileType", {
+	group = augroup("wrap_spell"),
+	pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+	callback = function()
+		vim.opt_local.wrap = true
+		vim.opt_local.spell = true
+	end,
+})
+
 -- Fix conceallevel for json files
 vim.api.nvim_create_autocmd({ "FileType" }, {
 	group = augroup("json_conceal"),
 	pattern = { "json", "jsonc", "json5" },
 	callback = function()
-		vim.wo.conceallevel = 0
+		vim.opt_local.conceallevel = 0
 	end,
 })
 
@@ -110,17 +151,28 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- create file headers while creating a python file
+-- Auto create file headers while creating a python file
 vim.api.nvim_create_autocmd("BufNewFile", {
 	group = augroup("create_python_header"),
 	pattern = "*.py",
 	callback = require("util.create_header").create_python_header,
 })
 
--- Use LspAttach autocommand to only map the following keys
--- after the language server attaches to the current buffer
+-- Auto create dir when saving a file, in case some intermediate directory does not exist
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+	group = augroup("auto_create_dir"),
+	callback = function(event)
+		if event.match:match("^%w%w+:[\\/][\\/]") then
+			return
+		end
+		local file = vim.uv.fs_realpath(event.match) or event.match
+		vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+	end,
+})
+
+-- Use LspAttach autocommand to only map the following keys after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = augroup("Lsp"),
+	group = augroup("lsp"),
 	callback = function(ev)
 		local bufnr = ev.buf
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
@@ -152,7 +204,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<leader>cL", function()
 			vim.lsp.buf.format({ buffer = bufnr, async = true })
 		end, { buffer = bufnr, desc = "Format file (Lsp)" })
-		if vim.fn.has("nvim-0.12") then
+		if vim.fn.has("nvim-0.12") == 1 then
 			vim.keymap.set("n", "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", { desc = "Lsp Info" })
 		else
 			vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })

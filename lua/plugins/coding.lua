@@ -153,10 +153,9 @@ return {
 		opts = {
 			default_format_opts = { timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" },
 			format_after_save = function(bufnr)
-				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-					return
+				if vim.g.autoformat or vim.b[bufnr].autoformat then
+					return {}
 				end
-				return {}
 			end,
 			formatters = { injected = { options = { ignore_errors = true } } },
 			formatters_by_ft = {
