@@ -1,3 +1,7 @@
+---@class util
+---@field run_file util.run_file
+---@field root util.root
+---@field toggle util.toggle
 local M = {}
 
 setmetatable(M, {

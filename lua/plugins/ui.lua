@@ -6,17 +6,24 @@ return {
 		event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
+
 	-- Tabline
 	{
 		"akinsho/bufferline.nvim",
 		event = { "BufRead", "BufNewFile" },
 		keys = {
 			{ "<leader>bp", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle Pin" },
-			{ "<leader>bb", "<Cmd>BufferLinePick<CR>", desc = "BufferLine Pick" },
 			{ "<leader>bP", "<Cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete Non-Pinned Buffers" },
-			{ "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete Other Buffers" },
-			{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
+			{ "<leader>bb", "<Cmd>BufferLinePick<CR>", desc = "BufferLine Pick" },
 			{ "<leader>bl", "<Cmd>BufferLineCloseLeft<CR>", desc = "Delete Buffers to the Left" },
+			{ "<leader>br", "<Cmd>BufferLineCloseRight<CR>", desc = "Delete Buffers to the Right" },
+			{ "<leader>bo", "<Cmd>BufferLineCloseOthers<CR>", desc = "Delete Other Buffers" },
+			{ "<S-h>", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
+			{ "<S-l>", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
+			{ "[b", "<cmd>BufferLineCyclePrev<cr>", desc = "Prev Buffer" },
+			{ "]b", "<cmd>BufferLineCycleNext<cr>", desc = "Next Buffer" },
+			{ "[B", "<cmd>BufferLineMovePrev<cr>", desc = "Move buffer prev" },
+			{ "]B", "<cmd>BufferLineMoveNext<cr>", desc = "Move buffer next" },
 		},
 		opts = {
 			options = {
@@ -24,7 +31,9 @@ return {
 				diagnostics_indicator = function(_, _, diag)
 					local icons = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 					local ret = (diag.error and icons.Error .. diag.error .. " " or "")
-						.. (diag.warning and icons.Warn .. diag.warning or "")
+						.. (diag.warning and icons.Warn .. diag.warning .. " " or "")
+						.. (diag.hint and icons.Hint .. diag.hint .. " " or "")
+						.. (diag.info and icons.Info .. diag.info or "")
 					return vim.trim(ret)
 				end,
 				show_buffer_close_icons = false,
@@ -44,51 +53,17 @@ return {
 			},
 		},
 	},
-	-- Winbar
-	-- {
-	-- 	"Bekaboo/dropbar.nvim",
-	-- 	enabled = vim.fn.has("nvim-0.10") == 1,
-	-- 	dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
-	-- 	opts = {},
-	-- },
-	-- {
-	-- 	"xiyaowong/transparent.nvim",
-	-- 	cmd = { "TransparentEnable", "TransparentDisable", "TransparentToggle" },
-	-- 	keys = { { "<leader>ut", "<cmd>TransparentToggle<cr>", desc = "Toggle Background Transparent" } },
-	-- 	config = function()
-	-- 		require("transparent").setup({
-	-- 			extra_groups = { "NormalFloat", "NvimTreeNormal" },
-	-- 		})
-	-- 		require("transparent").clear_prefix("BufferLine")
-	-- 		-- require("transparent").clear_prefix("lualine")
-	-- 	end,
-	-- },
 
-	-- Better notification
-	-- {
-	-- 	"rcarriga/nvim-notify",
-	-- 	event = "VeryLazy",
-	--        -- stylua: ignore
-	-- 	keys = {
-	-- 		{ "<leader>un", function() require("notify").dismiss({ silent = true, pending = true }) end, desc = "Dismiss All Notifications", },
-	-- 	},
-	-- 	opts = {
-	-- 		render = "compact", -- "default", "minimal", "simple", "compact","wrapped-compact"
-	-- 		-- background_colour = "#000000",
-	-- 	},
-	-- 	init = function()
-	-- 		vim.notify = require("notify")
-	-- 	end,
-	-- },
+	-- Better Notify
 	{
 		"folke/noice.nvim",
 		event = "VeryLazy",
         -- stylua: ignore
         keys = {
             { "<c-f>", function() if not require("noice.lsp").scroll(4) then return "<c-f>" end end, silent = true, expr = true, desc = "Scroll Forward", mode = {"i", "n", "s"} },
-            { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll Backward", mode = {"i", "n", "s"}},
-			{ "<leader>sn", "<cmd>Noice history<cr>", desc = "Show Notifications History", },
-			{ "<leader>un", "<cmd>Noice dismiss<cr>", desc = "Dismiss all messages", },
+            { "<c-b>", function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end, silent = true, expr = true, desc = "Scroll Backward", mode = {"i", "n", "s"} },
+			{ "<leader>sn", "<cmd>Noice history<cr>", desc = "Show Notifications History" },
+			{ "<leader>un", "<cmd>Noice dismiss<cr>", desc = "Dismiss all messages" },
         },
 		dependencies = {
 			"MunifTanjim/nui.nvim",

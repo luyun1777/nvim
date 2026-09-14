@@ -24,15 +24,22 @@ require("lazy").setup({
 	performance = {
 		rtp = {
 			disabled_plugins = {
-				-- "gzip",
-				-- "matchit",
+				"gzip",
+				"matchit",
 				-- "matchparen",
-				-- "netrwPlugin",
-				-- "tarPlugin",
-				-- "tohtml",
-				-- "tutor",
-				-- "zipPlugin",
+				"netrwPlugin",
+				"tarPlugin",
+				"tohtml",
+				"tutor",
+				"zipPlugin",
 			},
 		},
+	},
+	profiling = {
+		-- Enables extra stats on the debug tab related to the loader cache.
+		-- Additionally gathers stats about all package.loaders
+		-- loader = true,
+		-- Track each new require in the Lazy profiling tab
+		-- require = true,
 	},
 })

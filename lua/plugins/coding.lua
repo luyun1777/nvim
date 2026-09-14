@@ -2,13 +2,13 @@ return {
 	-- Comment
 	{
 		"numToStr/Comment.nvim",
-		enabled = not vim.fn.has("nvim-0.10"),
+		enabled = vim.fn.has("nvim-0.10") == 0,
 		keys = { { "gc", mode = { "n", "v" } }, { "gb", mode = { "n", "v" } } },
 		opts = { ignore = "^$" },
 	},
 	{
 		"folke/ts-comments.nvim",
-		enabled = vim.fn.has("nvim-0.10"),
+		enabled = vim.fn.has("nvim-0.10") == 1,
 		event = { "BufRead", "BufNewFile" },
 		opts = {},
 	},
@@ -25,16 +25,15 @@ return {
             { "<leader>xT", "<cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<cr>", desc = "Todo/Fix/Fixme (Trouble)" },
         },
 	},
+
 	-- better diagnostics list and others
 	{
 		"folke/trouble.nvim",
 		cmd = { "Trouble" },
 		opts = {
-			win = {},
+			focus = true,
 			modes = {
-				lsp = {
-					win = { position = "right" },
-				},
+				symbols = { focus = true },
 			},
 		},
 		keys = {
@@ -74,71 +73,6 @@ return {
 			},
 		},
 	},
-	-- Indent
-	-- {
-	-- 	"shellRaining/hlchunk.nvim",
-	-- 	event = "VeryLazy",
-	-- 	opts = {
-	-- 		indent = { enable = true, chars = { "│", "¦", "┆", "┊" }, use_treesitter = false },
-	-- 		blank = { enable = false },
-	-- 		line_num = { use_treesitter = true },
-	-- 	},
-	-- },
-	-- {
-	-- 	"lukas-reineke/indent-blankline.nvim",
-	-- 	event = "VeryLazy",
-	-- 	main = "ibl",
-	-- 	opts = {
-	-- 		indent = {
-	-- 			char = "|",
-	-- 			tab_char = { "│", "¦", "┆", "┊" },
-	-- 		},
-	-- 		scope = { enabled = false },
-	-- 		exclude = {
-	-- 			filetypes = {
-	-- 				"help",
-	-- 				"alpha",
-	-- 				"dashboard",
-	-- 				"NvimTree",
-	-- 				"Trouble",
-	-- 				"trouble",
-	-- 				"lazy",
-	-- 				"mason",
-	-- 				"notify",
-	-- 				"toggleterm",
-	-- 				"lazyterm",
-	-- 			},
-	-- 		},
-	-- 	},
-	-- },
-	-- {
-	-- 	"echasnovski/mini.indentscope",
-	-- 	event = "VeryLazy",
-	-- 	opts = {
-	-- 		symbol = "│",
-	-- 		options = { try_as_border = true },
-	-- 	},
-	-- 	init = function()
-	-- 		vim.api.nvim_create_autocmd("FileType", {
-	-- 			pattern = {
-	-- 				"help",
-	-- 				"alpha",
-	-- 				"dashboard",
-	-- 				"NvimTree",
-	-- 				"Trouble",
-	-- 				"trouble",
-	-- 				"lazy",
-	-- 				"mason",
-	-- 				"notify",
-	-- 				"toggleterm",
-	-- 				"lazyterm",
-	-- 			},
-	-- 			callback = function()
-	-- 				vim.b.miniindentscope_disable = true
-	-- 			end,
-	-- 		})
-	-- 	end,
-	-- },
 
 	-- Formatting
 	{
@@ -147,8 +81,8 @@ return {
 		event = "BufWritePre",
         -- stylua: ignore
         keys = {
-            { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, }) end, desc = "Format Injected File", },
-            { "<leader>cf", function() require("conform").format() end, desc = "Format file", },
+            { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, }) end, desc = "Format Injected File" },
+            { "<leader>cf", function() require("conform").format() end, desc = "Format file" },
         },
 		opts = {
 			default_format_opts = { timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" },
@@ -209,7 +143,7 @@ return {
 			function M.debounce(ms, fn)
 				local timer = vim.uv.new_timer()
 				if timer == nil then
-					return
+					return fn
 				end
 				return function(...)
 					local argv = { ... }
@@ -252,70 +186,4 @@ return {
 			})
 		end,
 	},
-
-	-- Project management
-	-- {
-	-- 	"ahmedkhalf/project.nvim",
-	-- 	event = "VeryLazy",
-	-- 	config = function()
-	-- 		require("project_nvim").setup({})
-	-- 		require("telescope").load_extension("projects")
-	-- 		vim.keymap.set(
-	-- 			{ "n" },
-	-- 			"<leader>fp",
-	-- 			"<cmd>lua require'telescope'.extensions.projects.projects{}<cr>",
-	-- 			{ silent = true, noremap = true, desc = "Find recent project" }
-	-- 		)
-	-- 	end,
-	-- },
-
-	-- Outline
-	{
-		"stevearc/aerial.nvim",
-		keys = {
-			{ "<leader>o", "<cmd>AerialToggle<CR>", desc = "Toggle aerial" },
-			{ "<leader>O", "<cmd>AerialNavToggle<CR>", desc = "Toggle aerial nav" },
-		},
-		cmd = { "AerialToggle", "AerialNavToggle", "AerialPrev", "AerialNext" },
-		opts = {
-			layout = { width = 30 },
-			close_automatic_events = { "unfocus", "switch_buffer", "unsupported" },
-			filter_kind = {
-				"Class",
-				"Constructor",
-				"Enum",
-				"Field",
-				"Function",
-				"Interface",
-				"Method",
-				"Module",
-				"Namespace",
-				"Package",
-				"Property",
-				"Struct",
-				"Trait",
-			},
-			keymaps = { ["<tab>"] = "actions.tree_toggle" },
-			highlight_on_hover = true,
-			autojump = true,
-			close_on_select = false,
-			show_guides = true,
-		},
-	},
-	-- {
-	-- 	"hedyhli/outline.nvim",
-	-- 	cmd = { "Outline", "OutlineOpen" },
-	-- 	keys = { { "<leader>o", "<cmd>Outline<CR>", mode = { "n" }, desc = "Toggle Outline" } },
-	-- 	opts = {
-	-- 		outline_window = {
-	-- 			position = "right",
-	-- 			auto_close = true,
-	-- 			auto_jump = true,
-	-- 			focus_on_open = true,
-	-- 		},
-	-- 		outline_items = { show_symbol_details = false },
-	-- 		providers = { priority = { "lsp", "markdown", "coc", "norg" } },
-	-- 		symbols = { icon_source = "lspkind" },
-	-- 	},
-	-- },
 }

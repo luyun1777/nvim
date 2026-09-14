@@ -5,83 +5,96 @@ end
 vim.g.mapleader = " "
 vim.g.localleader = "\\"
 
-vim.g.autoformat = true
+vim.g.autoformat = true -- Used by `confirm.nvim`
 
-vim.o.autochdir = true
-vim.o.autoindent = true
-vim.o.autowrite = true -- Enable auto write
-vim.o.backup = false
-vim.o.completeopt = "menu,menuone,noselect"
-vim.o.conceallevel = 2 -- Hide * markup for bold and italic, but not markers with substitutions
-vim.o.confirm = true -- Confirm to save changes before exiting modified buffer
--- vim.o.clipboard = "unnamedplus" -- Sync with system clipboard
-vim.o.cursorline = true -- Enable highlighting of the current line
-vim.o.diffopt = "closeoff,context:2,filler,followwrap,indent-heuristic,inline:char,internal,linematch:40,vertical"
-vim.o.expandtab = true -- Use spaces instead of tabs
-vim.o.fileformat = "unix"
-vim.o.fileformats = "unix,dos,mac"
-vim.o.fileencoding = "utf-8"
-vim.o.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
-vim.opt.fillchars = { foldopen = "", foldclose = "", fold = " ", foldsep = " ", diff = "╱", eob = " " }
-vim.o.foldlevel = 99
-vim.o.foldmethod = "indent"
-vim.o.foldtext = ""
-vim.o.formatoptions = "jcroqlnt" -- tcqj
-vim.o.grepformat = "%f:%l:%c:%m,%f:%l:%m"
-vim.o.grepprg = vim.fn.executable("rg") == 1 and "rg --vimgrep --no-heading --smart-case"
-vim.o.guicursor =
+-- Set LSP servers to be ignored when used with `util.root.get_lsp_root`
+-- for detecting the LSP root
+vim.g.root_lsp_ignore = {}
+
+local opt = vim.opt
+
+opt.autochdir = true
+opt.autoindent = true
+opt.autowrite = true -- Enable auto write
+opt.backup = false
+opt.completeopt = "menu,menuone,noselect"
+opt.conceallevel = 2 -- Hide * markup for bold and italic, but not markers with substitutions
+opt.confirm = true -- Confirm to save changes before exiting modified buffer
+-- opt.clipboard = "unnamedplus" -- Sync with system clipboard
+opt.cursorline = true -- Enable highlighting of the current line
+-- opt.diffopt = "closeoff,context:2,filler,followwrap,indent-heuristic,inline:char,internal,linematch:40,vertical"
+-- internal,filler,closeoff,indent-heuristic,inline:char,linematch:40
+opt.diffopt:append({ "context:2", "followwrap", "vertical" })
+opt.expandtab = true -- Use spaces instead of tabs
+opt.fileformat = "unix"
+opt.fileformats = "unix,dos,mac"
+opt.fileencoding = "utf-8"
+opt.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
+opt.fillchars = { foldopen = "", foldclose = "", fold = " ", foldsep = " ", diff = "╱", eob = " " }
+opt.foldlevel = 99
+opt.foldmethod = "indent"
+opt.foldtext = ""
+opt.formatoptions = "jcroqlnt" -- tcqj
+opt.grepformat = "%f:%l:%c:%m"
+opt.guicursor =
 	"n-v:block-nCursor,i-c-ci-t:ver20-iCursor-blinkwait200-blinkoff200-blinkon200,r-cr-o:hor20-Cursor-blinkwait200-blinkoff200-blinkon200"
-vim.o.guifont = "FiraCode Nerd Font Mono,LXGW WenKai Mono,Consolas"
-vim.o.hlsearch = false
-vim.o.ignorecase = true -- Ignore case
-vim.o.inccommand = "nosplit" -- preview incremental substitute
-vim.o.jumpoptions = "view"
-vim.o.laststatus = 3 -- global statusline
-vim.o.linebreak = true -- Wrap lines at convenient points
--- vim.o.list = true -- Show some invisible characters (tabs...
--- vim.o.listchars = "space:·,tab:··,trail:▫"
-vim.o.mouse = "a" -- Enable mouse mode
-vim.o.number = true -- Print line number
-vim.o.pumblend = 10 -- Popup blend
-vim.o.pumheight = 10 -- Maximum number of entries in a popup
-vim.o.relativenumber = true -- Relative line numbers
--- vim.o.ruler = false -- Disable the default ruler
-vim.o.scrolloff = 4 -- Lines of context
-vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
-vim.o.shell = vim.fn.executable("fish") == 1 and "fish" or vim.fn.executable("pwsh") and "pwsh" or nil
-if vim.o.shell == "pwsh" then
-	vim.o.shellcmdflag =
-		"-NoProfile -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues['Out-File:Encoding']='utf8';$PSStyle.OutputRendering='plaintext';Remove-Alias -Force -ErrorAction SilentlyContinue tee;"
-	vim.o.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode' -- Setting shell redirection
-	vim.o.shellpipe = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode' -- Setting shell pipe
-	-- Setting shell quote options
-	vim.o.shellquote = ""
-	vim.o.shellxquote = ""
+opt.guifont = "FiraCode Nerd Font Mono,LXGW WenKai Mono,Consolas"
+opt.hlsearch = false
+opt.ignorecase = true -- Ignore case
+opt.inccommand = "nosplit" -- preview incremental substitute
+opt.jumpoptions = "view"
+opt.laststatus = 3 -- global statusline
+opt.linebreak = true -- Wrap lines at convenient points
+-- opt.list = true -- Show some invisible characters (tabs...
+-- opt.listchars = "space:·,tab:··,trail:▫"
+opt.mouse = "a" -- Enable mouse mode
+opt.number = true -- Print line number
+opt.pumblend = 10 -- Popup blend
+opt.pumheight = 10 -- Maximum number of entries in a popup
+opt.relativenumber = true -- Relative line numbers
+-- opt.ruler = false -- Disable the default ruler
+opt.scrolloff = 4 -- Lines of context
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+opt.shiftround = true -- Round indent
+opt.shiftwidth = 4 -- Size of an indent
+opt.shortmess:append({ c = true, C = true }) -- "ltToOCF"
+opt.showbreak = "↳ " -- DOWNWARDS ARROW WITH TIP RIGHTWARDS (U+21B3, UTF-8: E2 86 B3)
+opt.showmode = false -- Dont show mode since we have a statusline
+opt.sidescrolloff = 8 -- Columns of context
+opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
+opt.smartcase = true -- Don't ignore case with capitals
+opt.smartindent = true -- Insert indents automatically
+opt.smoothscroll = vim.fn.has("nvim-0.10") == 1
+opt.softtabstop = 4
+opt.spell = false -- Disable spell
+opt.splitbelow = true -- Put new windows below current
+opt.splitkeep = "screen"
+opt.splitright = true -- Put new windows right of current
+opt.swapfile = false -- Save swap file and trigger CursorHold
+opt.tabstop = 4 -- Number of spaces tabs count for
+opt.termguicolors = true -- True color support
+opt.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
+-- opt.undofile = true
+opt.updatetime = 200 -- Save swap file and trigger CursorHold
+opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
+opt.wildmode = "longest:full,full" -- Command-line completion mode
+opt.winborder = "rounded" -- Defines the default border style of floating windows
+opt.winminwidth = 5 -- Minimum window width
+opt.writebackup = false
+opt.wrap = false -- Disable line wrap
+
+if vim.fn.executable("rg") == 1 then
+	opt.grepprg = "rg --vimgrep --smart-case"
 end
-vim.o.shiftround = true -- Round indent
-vim.o.shiftwidth = 4 -- Size of an indent
-vim.o.shortmess = "ltToOcCF"
-vim.o.showbreak = "↳ " -- DOWNWARDS ARROW WITH TIP RIGHTWARDS (U+21B3, UTF-8: E2 86 B3)
-vim.o.showmode = false -- Dont show mode since we have a statusline
-vim.o.sidescrolloff = 8 -- Columns of context
-vim.o.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
-vim.o.smartcase = true -- Don't ignore case with capitals
-vim.o.smartindent = true -- Insert indents automatically
-vim.o.smoothscroll = vim.fn.has("nvim-0.10") == 1 and true or false
-vim.o.softtabstop = 4
-vim.o.spell = false -- Disable spell
-vim.o.splitbelow = true -- Put new windows below current
-vim.o.splitkeep = "screen"
-vim.o.splitright = true -- Put new windows right of current
-vim.o.swapfile = false -- Save swap file and trigger CursorHold
-vim.o.tabstop = 4 -- Number of spaces tabs count for
-vim.o.termguicolors = true -- True color support
-vim.o.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
--- vim.o.undofile = true
-vim.o.updatetime = 200 -- Save swap file and trigger CursorHold
-vim.o.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
-vim.o.wildmode = "longest:full,full" -- Command-line completion mode
-vim.o.winborder = "rounded" -- Defines the default border style of floating windows
-vim.o.winminwidth = 5 -- Minimum window width
-vim.o.writebackup = false
-vim.o.wrap = false -- Disable line wrap
+
+if vim.fn.executable("fish") == 1 then
+	opt.shell = "fish"
+elseif vim.fn.executable("pwsh") == 1 then
+	opt.shell = "pwsh"
+	opt.shellcmdflag =
+		"-NoProfile -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues['Out-File:Encoding']='utf8';$PSStyle.OutputRendering='plaintext';Remove-Alias -Force -ErrorAction SilentlyContinue tee;"
+	opt.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
+	opt.shellpipe = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
+	opt.shellquote = ""
+	opt.shellxquote = ""
+end

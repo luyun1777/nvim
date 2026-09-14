@@ -14,6 +14,8 @@ return {
 		{ "onsails/lspkind.nvim" },
 	},
 
+	---@module "blink.cmp"
+	---@type blink.cmp.Config
 	opts = {
 		-- snippets = { preset = "luasnip" },
 		keymap = {
@@ -74,7 +76,10 @@ return {
 		},
 
 		sources = {
-			default = { "lsp", "lazydev", "path", "snippets", "buffer" },
+			default = { "lsp", "path", "snippets", "buffer" },
+			per_filetype = {
+				lua = { inherit_defaults = true, "lazydev" },
+			},
 			providers = {
 				lazydev = {
 					name = "LazyDev",

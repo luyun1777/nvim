@@ -1,37 +1,30 @@
 local function augroup(name)
-	return vim.api.nvim_create_augroup("my_group_" .. name, { clear = true })
+	return vim.api.nvim_create_augroup("user_" .. name, { clear = true })
 end
 
--- Auto change directory to current dir
--- vim.api.nvim_create_autocmd("BufReadPost", { pattern = "*", command = "silent! lcd %:p:h" })
-
--- Auto restore cursor position to last open
-vim.api.nvim_create_autocmd("BufReadPre", {
-	group = augroup("restore_cursor"),
-	pattern = "*",
-	callback = function()
-		vim.api.nvim_create_autocmd("FileType", {
-			buffer = 0,
-			once = true,
-			callback = function()
-				local line = vim.fn.line("'\"")
-				local last_line = vim.fn.line("$")
-				local ft = vim.bo.filetype
-
-				if
-					line >= 1
-					and line <= last_line
-					and not ft:match("commit")
-					and not vim.tbl_contains({ "xxd", "gitrebase" }, ft)
-					and not vim.opt.diff:get()
-				then
-					vim.cmd('normal! g`"')
-				end
-			end,
-		})
+vim.api.nvim_create_autocmd({ "LspAttach", "BufFilePost", "DirChanged", "BufEnter" }, {
+	group = augroup("root_refresh"),
+	callback = function(ev)
+		require("util.root").clear_cache(ev.buf)
 	end,
 })
-
+-- Auto restore cursor position to last location
+vim.api.nvim_create_autocmd("BufReadPost", {
+	group = augroup("last_loc"),
+	callback = function(ev)
+		local exclude = { "gitcommit", "gitrebase", "help", "dashboard" }
+		local buf = ev.buf
+		if vim.tbl_contains(exclude, vim.bo[buf].filetype) or vim.b[buf].last_loc then
+			return
+		end
+		vim.b[buf].last_loc = true
+		local mark = vim.api.nvim_buf_get_mark(buf, '"')
+		local lcount = vim.api.nvim_buf_line_count(buf)
+		if mark[1] > 0 and mark[1] <= lcount then
+			pcall(vim.api.nvim_win_set_cursor, 0, mark)
+		end
+	end,
+})
 -- Auto enter insert mode while enter a terminal
 vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
 	group = augroup("startinsert"),
@@ -96,14 +89,14 @@ vim.api.nvim_create_autocmd("FileType", {
 		"startuptime",
 		"tsplayground",
 	},
-	callback = function(event)
-		vim.bo[event.buf].buflisted = false
+	callback = function(ev)
+		vim.bo[ev.buf].buflisted = false
 		vim.schedule(function()
 			vim.keymap.set("n", "q", function()
 				vim.cmd("close")
-				pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+				pcall(vim.api.nvim_buf_delete, ev.buf, { force = true })
 			end, {
-				buffer = event.buf,
+				buffer = ev.buf,
 				silent = true,
 				desc = "Quit buffer",
 			})
@@ -115,8 +108,8 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("man_unlisted"),
 	pattern = { "man" },
-	callback = function(event)
-		vim.bo[event.buf].buflisted = false
+	callback = function(ev)
+		vim.bo[ev.buf].buflisted = false
 	end,
 })
 
@@ -142,30 +135,23 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 -- Auto set tab's length to 2, while open yaml or markdown file
 vim.api.nvim_create_autocmd("FileType", {
 	group = augroup("yaml_md"),
-	pattern = { "*.md", "*.markdown", "*.yaml", "*.yml" },
+	pattern = { "markdown", "yaml" },
 	callback = function()
-		vim.opt_local.tabstop = 2
+		vim.opt_local.expandtab = false
 		vim.opt_local.shiftwidth = 2
 		vim.opt_local.softtabstop = 2
-		vim.opt_local.expandtab = false
+		vim.opt_local.tabstop = 2
 	end,
-})
-
--- Auto create file headers while creating a python file
-vim.api.nvim_create_autocmd("BufNewFile", {
-	group = augroup("create_python_header"),
-	pattern = "*.py",
-	callback = require("util.create_header").create_python_header,
 })
 
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	group = augroup("auto_create_dir"),
-	callback = function(event)
-		if event.match:match("^%w%w+:[\\/][\\/]") then
+	callback = function(ev)
+		if ev.match:match("^%w%w+:[\\/][\\/]") then
 			return
 		end
-		local file = vim.uv.fs_realpath(event.match) or event.match
+		local file = vim.uv.fs_realpath(ev.match) or ev.match
 		vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
 	end,
 })
@@ -174,26 +160,48 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = augroup("lsp"),
 	callback = function(ev)
-		local bufnr = ev.buf
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
-
 		if client == nil then
 			return
 		end
-		if client:supports_method("textDocument/inlayHint", bufnr) then
-			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-			vim.keymap.set("n", "<leader>uh", function()
-				require("util").toggle.inlay_hints()
-			end, { desc = "Toggle Inlay Hints" })
-		end
-		if client:supports_method("textDocument/codeLens", bufnr) then
-			vim.lsp.codelens.enable(true, { bufnr = bufnr })
-			vim.keymap.set("n", "<leader>cc", vim.lsp.codelens.run, { desc = "Run CodeLens" })
-			vim.keymap.set("n", "<leader>cC", function()
-				require("util").toggle.codelens()
-			end, { buffer = bufnr, desc = "Toggle CodeLens" })
+		local bufnr = ev.buf
+		local has_snacks, _ = pcall(require, "snacks")
+		local function map(mode, lhs, rhs, opts)
+			vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts or {}, { buffer = bufnr }))
 		end
 
+		-- CodeLens
+		if client:supports_method("textDocument/codeLens", bufnr) then
+			vim.lsp.codelens.enable(true, { bufnr = bufnr })
+			map("n", "<leader>cc", vim.lsp.codelens.run, { desc = "Run CodeLens" })
+			map("n", "<leader>cC", function()
+				require("util.toggle").codelens()
+			end, { desc = "Toggle CodeLens" })
+		end
+
+		-- Formatting
+		map("n", "<leader>cL", function()
+			vim.lsp.buf.format({ buffer = bufnr, async = true })
+		end, { desc = "Format file (Lsp)" })
+
+		--Folds
+		if client:supports_method("textDocument/foldingRange") then
+			vim.wo.foldmethod = "expr"
+			vim.wo.foldexpr = "v:lua.vim.lsp.foldexpr()"
+		end
+
+		-- Inlay Hints
+		if client:supports_method("textDocument/inlayHint", bufnr) then
+			vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+
+			if not has_snacks then
+				map("n", "<leader>uh", function()
+					require("util.toggle").inlay_hints()
+				end, { desc = "Toggle Inlay Hints" })
+			end
+		end
+
+		-- Completion & Tags
 		if client.server_capabilities.completionProvider then
 			vim.bo[bufnr].omnifunc = "v:lua.vim.lsp.omnifunc"
 		end
@@ -201,38 +209,28 @@ vim.api.nvim_create_autocmd("LspAttach", {
 			vim.bo[bufnr].tagfunc = "v:lua.vim.lsp.tagfunc"
 		end
 
-		vim.keymap.set("n", "<leader>cL", function()
-			vim.lsp.buf.format({ buffer = bufnr, async = true })
-		end, { buffer = bufnr, desc = "Format file (Lsp)" })
-		if vim.fn.has("nvim-0.12") == 1 then
-			vim.keymap.set("n", "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", { desc = "Lsp Info" })
-		else
-			vim.keymap.set("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
+		if not has_snacks then
+			if vim.fn.has("nvim-0.12") == 1 then
+				map("n", "<leader>cl", "<cmd>checkhealth vim.lsp<cr>", { desc = "Lsp Info" })
+			else
+				map("n", "<leader>cl", "<cmd>LspInfo<cr>", { desc = "Lsp Info" })
+			end
+			map("n", "gD", vim.lsp.buf.declaration, { desc = "Go Declaration" })
+			map("n", "gd", vim.lsp.buf.definition, { desc = "Go Definition" })
+			map("n", "gi", vim.lsp.buf.implementation, { desc = "Go Implementation" })
+			map("n", "gr", vim.lsp.buf.references, { desc = "Go References" })
+			map("n", "gy", vim.lsp.buf.type_definition, { desc = "Goto T[y]pe Definition" })
 		end
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "Go declaration" })
-		vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, { buffer = bufnr, desc = "Type definition" })
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go definition" })
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover" })
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, { buffer = bufnr, desc = "GO implementation" })
-		vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go references" })
-		vim.keymap.set("n", "gk", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "signature help" })
-		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename variable" })
-		vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code action" })
-		vim.keymap.set("i", "<c-k>", vim.lsp.buf.signature_help, { buffer = bufnr, desc = "signature help" })
-		vim.keymap.set(
-			"n",
-			"<leader>wa",
-			vim.lsp.buf.add_workspace_folder,
-			{ buffer = bufnr, desc = "Add workspace folder" }
-		)
-		vim.keymap.set(
-			"n",
-			"<leader>wr",
-			vim.lsp.buf.remove_workspace_folder,
-			{ buffer = bufnr, desc = "Remove workspace folder" }
-		)
-		vim.keymap.set("n", "<leader>wl", function()
+
+		map("n", "K", vim.lsp.buf.hover, { desc = "Hover" })
+		map("n", "gK", vim.lsp.buf.signature_help, { desc = "Signature help" })
+		map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename variable" })
+		map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+		map("i", "<c-k>", vim.lsp.buf.signature_help, { desc = "Signature Help" })
+		map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { desc = "Add workspace folder" })
+		map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { desc = "Remove workspace folder" })
+		map("n", "<leader>wl", function()
 			print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-		end, { buffer = bufnr, desc = "List workspace folders" })
+		end, { desc = "List workspace folders" })
 	end,
 })

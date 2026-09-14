@@ -1,4 +1,4 @@
-local rooter = require("util.root")
+local root = require("util.root")
 
 return {
 	"folke/snacks.nvim",
@@ -36,26 +36,27 @@ return {
 		terminal = { enabled = true, win = { position = "float", border = "rounded" } },
 		words = { enabled = true },
 	},
+    -- stylua: ignore start 
 	keys = {
-		-- Top Pickers & Explorer
-        -- stylua: ignore start 
         { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
         { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
-        { "<leader>/", function() Snacks.picker.grep({ cwd = rooter.get_root() }) end, desc = "Grep (Root Dir)" },
+        { "<leader>/", function() Snacks.picker.grep({ cwd = root.get() }) end, desc = "Grep (Root Dir)" },
         { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
-        { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
-        { "<leader>fe", function() Snacks.explorer({ cwd = rooter.get_root() }) end, desc = "Explorer Snacks (Root Dir)" },
+        { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Show Notification History" },
+        { "<leader>fn", function() Snacks.picker.notifications() end, desc = "Find Notification History" },
+        { "<leader>fe", function() Snacks.explorer({ cwd = root.get() }) end, desc = "Explorer Snacks (Root Dir)" },
         { "<leader>fE", function() Snacks.explorer() end, desc = "Explorer Snacks (Cwd)" },
         -- find
         { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
         { "<leader>fB", function() Snacks.picker.buffers({ hidden = true, nofile = true }) end, desc = "Buffers (all)" },
 
         { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-        { "<leader>ff", function() Snacks.picker.files({ cwd = rooter.get_root() }) end, desc = "Find Files (Root Dir)" },
+        { "<leader>ff", function() Snacks.picker.files({ cwd = root.get() }) end, desc = "Find Files (Root Dir)" },
         { "<leader>fF", function() Snacks.picker.files({ cwd = vim.uv.cwd() }) end, desc = "Find Files (Cwd)" },
         { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
         { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
         { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
+        { "<leader>fR", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Recent (cwd)" },
         -- git
         { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
         { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
@@ -67,15 +68,14 @@ return {
         -- Grep
         { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
         { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
-        { "<leader>sg", function() Snacks.picker.grep({ cwd = rooter.get_root() }) end, desc = "Grep (Root Dir)" },
+        { "<leader>sg", function() Snacks.picker.grep({ cwd = root.get() }) end, desc = "Grep (Root Dir)" },
         { "<leader>sG", function() Snacks.picker.grep({ cwd = vim.uv.cwd()}) end, desc = "Grep (Cwd)" },
-        { "<leader>sw", function() Snacks.picker.grep_word({ cwd = rooter.get_root() }) end, desc = "Visual selection or word (Root Dir)", mode = { "n", "x" } },
+        { "<leader>sw", function() Snacks.picker.grep_word({ cwd = root.get() }) end, desc = "Visual selection or word (Root Dir)", mode = { "n", "x" } },
         { "<leader>sW", function() Snacks.picker.grep_word({ cwd = vim.uv.cwd()}) end, desc = "Visual selection or word (Cwd)", mode = { "n", "x" } },
         -- search
         { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
         { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
         { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
-        { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
         { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
         { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands" },
         { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
@@ -92,12 +92,13 @@ return {
         { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
         { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
         { "<leader>su", function() Snacks.picker.undo() end, desc = "Undo History" },
-        { "<leader>uc", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+        { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
         -- LSP
+        { "<leader>cl", function() Snacks.picker.lsp_config() end, desc = "Lsp Info" },
         { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
         { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
         { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
-        { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+        { "gi", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
         { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
         { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
         { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
@@ -106,22 +107,21 @@ return {
         { "<leader>uZ",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
         { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
         { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
-        { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
         { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
         { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
         { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-        { "<leader>gg", function() Snacks.lazygit({ cwd = rooter.get_root() }) end, desc = "Lazygit (Root Dir)" },
+        { "<leader>gg", function() Snacks.lazygit({ cwd = root.get() }) end, desc = "Lazygit (Root Dir)" },
         { "<leader>gG", function() Snacks.lazygit() end, desc = "Lazygit (Cwd)" },
         { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
-        { "<leader>tt", function() Snacks.terminal(nil, { cwd = rooter.get_root() }) end, desc = "Terminal (Float & Root Dir)" },
+        { "<leader>tt", function() Snacks.terminal(nil, { cwd = root.get() }) end, desc = "Terminal (Float & Root Dir)" },
         { "<leader>tT", function() Snacks.terminal() end, desc = "Terminal (Float & Cwd)" },
-        { "<leader>tf", function() Snacks.terminal(nil, { cwd = rooter.get_root() } ) end, desc = "Terminal (Float & Root Dir)" },
+        { "<leader>tf", function() Snacks.terminal(nil, { cwd = root.get() } ) end, desc = "Terminal (Float & Root Dir)" },
         { "<leader>tF", function() Snacks.terminal() end, desc = "Terminal (Float & Cwd)" },
-        { "<leader>tv", function() Snacks.terminal(nil, { cwd = rooter.get_root(), count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom & Root Dir)" },
+        { "<leader>tv", function() Snacks.terminal(nil, { cwd = root.get(), count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom & Root Dir)" },
         { "<leader>tV", function() Snacks.terminal(nil, { count = 2, win = { position = "bottom", height = 0.4 } }) end, desc = "Terminal (Bottom & Cwd)" },
-        { "<leader>th", function() Snacks.terminal(nil, { cwd = rooter.get_root(), count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right & Root Dir)" },
+        { "<leader>th", function() Snacks.terminal(nil, { cwd = root.get(), count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right & Root Dir)" },
         { "<leader>tH", function() Snacks.terminal(nil, { count = 3, win = { position = "right", width = 0.3 } }) end, desc = "Terminal (Right & Cwd)" },
-        { "<c-/>",      function() Snacks.terminal.toggle(nil, { cwd = rooter.get_root() }) end, desc = "Terminal (Toggle)" },
+        { "<c-/>",      function() Snacks.terminal.toggle(nil, { cwd = root.get() }) end, desc = "Terminal (Toggle)" },
         { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore", mode = { "n", "t" } },
         { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
         { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
@@ -166,9 +166,9 @@ return {
 				Snacks.toggle.inlay_hints():map("<leader>uh")
 				Snacks.toggle.diagnostics():map("<leader>ud")
 				Snacks.toggle.line_number():map("<leader>ul")
-				-- Snacks.toggle
-				-- 	.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
-				-- 	:map("<leader>uc")
+				Snacks.toggle
+					.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+					:map("<leader>uc")
 				Snacks.toggle.treesitter():map("<leader>uT")
 				Snacks.toggle
 					.option("background", { off = "light", on = "dark", name = "Dark Background" })

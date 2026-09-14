@@ -26,16 +26,20 @@ return {
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		ft = "markdown",
+		keys = {
+			{
+				"<leader>um",
+				function()
+					require("render-markdown").toggle()
+				end,
+				desc = "Toggle Render Markdown",
+			},
+		},
 		opts = {
 			sign = { enabled = false },
 			indent = { enabled = true },
 		},
 	},
-	-- {
-	-- 	"tadmccorkle/markdown.nvim",
-	-- 	ft = { "markdown" },
-	-- 	opts = {},
-	-- },
 	-- {
 	-- 	"iamcco/markdown-preview.nvim",
 	-- 	cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -48,28 +52,14 @@ return {
 	{
 		"lervag/vimtex",
 		enabled = vim.fn.executable("tex") == 1,
-		lazy = false, -- 确保 VimTeX 在打开 .tex 文件时立即加载
-		init = function()
-			-- vim.g.vimtex_quickfix_mode = 0 -- set to 0 to never opene quickfix window automatically.
-			-- vim.g.vimtex_complete_close_braces = 1 -- whether to append a closing brace after a label or a citation has been completed.
+		lazy = false,
+		keys = {
+			{ "<localLeader>l", "", desc = "+vimtex", ft = "tex" },
+		},
+
+		config = function()
+			vim.g.vimtex_quickfix_mode = 0 -- set to 0 to never open quickfix window automatically.
 			vim.g.vimtex_compiler_latexmk_engines = { _ = "-xelatex" }
 		end,
 	},
-
-	-- {
-	-- 	"Eandrju/cellular-automaton.nvim",
-	-- 	keys = {
-	-- 		{
-	-- 			"<leader>qq",
-	-- 			"<cmd>CellularAutomaton make_it_rain<CR>",
-	-- 			desc = "Fun",
-	-- 		},
-	-- 	},
-	-- 	opts = {},
-	-- },
-
-	-- {
-	-- 	"sontungexpt/url-open",
-	-- 	opts = {},
-	-- },
 }

@@ -1,13 +1,12 @@
 local map = vim.keymap.set
 
 map({ "i", "x", "n", "s" }, "<c-s>", "<cmd>w<cr><esc>", { silent = true, desc = "Save file" })
-map({ "n", "v" }, "Q", "<cmd>q<cr>", { silent = true, desc = "Quit" })
 map({ "n", "v" }, "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
 map("v", "Y", '"+y', { desc = "Copy to system clipboard" })
 map("n", "P", '"+p', { desc = "Paste from system clipboard" })
 
-map("n", "<leader>rc", "<cmd>e $MYVIMRC<cr>,", { silent = true, desc = "Edit configuration" })
+map("n", "<leader>rc", "<cmd>e $MYVIMRC<cr>", { silent = true, desc = "Edit Configuration" })
 
 -- better indent
 map("n", ">", ">>", { silent = true })
@@ -81,8 +80,18 @@ map("n", "N", "'nN'[v:searchforward].'zv'", { expr = true, desc = "Prev search r
 map("x", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 map("o", "N", "'nN'[v:searchforward]", { expr = true, desc = "Prev search result" })
 
+-- Add undo break-points
+map("i", ",", ",<c-g>u")
+map("i", ".", ".<c-g>u")
+map("i", ";", ";<c-g>u")
+
 --keywordprg
 map("n", "<leader>K", "<cmd>norm! K<cr>", { desc = "Keywordprg" })
+
+-- commenting
+map("n", "gco", "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Below" })
+map("n", "gcO", "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>", { desc = "Add Comment Above" })
+
 -- location list
 map("n", "<leader>xl", function()
 	local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
@@ -103,19 +112,26 @@ map("n", "[q", vim.cmd.cprev, { silent = true, desc = "Previous quickfix" })
 map("n", "]q", vim.cmd.cnext, { silent = true, desc = "Next quickfix" })
 
 -- diagnostic
--- stylua: ignore start
+local diagnostic_goto = function(next, severity)
+	return function()
+		vim.diagnostic.jump({
+			count = (next and 1 or -1) * vim.v.count1,
+			severity = severity and vim.diagnostic.severity[severity] or nil,
+			float = true,
+		})
+	end
+end
 map("n", "<leader>cd", vim.diagnostic.open_float, { desc = "Line Diagnostics" })
 map("n", "<leader>e", vim.diagnostic.setloclist, { desc = "Diagnostic list" })
-map("n", "]d", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true })<cr>", { desc = "Next Diagnostic" })
-map("n", "[d", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true })<cr>", { desc = "Next Diagnostic" })
-map("n", "]e", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Next Error" })
-map("n", "[e", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.ERROR })<cr>", { desc = "Prev Error" })
-map("n", "]w", "<cmd>lua vim.diagnostic.jump({ count = 1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Next Warning" })
-map("n", "[w", "<cmd>lua vim.diagnostic.jump({ count = -1, float = true, severity = vim.diagnostic.severity.WARN })<cr>", { desc = "Prev Warning" })
+map("n", "]d", diagnostic_goto(true), { desc = "Next Diagnostic" })
+map("n", "[d", diagnostic_goto(false), { desc = "Prev Diagnostic" })
+map("n", "]e", diagnostic_goto(true, "ERROR"), { desc = "Next Error" })
+map("n", "[e", diagnostic_goto(false, "ERROR"), { desc = "Prev Error" })
+map("n", "]w", diagnostic_goto(true, "WARN"), { desc = "Next Warning" })
+map("n", "[w", diagnostic_goto(false, "WARN"), { desc = "Prev Warning" })
 
 -- Terminal Mappings
 map("t", "<esc>", "<c-\\><c-n>", { desc = "Enter Normal Mode" })
-map("t", "<c-r>", [['<c-\><c-N>"'.nr2char(getchar()).'pi']], { expr = true })
 map("t", "<c-h>", "<cmd>wincmd h<cr>", { desc = "Go to left window" })
 map("t", "<c-j>", "<cmd>wincmd j<cr>", { desc = "Go to lower window" })
 map("t", "<c-k>", "<cmd>wincmd k<cr>", { desc = "Go to upper window" })
@@ -158,12 +174,9 @@ map("n", "<leader>uI", function()
 	vim.api.nvim_input("I")
 end, { desc = "Inspect Tree" })
 
-map("n", "<f5>", function()
-	Util.compile_run()
-end, { desc = "Run file" })
-
--- Useful actions
-map("i", "<s-enter>", "<esc>o", { silent = true })
+map("n", "<leader>rr", function()
+	Util.run_file.run()
+end, { desc = "Run Current File" })
 
 -- Disable `s`、`S`
 map("", "s", "<nop>", { silent = true })

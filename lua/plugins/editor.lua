@@ -6,15 +6,20 @@ return {
 		keys = {
 			{
 				"tt",
-				"<cmd>lua require('nvim-tree.api').tree.toggle( {path = require('util.root').get_root(), find_file = true })<cr>",
+				function()
+					require("nvim-tree.api").tree.toggle({ path = require("util.root").get(), find_file = true })
+				end,
 				desc = "Toggle NvimTree (Root Dir)",
 			},
 			{
 				"te",
-				"<cmd>lua require('nvim-tree.api').tree.toggle( { find_file = true, update_root = true })<cr>",
+				function()
+					require("nvim-tree.api").tree.toggle({ path = vim.uv.cwd(), find_file = true })
+				end,
 				desc = "Toggle NvimTree (Cwd)",
 			},
 		},
+		---@type nvim_tree.config
 		opts = {
 			renderer = { indent_markers = { enable = true } },
 			filters = { dotfiles = true, git_ignored = true },
@@ -45,10 +50,10 @@ return {
 	{
 		"folke/flash.nvim",
 		opts = { rainbow = { enable = true } },
-		-- stylua: ignore
-		keys = {
-			{ "s", function() require("flash").jump() end, desc = "Flash" },
-			{ "S", function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+-- stylua: ignore
+keys = {
+{ "s", function() require("flash").jump() end, desc = "Flash" },
+{ "S", function() require("flash").treesitter() end, desc = "Flash Treesitter" },
             { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
             { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
 
@@ -62,7 +67,7 @@ return {
                     }
                 })
                 end, desc = "Treesitter Incremental Selection" },
-		},
+},
 	},
 	-- Better fold
 	{
@@ -98,7 +103,7 @@ return {
 	{
 		"MagicDuck/grug-far.nvim",
 		opts = { headerMaxWidth = 80 },
-		cmd = "GrugFar",
+		cmd = { "GrugFar", "GrugFarWithin" },
 		keys = {
 			{
 				"<leader>sr",
@@ -129,21 +134,15 @@ return {
 	{ -- Color indicator
 		"NvChad/nvim-colorizer.lua",
 		cmd = { "ColorizerToggle" },
-		keys = { { "<leader>uC", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" } },
+		keys = { { "<leader>ct", "<cmd>ColorizerToggle<cr>", desc = "Toggle Colorizer" } },
 		opts = {
-			user_default_options = {
-				mode = "virtualtext", -- foreground, background,  virtualtext
-				virtualtext = "■",
+			options = {
+				parsers = { css = true, tailwind = { enable = true } },
+				display = { mode = "virtualtext" },
 			},
 		},
 	},
-	-- { -- Undotree
-	-- 	"jiaoshijie/undotree",
-	-- 	opts = {},
-	-- 	keys = {
-	-- 		{ "<leader>U", "<cmd>lua require('undotree').toggle()<cr>", desc = "Toggle undotree" },
-	-- 	},
-	-- },
+
 	{ -- Translate
 		"voldikss/vim-translator",
 		cmd = { "Translate" },

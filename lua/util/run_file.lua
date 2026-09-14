@@ -1,10 +1,12 @@
+---@class util.run_file
+local M = {}
 local split = function()
 	vim.cmd("set splitbelow")
-	vim.cmd("sp")
+	vim.cmd("split")
 	vim.cmd("res -5")
 end
 --- execute single file
-local compile_run = function()
+M.run = function()
 	if vim.bo.modified then
 		vim.cmd("write")
 	end
@@ -35,8 +37,10 @@ local compile_run = function()
 		split()
 		vim.cmd("term lua %")
 	elseif ft == "tex" then
-		if require("lazy.core.config").spec.plugins["vimtex"] ~= nil then
+		if vim.fn.exists(":VimtexCompile") == 2 then
 			vim.cmd("VimtexCompile")
+		else
+			vim.notify("`vimtex` is not installed", vim.log.levels.WARN, { title = "Run Current File" })
 		end
 	elseif ft == "python" then
 		split()
@@ -52,8 +56,8 @@ local compile_run = function()
 		split()
 		vim.cmd("term bash %")
 	else
-		vim.notify("Current file type is not supported!", vim.log.levels.WARN, { title = "Compile and Run" })
+		vim.notify("Current file type is not supported!", vim.log.levels.WARN, { title = "Run Current File" })
 	end
 end
 
-return compile_run
+return M

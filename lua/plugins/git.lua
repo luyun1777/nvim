@@ -45,23 +45,14 @@ return {
 				map({ "n", "v" }, "<leader>ghR", gs.reset_buffer, "Reset Buffer")
                 map("n", "<leader>ghS", gs.stage_buffer, "Stage Buffer")
                 map("n", "<leader>ghu", gs.undo_stage_hunk, "Undo Stage Hunk")
-                map("n", "<leader>ghR", gs.reset_buffer, "Reset Buffer")
                 map("n", "<leader>ghp", gs.preview_hunk_inline, "Preview Hunk Inline")
                 map("n", "<leader>ghb", function() gs.blame_line({ full = true }) end, "Blame Line")
                 map("n", "<leader>ghB", function() gs.blame() end, "Blame Buffer")
+                map("n", "<leader>ghl", function() gs.toggle_current_line_blame() end, "Blame Current Line")
                 map("n", "<leader>ghd", gs.diffthis, "Diff This")
                 map("n", "<leader>ghD", function() gs.diffthis("~") end, "Diff This ~")
-                map({ "o", "x" }, "ih", "<cmd><C-U>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
+                map({ "o", "x" }, "ih", "<cmd>Gitsigns select_hunk<CR>", "GitSigns Select Hunk")
 			end,
 		},
 	},
-	-- {
-	-- 	"kdheepak/lazygit.nvim",
-	-- 	enabled = vim.fn.executable("git") == 1 and vim.fn.executable("lazygit") == 1,
-	-- 	cmd = { "LazyGit", "LazyGitConfig", "LazyGitFilter" },
-	-- 	keys = {
-	-- 		{ "<leader>gG", "<cmd>Telescope lazygit<cr>", desc = "Telescope lazygit" },
-	-- 		{ "<leader>gg", "<cmd>LazyGit<CR>", desc = "Toggle lazygit" },
-	-- 	},
-	-- },
 }
