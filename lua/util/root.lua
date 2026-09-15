@@ -124,9 +124,9 @@ local function get_fs_root(bufpath, markers)
 end
 
 --- Clear all cached entries for a given buffer (or all buffers if nil).
----@param bufnr? integer
 -- Invalidate every cache entry belonging to this buffer, across
 -- all marker fingerprints.
+---@param bufnr? integer
 function M.clear_cache(bufnr)
 	if bufnr then
 		local prefix = bufnr .. "|"

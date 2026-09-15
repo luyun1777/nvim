@@ -22,8 +22,6 @@ opt.conceallevel = 2 -- Hide * markup for bold and italic, but not markers with 
 opt.confirm = true -- Confirm to save changes before exiting modified buffer
 -- opt.clipboard = "unnamedplus" -- Sync with system clipboard
 opt.cursorline = true -- Enable highlighting of the current line
--- opt.diffopt = "closeoff,context:2,filler,followwrap,indent-heuristic,inline:char,internal,linematch:40,vertical"
--- internal,filler,closeoff,indent-heuristic,inline:char,linematch:40
 opt.diffopt:append({ "context:2", "followwrap", "vertical" })
 opt.expandtab = true -- Use spaces instead of tabs
 opt.fileformat = "unix"
