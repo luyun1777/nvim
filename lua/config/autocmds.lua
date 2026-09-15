@@ -8,6 +8,7 @@ vim.api.nvim_create_autocmd({ "LspAttach", "BufFilePost", "DirChanged", "BufEnte
 		require("util.root").clear_cache(ev.buf)
 	end,
 })
+
 -- Auto restore cursor position to last location
 vim.api.nvim_create_autocmd("BufReadPost", {
 	group = augroup("last_loc"),
@@ -25,6 +26,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		end
 	end,
 })
+
 -- Auto enter insert mode while enter a terminal
 vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
 	group = augroup("startinsert"),

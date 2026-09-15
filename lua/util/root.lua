@@ -185,13 +185,4 @@ function M.get(opts)
 	return root
 end
 
-function M.setup()
-	vim.api.nvim_create_autocmd({ "LspAttach", "BufFilePost", "DirChanged", "BufEnter" }, {
-		group = vim.api.nvim_create_augroup("root_cache", { clear = true }),
-		callback = function(ev)
-			M.clear_cache(ev.buf)
-		end,
-	})
-end
-
 return M
