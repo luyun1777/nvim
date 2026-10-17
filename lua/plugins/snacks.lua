@@ -4,6 +4,7 @@ return {
 	"folke/snacks.nvim",
 	priority = 1000,
 	lazy = false,
+	---@type snacks.Config
 	opts = {
 		animate = { enabled = true },
 		bigfile = { enabled = true },
@@ -24,6 +25,8 @@ return {
 						["<Esc>"] = { "close", mode = { "n", "i" } },
 						["<Tab>"] = { "list_down", mode = { "i", "n" } },
 						["<S-Tab>"] = { "list_up", mode = { "i", "n" } },
+						["<C-h>"] = { "preview_scroll_left", mode = { "i", "n" } },
+						["<C-l>"] = { "preview_scroll_right", mode = { "i", "n" } },
 					},
 				},
 			},

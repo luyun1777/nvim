@@ -30,6 +30,7 @@ return {
 	{
 		"folke/trouble.nvim",
 		cmd = { "Trouble" },
+		---@type trouble.Config
 		opts = {
 			focus = true,
 			modes = {
@@ -81,11 +82,12 @@ return {
 		event = "BufWritePre",
         -- stylua: ignore
         keys = {
-            { "<leader>cF", function() require("conform").format({ formatters = { "injected" }, }) end, desc = "Format Injected File" },
-            { "<leader>cf", function() require("conform").format() end, desc = "Format file" },
+            { "<leader>cF", function() require("conform").format({ formatters = { "injected" } }) end, desc = "Format Injected File" },
+            { "<leader>cf", function() require("conform").format({ async = true }) end, desc = "Format file" },
         },
+		---@type conform.setupOpts
 		opts = {
-			default_format_opts = { timeout_ms = 3000, async = true, quiet = true, lsp_format = "fallback" },
+			default_format_opts = { timeout_ms = 3000, quiet = true, lsp_format = "fallback" },
 			format_after_save = function(bufnr)
 				if vim.g.autoformat or vim.b[bufnr].autoformat then
 					return {}

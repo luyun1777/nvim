@@ -95,6 +95,7 @@ return {
 			end, { desc = "Swap With The Previous Parameter", silent = true })
 
             -- stylua: ignore
+            ---@type table<string, table<string, string>>
             local moves = {  -- textobjects
                 goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
                 goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },

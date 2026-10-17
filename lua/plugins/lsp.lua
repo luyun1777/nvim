@@ -24,7 +24,7 @@ return {
 				border = "rounded",
 				icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" },
 			},
-			github = { download_url_template = "https://wget.la/https://github.com/%s/releases/download/%s/%s" },
+			github = { download_url_template = "https://gh-proxy.org/https://github.com/%s/releases/download/%s/%s" }, -- https://wget.la/
 			ensure_installed = {},
 		},
 		config = function(_, opts)

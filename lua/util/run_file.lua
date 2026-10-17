@@ -44,7 +44,11 @@ M.run = function()
 		end
 	elseif ft == "python" then
 		split()
-		vim.cmd("term python %")
+		if vim.fn.executable("uv") == 1 then
+			vim.cmd("term uv run %")
+		else
+			vim.cmd("term python %")
+		end
 	elseif ft == "rust" then
 		split()
 		if is_win then
