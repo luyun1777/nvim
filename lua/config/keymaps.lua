@@ -4,7 +4,7 @@ map({ "i", "x", "n", "s" }, "<c-s>", "<cmd>w<cr><esc>", { silent = true, desc = 
 map({ "n", "v" }, "<leader>qq", "<cmd>qa<cr>", { desc = "Quit All" })
 
 map("v", "Y", '"+y', { desc = "Copy to system clipboard" })
-map("n", "P", '"+p', { desc = "Paste from system clipboard" })
+map("n", "<c-s-v>", '"+p', { desc = "Paste from system clipboard" })
 
 map("n", "<leader>rc", "<cmd>e $MYVIMRC<cr>", { silent = true, desc = "Edit Configuration" })
 

@@ -7,8 +7,9 @@ vim.g.localleader = "\\"
 
 vim.g.autoformat = true -- Used by `confirm.nvim`
 
--- Set LSP servers to be ignored when used with `util.root.get_lsp_root`
--- for detecting the LSP root
+vim.g.enable_virtual_text = false -- whether enable `virtual_text` (vim.diagnostic.config)
+
+-- Set LSP servers to be ignored when used with `util.root.get_lsp_root` for detecting the LSP root
 vim.g.root_lsp_ignore = {}
 
 local opt = vim.opt
