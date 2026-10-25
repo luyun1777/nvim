@@ -33,16 +33,60 @@ vim.keymap.set("n", "<leader>uv", function()
 	)
 end, { desc = "Toggle virtual_text (diagnostic)" })
 
+-- capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+-- copy form `https://github.com/saghen/blink.cmp/blob/main/lua/blink/cmp/sources/lib/init.lua`
+---@type lsp.ClientCapabilities
 local capabilities = {
+	textDocument = {
+		completion = {
+			completionItem = {
+				snippetSupport = true,
+				commitCharactersSupport = false, -- TODO:
+				documentationFormat = { "markdown", "plaintext" },
+				deprecatedSupport = true,
+				preselectSupport = false, -- TODO:
+				tagSupport = { valueSet = { 1 } }, -- deprecated
+				insertReplaceSupport = true, -- TODO:
+				resolveSupport = {
+					properties = {
+						"documentation",
+						"detail",
+						"additionalTextEdits",
+						"command",
+						"data",
+						-- TODO: support more properties? should test if it improves latency
+					},
+				},
+				insertTextModeSupport = {
+					-- TODO: support adjustIndentation
+					valueSet = { 1 }, -- asIs
+				},
+				labelDetailsSupport = true,
+			},
+			completionList = {
+				itemDefaults = {
+					"commitCharacters",
+					"editRange",
+					"insertTextFormat",
+					"insertTextMode",
+					"data",
+				},
+			},
+
+			contextSupport = true,
+			insertTextMode = 1, -- asIs
+		},
+	},
+}
+capabilities = vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), capabilities)
+capabilities = vim.tbl_deep_extend("force", capabilities, {
 	textDocument = {
 		foldingRange = {
 			dynamicRegistration = false,
 			lineFoldingOnly = true,
 		},
 	},
-}
-
-capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+})
 -- Set default capabilities for all LSP servers
 vim.lsp.config("*", { capabilities = capabilities })
 
