@@ -97,11 +97,7 @@ vim.api.nvim_create_autocmd("FileType", {
 			vim.keymap.set("n", "q", function()
 				vim.cmd("close")
 				pcall(vim.api.nvim_buf_delete, ev.buf, { force = true })
-			end, {
-				buffer = ev.buf,
-				silent = true,
-				desc = "Quit buffer",
-			})
+			end, { buf = ev.buf, silent = true, desc = "Quit buffer" })
 		end)
 	end,
 })

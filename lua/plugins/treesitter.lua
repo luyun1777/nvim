@@ -2,27 +2,15 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		branch = "main",
-		cmd = {
-			"TSInstall",
-			"TSInstallFromGrammar",
-			"TSUpdate",
-			"TSUninstall",
-			"TSLog",
-		},
+		cmd = { "TSInstall", "TSInstallFromGrammar", "TSUpdate", "TSUninstall", "TSLog" },
 		event = { "BufReadPre", "BufNewFile" },
-		opts = {
-			highlight = { enable = true },
-			folds = { enable = true },
-			indent = { enabled = true },
-		},
-		config = function(_, opts)
+		config = function()
 			local TS = require("nvim-treesitter")
-			TS.setup(opts)
 
 			local ensure_installed = {
 				"bash",
 				"c",
+				"diff",
 				"html",
 				"json",
 				"lua",
@@ -42,7 +30,7 @@ return {
 			for _, lang in ipairs(ensure_installed) do
 				if not vim.tbl_contains(installed, lang) then
 					TS.install(lang)
-					installed = vim.tbl_extend("force", installed, { lang })
+					installed[#installed + 1] = lang
 				end
 			end
 

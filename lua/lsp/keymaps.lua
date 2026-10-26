@@ -9,7 +9,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufnr = ev.buf
 		local has_snacks, _ = pcall(require, "snacks")
 		local function map(mode, lhs, rhs, opts)
-			vim.keymap.set(mode, lhs, rhs, vim.tbl_extend("force", opts or {}, { buffer = bufnr }))
+			vim.keymap.set(mode, lhs, rhs, { buf = bufnr, desc = opts.desc })
 		end
 
 		-- CodeLens
@@ -23,7 +23,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		-- Formatting
 		map("n", "<leader>cL", function()
-			vim.lsp.buf.format({ buffer = bufnr, async = true })
+			vim.lsp.buf.format({ bufnr = bufnr, async = true })
 		end, { desc = "Format file (Lsp)" })
 
 		--Folds
