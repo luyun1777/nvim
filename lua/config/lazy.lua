@@ -1,7 +1,6 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	-- local lazyrepo = "https://wget.la/https://github.com/folke/lazy.nvim.git"
 	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
@@ -17,10 +16,8 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 	spec = { import = "plugins" },
+	install = { colorscheme = { "catppuccin-mocha", "habamax" } },
 	ui = { border = "rounded" },
-	-- git = { timeout = 60, url_format = "https://wget.la/https://github.com/%s.git" },
-	-- rocks = { enabled = false },
-	-- checker = { enabled = true },
 	performance = {
 		rtp = {
 			disabled_plugins = {
@@ -34,12 +31,5 @@ require("lazy").setup({
 				"zipPlugin",
 			},
 		},
-	},
-	profiling = {
-		-- Enables extra stats on the debug tab related to the loader cache.
-		-- Additionally gathers stats about all package.loaders
-		-- loader = true,
-		-- Track each new require in the Lazy profiling tab
-		-- require = true,
 	},
 })

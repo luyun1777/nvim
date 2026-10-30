@@ -29,28 +29,8 @@ return {
 	settings = {
 		emmylua = {
 			codeLens = { enable = true, enumParamHint = true },
+			diagnostics = { globals = { "vim", "require" } },
 			hint = { enable = true },
-			runtime = {
-				version = "LuaJIT",
-				requirePattern = {
-					"lua/?/init.lua",
-					"lua/?.lua",
-					"?/lua/?/init.lua",
-					"?/lua/?.lua",
-				},
-			},
-			diagnostics = {
-				globals = { "vim", "require" },
-			},
-			workspace = {
-				library = {
-					vim.env.VIMRUNTIME,
-					-- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
-					-- vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
-					-- vim.api.nvim_get_runtime_file("", true), -- pull in all of 'runtimepath'. May be slower!
-					-- vim.fn.stdpath("data") .. "/lazy",
-				},
-			},
 		},
 	},
 }

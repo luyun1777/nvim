@@ -25,30 +25,10 @@ return {
 	settings = {
 		Lua = {
 			codeLens = { enable = true },
+			diagnostics = { globals = { "vim", "require" } },
 			hint = { enable = true, semicolon = "Disable" },
-			runtime = {
-				version = "LuaJIT",
-				path = {
-					"lua/?/init.lua",
-					"lua/?.lua",
-					"?/lua/?/init.lua",
-					"?/lua/?.lua",
-				},
-			},
-			diagnostics = {
-				globals = { "vim", "require" },
-			},
 			workspace = {
 				checkThirdParty = false,
-				library = {
-					vim.env.VIMRUNTIME,
-					-- For LSP Settings Type Annotations: https://github.com/neovim/nvim-lspconfig#lsp-settings-type-annotations
-					-- vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
-					-- "${3rd}/luv/library",
-				},
-			},
-			telemetry = {
-				enable = false,
 			},
 		},
 	},

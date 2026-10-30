@@ -6,7 +6,6 @@ return {
 			"mason-org/mason-lspconfig.nvim",
 		},
 		config = function()
-			require("lspconfig.ui.windows").default_options.border = "rounded"
 			require("mason-lspconfig").setup({
 				ensure_installed = {},
 				automatic_enable = true,
@@ -21,12 +20,13 @@ return {
 		build = ":MasonUpdate",
 		opts = {
 			ui = {
-				border = "rounded",
 				icons = { package_installed = "✓", package_pending = "➜", package_uninstalled = "✗" },
 			},
 			github = { download_url_template = "https://gh-proxy.org/https://github.com/%s/releases/download/%s/%s" }, -- https://wget.la/
 			ensure_installed = {},
 		},
+
+		---@param opts MasonSettings | {ensure_installed: string[]}
 		config = function(_, opts)
 			require("mason").setup(opts)
 			local mr = require("mason-registry")
@@ -57,6 +57,7 @@ return {
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
 				{ path = "snacks.nvim", words = { "Snacks" } },
 				{ path = "lazy.nvim", words = { "LazyVim" } },
+				{ path = "nvim-lspconfig", words = { "lspconfig.settings" } },
 			},
 		},
 	},
