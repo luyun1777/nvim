@@ -7,20 +7,10 @@ local M = setmetatable({}, {
 })
 
 --- Toggle Options
----@param option vim.Option
+---@param option string
 ---@param silent boolean?
 ---@param values table?
 function M.option(option, silent, values)
-  if values then
-    local current = vim.opt_local[option]:get()
-    local new_value = current == values[1] and values[2] or values[1]
-    vim.opt_local[option] = new_value
-    if not silent then
-      vim.notify('Set ' .. option .. ' to ' .. new_value, vim.log.levels.INFO, { title = 'Option' })
-    end
-    return
-  end
-
   local ok, current = pcall(function()
     return vim.opt_local[option]:get()
   end)
@@ -28,13 +18,27 @@ function M.option(option, silent, values)
     vim.notify('Failed to get option: ' .. tostring(option), vim.log.levels.ERROR, { title = 'Option' })
     return
   end
+  if values then
+    local new_value = current == values[1] and values[2] or values[1]
+    local set_ok, err = pcall(function()
+      vim.opt_local[option] = new_value
+    end)
+    if not set_ok then
+      vim.notify('Failed to set option: ' .. tostring(err), vim.log.levels.ERROR, { title = 'Option' })
+      return
+    end
+    if not silent then
+      vim.notify('Set ' .. option .. ' to ' .. new_value, vim.log.levels.INFO, { title = 'Option' })
+    end
+    return
+  end
 
-  local new_value = current ~= false
+  local new_value = not current
   vim.opt_local[option] = new_value
   if not silent then
     vim.notify(
       (new_value and 'Enabled' or 'Disabled') .. ' ' .. tostring(option),
-      new_value and vim.log.levels.INFO or vim.log.levels.WARN,
+      vim.log.levels.INFO,
       { title = 'Option' }
     )
   end
@@ -45,7 +49,7 @@ function M.number()
   if vim.wo.number or vim.wo.relativenumber then
     vim.wo.number = false
     vim.wo.relativenumber = false
-    vim.notify('Disabled Line Numbers', vim.log.levels.WARN, { title = 'Line Numbers' })
+    vim.notify('Disabled Line Numbers', vim.log.levels.INFO, { title = 'Line Numbers' })
   else
     vim.wo.number = true
     vim.wo.relativenumber = true

@@ -22,9 +22,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
     -- Formatting
-    map('n', '<Leader>cL', function()
-      vim.lsp.buf.format({ bufnr = bufnr, async = true })
-    end, { desc = 'Format file (Lsp)' })
+    if not pcall(require, 'conform') then
+      map('n', '<Leader>cf', function()
+        vim.lsp.buf.format({ bufnr = bufnr, async = true })
+      end, { desc = 'Format File (Lsp)' })
+    end
 
     --Folds
     if client:supports_method('textDocument/foldingRange') then

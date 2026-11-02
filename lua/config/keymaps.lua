@@ -6,7 +6,7 @@ end
 map({ 'n', 'i', 'v' }, '<C-s>', '<Cmd>update<CR><Esc>', { desc = 'Save and go to Normal mode' })
 map({ 'n', 'v' }, '<Leader>qq', '<Cmd>qa<CR>', { desc = 'Quit All' })
 
-map({ 'n', 'x' }, 'gy', '"+y', { desc = 'Copy to system clipboard' })
+map({ 'n', 'x' }, 'Y', '"+y', { desc = 'Copy to system clipboard' })
 map('n', 'gp', '"+p', { desc = 'Paste from system clipboard' })
 map('x', 'gp', '"+P', { desc = 'Paste from system clipboard' })
 
@@ -147,10 +147,10 @@ map('t', '<C-/>', '<Cmd>close<CR>', { desc = 'Hide Terminal' })
 map('n', '<Leader>l', '<Cmd>Lazy<CR>', { desc = 'Lazy' })
 
 local Util = require('util')
--- stylua: ignore start
 -- toggle options
-map('n', '<Leader>ub', function() Util.toggle('background', false, { 'light', 'dark' }) end,
-  { desc = 'Toggle Background' })
+-- stylua: ignore start
+map('n', '<Leader>ub', function() Util.toggle('background', false, { 'light', 'dark' }) end, { desc = 'Toggle Background' })
+map('n', '<Leader>uc', function() Util.toggle('conceallevel', false, { 0, vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }) end, { desc = 'Toggle Background' })
 map('n', '<Leader>ul', function() Util.toggle.number() end, { desc = 'Toggle Line Numbers' })
 map('n', '<Leader>uL', function() Util.toggle('relativenumber') end, { desc = 'Toggle Relative Line Numbers' })
 map('n', '<Leader>us', function() Util.toggle('spell') end, { desc = 'Toggle Spelling' })

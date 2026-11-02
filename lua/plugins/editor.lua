@@ -55,15 +55,17 @@ return {
       label = { rainbow = { enable = true } },
     },
 
-    -- stylua: ignore
     keys = {
+    -- stylua: ignore start
       { 's', function() require('flash').jump() end, desc = 'Flash' },
       { 'S', function() require('flash').treesitter() end, desc = 'Flash Treesitter' },
       { 'r', function() require('flash').remote() end, mode = 'o', desc = 'Remote Flash' },
       { 'R', function() require('flash').treesitter_search() end, mode = { 'o', 'x' }, desc = 'Treesitter Search' },
       { '<C-s>', function() require('flash').toggle() end, mode = { 'c' }, desc = 'Toggle Flash Search' },
+      -- stylua: ignore end
       -- Simulate nvim-treesitter incremental selection
-      { '<CR>',
+      {
+        '<CR>',
         function()
           require('flash').treesitter({
             actions = {

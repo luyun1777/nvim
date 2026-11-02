@@ -39,8 +39,8 @@ return {
     terminal = { enabled = true, win = { position = 'float', border = 'rounded' } },
     words = { enabled = true },
   },
-  -- stylua: ignore start 
   keys = {
+  -- stylua: ignore start
     { '<Leader><space>', function() Snacks.picker.smart() end, desc = 'Smart Find Files' },
     { '<Leader>,', function() Snacks.picker.buffers() end, desc = 'Buffers' },
     { '<Leader>/', function() Snacks.picker.grep({ cwd = root.get() }) end, desc = 'Grep (Root Dir)' },
@@ -97,11 +97,12 @@ return {
     { '<Leader>su', function() Snacks.picker.undo() end, desc = 'Undo History' },
     { '<Leader>uC', function() Snacks.picker.colorschemes() end, desc = 'Colorschemes' },
     -- LSP
-    { '<Leader>ci', function() Snacks.picker.lsp_config() end, desc = 'Lsp Info' },
+    { '<Leader>cl', function() Snacks.picker.lsp_config() end, desc = 'Lsp Info' },
     { 'gd', function() Snacks.picker.lsp_definitions() end, desc = 'Goto Definition' },
     { 'gD', function() Snacks.picker.lsp_declarations() end, desc = 'Goto Declaration' },
     { 'gr', function() Snacks.picker.lsp_references() end, nowait = true, desc = 'References' },
     { 'gi', function() Snacks.picker.lsp_implementations() end, desc = 'Goto Implementation' },
+    { 'gy', function() Snacks.picker.lsp_type_definitions() end, desc = 'Goto T[y]pe Definition' },
     { '<Leader>ss', function() Snacks.picker.lsp_symbols() end, desc = 'LSP Symbols' },
     { '<Leader>sS', function() Snacks.picker.lsp_workspace_symbols() end, desc = 'LSP Workspace Symbols' },
     -- Other
@@ -154,10 +155,10 @@ return {
       callback = function()
         -- Setup some globals for debugging (lazy-loaded)
         _G.dd = function(...)
-            Snacks.debug.inspect(...)
+          Snacks.debug.inspect(...)
         end
         _G.bt = function()
-            Snacks.debug.backtrace()
+          Snacks.debug.backtrace()
         end
         vim.print = _G.dd -- Override print to use snacks for `:=` command
 
@@ -172,9 +173,7 @@ return {
           .option('conceallevel', { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
           :map('<Leader>uc')
         Snacks.toggle.treesitter():map('<Leader>uT')
-        Snacks.toggle
-          .option('background', { off = 'light', on = 'dark', name = 'Dark Background' })
-          :map('<Leader>ub')
+        Snacks.toggle.option('background', { off = 'light', on = 'dark', name = 'Dark Background' }):map('<Leader>ub')
         Snacks.toggle.animate():map('<Leader>ua')
         Snacks.toggle.indent():map('<Leader>ug')
         Snacks.toggle.dim():map('<Leader>uD')

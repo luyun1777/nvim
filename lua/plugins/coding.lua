@@ -76,7 +76,7 @@ return {
     -- stylua: ignore
     keys = {
       { '<Leader>cF', function() require('conform').format({ formatters = { 'injected' } }) end, desc = 'Format Injected File' },
-      { '<Leader>cf', function() require('conform').format({ async = true }) end, desc = 'Format file' },
+      { '<Leader>cf', function() require('conform').format({ async = true }) end, desc = 'Format File' },
     },
     ---@type conform.setupOpts
     opts = {

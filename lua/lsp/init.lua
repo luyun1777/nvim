@@ -28,13 +28,13 @@ vim.keymap.set('n', '<Leader>uv', function()
   vim.diagnostic.config({ virtual_text = vim.g.enable_virtual_text and virtual_text })
   vim.notify(
     (vim.g.enable_virtual_text and 'Enabled' or 'Disabled') .. ' `virtual_text`',
-    not vim.g.enable_virtual_text and vim.log.levels.WARN or vim.log.levels.INFO,
+    vim.log.levels.INFO,
     { title = 'Virtual Text' }
   )
 end, { desc = 'Toggle virtual_text (diagnostic)' })
 
 -- capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
--- copy form `https://github.com/saghen/blink.cmp/blob/main/lua/blink/cmp/sources/lib/init.lua`
+-- copy from `https://github.com/saghen/blink.cmp/blob/main/lua/blink/cmp/sources/lib/init.lua`
 ---@type lsp.ClientCapabilities
 local capabilities = {
   textDocument = {
