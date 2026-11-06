@@ -1,6 +1,6 @@
 -- Use LspAttach autocommand to only map the following keys after the language server attaches to the current buffer
 vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('lsp_keymaps_bind', { clear = true }),
+  group = vim.api.nvim_create_augroup('lsp_keymaps', { clear = true }),
   callback = function(ev)
     local client = vim.lsp.get_client_by_id(ev.data.client_id)
     if client == nil then
@@ -25,7 +25,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
     if not pcall(require, 'conform') then
       map('n', '<Leader>cf', function()
         vim.lsp.buf.format({ bufnr = bufnr, async = true })
-      end, { desc = 'Format File (Lsp)' })
+      end, { desc = 'Format' })
+
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = vim.api.nvim_create_augroup('lsp_autoformat', { clear = true }),
+        callback = function()
+          if vim.g.autoformat then
+            vim.lsp.buf.format({ bufnr = bufnr })
+          end
+        end,
+      })
     end
 
     --Folds

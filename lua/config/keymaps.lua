@@ -3,10 +3,12 @@ local function map(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
-map({ 'n', 'i', 'v' }, '<C-s>', '<Cmd>update<CR><Esc>', { desc = 'Save and go to Normal mode' })
+-- NOTE: Adding `redraw` helps with `cmdheight=0` if buffer is not modified
+map('n', '<C-s>', '<Cmd>update | redraw<CR>', { desc = 'Save' })
+map({ 'i', 'x' }, '<C-s>', '<Esc><Cmd>update | redraw<CR>', { desc = 'Save and go to Normal mode' })
 map({ 'n', 'v' }, '<Leader>qq', '<Cmd>qa<CR>', { desc = 'Quit All' })
 
-map({ 'n', 'x' }, 'Y', '"+y', { desc = 'Copy to system clipboard' })
+map('x', 'Y', '"+y', { desc = 'Copy to system clipboard' })
 map('n', 'gp', '"+p', { desc = 'Paste from system clipboard' })
 map('x', 'gp', '"+P', { desc = 'Paste from system clipboard' })
 
@@ -142,9 +144,6 @@ map('t', '<C-k>', '<Cmd>wincmd k<CR>', { desc = 'Go to upper window' })
 map('t', '<C-l>', '<Cmd>wincmd l<CR>', { desc = 'Go to right window' })
 map('t', '<C-q>', '<Cmd>close<CR>', { desc = 'Hide Terminal' })
 map('t', '<C-/>', '<Cmd>close<CR>', { desc = 'Hide Terminal' })
-
--- lazy
-map('n', '<Leader>l', '<Cmd>Lazy<CR>', { desc = 'Lazy' })
 
 local Util = require('util')
 -- toggle options

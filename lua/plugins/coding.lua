@@ -1,7 +1,6 @@
 return {
   {
     'folke/ts-comments.nvim',
-    enabled = vim.fn.has('nvim-0.10') == 1,
     event = { 'BufRead', 'BufNewFile' },
     opts = {},
   },
@@ -11,8 +10,8 @@ return {
     event = { 'BufRead', 'BufNewFile' },
     -- stylua: ignore
     keys = {
-      { ']t',         function() require('todo-comments').jump_next() end, desc = 'Next Todo Comment' },
-      { '[t',         function() require('todo-comments').jump_prev() end, desc = 'Previous Todo Comment' },
+      { ']t', function() require('todo-comments').jump_next() end, desc = 'Next Todo Comment' },
+      { '[t', function() require('todo-comments').jump_prev() end, desc = 'Previous Todo Comment' },
       { '<Leader>xt', '<Cmd>Trouble todo toggle<CR>', desc = 'Todo (Trouble)' },
       { '<Leader>xT', '<Cmd>Trouble todo toggle filter = {tag = {TODO,FIX,FIXME}}<CR>', desc = 'Todo/Fix/Fixme (Trouble)' },
     },
@@ -75,8 +74,8 @@ return {
     event = 'BufWritePre',
     -- stylua: ignore
     keys = {
-      { '<Leader>cF', function() require('conform').format({ formatters = { 'injected' } }) end, desc = 'Format Injected File' },
-      { '<Leader>cf', function() require('conform').format({ async = true }) end, desc = 'Format File' },
+      { '<Leader>cF', function() require('conform').format({ formatters = { 'injected' } }) end, desc = 'Format Injected Langs' },
+      { '<Leader>cf', function() require('conform').format({ async = true }) end, desc = 'Format' },
     },
     ---@type conform.setupOpts
     opts = {

@@ -5,7 +5,7 @@ end
 vim.g.mapleader = ' '
 vim.g.localleader = '\\'
 
-vim.g.autoformat = true -- Used by `confirm.nvim`
+vim.g.autoformat = true
 
 vim.g.enable_virtual_text = false -- whether enable `virtual_text` (vim.diagnostic.config)
 
@@ -79,13 +79,9 @@ o.winminwidth = 5 -- Minimum window width
 o.writebackup = false
 o.wrap = false -- Disable line wrap
 
-if vim.fn.executable('rg') == 1 then
-  o.grepprg = 'rg --vimgrep --smart-case'
-end
-
 if vim.fn.executable('fish') == 1 then
   o.shell = 'fish'
-elseif vim.fn.executable('pwsh') == 1 then
+elseif vim.fn.executable('pwsh') == 1 and vim.uv.os_uname().sysname == 'Windows_NT' then
   o.shell = 'pwsh'
   o.shellcmdflag =
     "-NoProfile -NoLogo -NonInteractive -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$PSDefaultParameterValues['Out-File:Encoding']='utf8';$PSStyle.OutputRendering='plaintext';Remove-Alias -Force -ErrorAction SilentlyContinue tee;"

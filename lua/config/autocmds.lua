@@ -1,9 +1,9 @@
 local function augroup(name)
-  return vim.api.nvim_create_augroup('user_' .. name, { clear = true })
+  return vim.api.nvim_create_augroup('lazy_' .. name, { clear = true })
 end
 
 vim.api.nvim_create_autocmd({ 'LspAttach', 'BufFilePost', 'DirChanged', 'BufEnter' }, {
-  group = augroup('root_refresh'),
+  group = augroup('root_cache'),
   callback = function(ev)
     require('util.root').clear_cache(ev.buf)
   end,

@@ -1,10 +1,7 @@
 return {
+  { 'nvim-lua/plenary.nvim', lazy = true }, -- library used by other plugins
 
-  -- library used by other plugins
-  { 'nvim-lua/plenary.nvim', lazy = true },
+  { 'nvim-tree/nvim-web-devicons', lazy = true }, -- fantastic icons
 
-  -- fantastic icons
-  { 'nvim-tree/nvim-web-devicons', lazy = true },
-
-  { 'nmac427/guess-indent.nvim', event = { 'BufReadPre', 'BufNewFile' }, opts = {} },
+  { 'nmac427/guess-indent.nvim', event = { 'BufRead', 'BufNewFile' }, opts = {} },
 }

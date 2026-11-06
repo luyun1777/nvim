@@ -7,9 +7,7 @@ local split = function()
 end
 --- execute single file
 M.run = function()
-  if vim.bo.modified then
-    vim.cmd('write')
-  end
+  vim.cmd('update')
   local ft = vim.bo.filetype
   local is_win = vim.uv.os_uname().sysname == 'Windows_NT'
   if ft == 'c' then
