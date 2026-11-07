@@ -1,5 +1,10 @@
----@class util.run_file
-local M = {}
+---@class util.run
+---@overload fun(): string
+local M = setmetatable({}, {
+  __call = function(m, ...)
+    return m.run(...)
+  end,
+})
 local split = function()
   vim.cmd('set splitbelow')
   vim.cmd('split')

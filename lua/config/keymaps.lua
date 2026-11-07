@@ -1,5 +1,5 @@
 local function map(mode, lhs, rhs, opts)
-  opts = vim.tbl_deep_extend('force', { silent = true }, opts or {})
+  opts = vim.tbl_extend('force', { silent = true }, opts or {})
   vim.keymap.set(mode, lhs, rhs, opts)
 end
 
@@ -114,6 +114,16 @@ map('n', '<Leader>xq', function()
   end
 end, { desc = 'Quickfix List' })
 
+-- formatting
+map({ 'n', 'x' }, '<Leader>cf', function()
+  local ok, conform = pcall(require, 'conform')
+  if ok then
+    conform.format({ async = true })
+  else
+    vim.lsp.buf.format({ async = true })
+  end
+end, { desc = 'Format' })
+
 map('n', '[q', vim.cmd.cprev, { desc = 'Previous quickfix' })
 map('n', ']q', vim.cmd.cnext, { desc = 'Next quickfix' })
 
@@ -148,8 +158,8 @@ map('t', '<C-/>', '<Cmd>close<CR>', { desc = 'Hide Terminal' })
 local Util = require('util')
 -- toggle options
 -- stylua: ignore start
-map('n', '<Leader>ub', function() Util.toggle('background', false, { 'light', 'dark' }) end, { desc = 'Toggle Background' })
-map('n', '<Leader>uc', function() Util.toggle('conceallevel', false, { 0, vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }) end, { desc = 'Toggle Background' })
+map('n', '<Leader>ub', function() Util.toggle('background', { 'light', 'dark' }) end, { desc = 'Toggle Background' })
+map('n', '<Leader>uc', function() Util.toggle('conceallevel', { 0, vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }) end, { desc = 'Toggle Background' })
 map('n', '<Leader>ul', function() Util.toggle.number() end, { desc = 'Toggle Line Numbers' })
 map('n', '<Leader>uL', function() Util.toggle('relativenumber') end, { desc = 'Toggle Relative Line Numbers' })
 map('n', '<Leader>us', function() Util.toggle('spell') end, { desc = 'Toggle Spelling' })
@@ -179,7 +189,7 @@ map('n', '<Leader>uI', function()
 end, { desc = 'Inspect Tree' })
 
 map('n', '<Leader>rr', function()
-  Util.run_file.run()
+  Util.run()
 end, { desc = 'Run Current File' })
 
 -- Disable `s`、`S`

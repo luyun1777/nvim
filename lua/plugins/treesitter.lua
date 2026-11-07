@@ -1,12 +1,12 @@
 return {
   {
     'nvim-treesitter/nvim-treesitter',
-    build = ':TSUpdate',
+    build = function()
+      require('nvim-treesitter').update()
+    end,
     cmd = { 'TSInstall', 'TSInstallFromGrammar', 'TSUpdate', 'TSUninstall', 'TSLog' },
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
-      local TS = require('nvim-treesitter')
-
       local ensure_installed = {
         'bash',
         'c',
@@ -26,21 +26,24 @@ return {
         'xml',
         'yaml',
       }
-      local installed = require('nvim-treesitter').get_installed()
-      for _, lang in ipairs(ensure_installed) do
-        if not vim.tbl_contains(installed, lang) then
-          TS.install(lang)
-          installed[#installed + 1] = lang
-        end
+
+      local TS = require('nvim-treesitter')
+      local installed = TS.get_installed()
+      local to_install = vim.tbl_filter(function(lang)
+        return not vim.tbl_contains(installed, lang)
+      end, ensure_installed)
+      if #to_install > 0 then
+        TS.install(to_install)
+        vim.list_extend(installed, to_install)
       end
 
       vim.api.nvim_create_autocmd('FileType', {
         pattern = installed,
-        callback = function()
-          vim.treesitter.start()
-          vim.wo.foldmethod = 'expr'
-          vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-          vim.bo.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+        callback = function(ev)
+          vim.treesitter.start(ev.buf)
+          vim.wo[0].foldmethod = 'expr'
+          vim.wo[0].foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          vim.bo[ev.buf].indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
         end,
       })
     end,
@@ -104,7 +107,8 @@ return {
           desc = desc .. (key:sub(2, 2) == key:sub(2, 2):upper() and ' End' or ' Start')
           vim.keymap.set({ 'n', 'x', 'o' }, key, function()
             if vim.wo.diff and key:find('[cC]') then
-              vim.cmd('normal! ' .. key)
+              vim.cmd.normal({ key, bang = true })
+              return
             end
             require('nvim-treesitter-textobjects.move')[method](query, 'textobjects')
           end, { desc = desc, silent = true })

@@ -16,7 +16,6 @@ local o = vim.o
 
 o.autochdir = true
 o.autowrite = true -- Enable auto write
-o.backup = false
 o.breakindent = true -- Indent wrapped lines to match line start
 o.completeopt = 'menu,menuone,noselect'
 o.conceallevel = 2 -- Hide * markup for bold and italic, but not markers with substitutions
@@ -66,7 +65,7 @@ o.softtabstop = 4
 o.splitbelow = true -- Put new windows below current
 o.splitkeep = 'screen'
 o.splitright = true -- Put new windows right of current
-o.swapfile = false -- Save swap file and trigger CursorHold
+o.swapfile = false -- Disuse a swapfile for the buffer
 o.tabstop = 4 -- Number of spaces tabs count for
 o.termguicolors = true -- True color support
 o.timeoutlen = 300 -- Lower than default (1000) to quickly trigger which-key
@@ -76,7 +75,6 @@ o.wildmode = 'longest:full,full' -- Command-line completion mode
 o.winblend = 10 -- Make floating windows slightly transparent
 o.winborder = 'rounded' -- Defines the default border style of floating windows
 o.winminwidth = 5 -- Minimum window width
-o.writebackup = false
 o.wrap = false -- Disable line wrap
 
 if vim.fn.executable('fish') == 1 then

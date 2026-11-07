@@ -1,5 +1,10 @@
 ---@class util.root
-local M = {}
+---@overload fun(): string
+local M = setmetatable({}, {
+  __call = function(m, ...)
+    return m.get(...)
+  end,
+})
 
 ---@type (string|string[])[]
 M.root_markers = {
@@ -21,7 +26,7 @@ local cache = {}
 --- Prefers roots that are an exact path-prefix of `bufpath` (deepest wins);
 --- otherwise falls back to the longest root.
 ---@param roots string[]
----@param bufpath string|nil
+---@param bufpath string
 ---@return string|nil
 local function pick_best(roots, bufpath)
   if #roots == 0 then
@@ -31,8 +36,8 @@ local function pick_best(roots, bufpath)
     return roots[1]
   end
 
+  local best
   if bufpath and bufpath ~= '' then
-    local best
     for _, r in ipairs(roots) do
       if bufpath:sub(1, #r) == r then
         local next_char = bufpath:sub(#r + 1, #r + 1)
@@ -48,10 +53,13 @@ local function pick_best(roots, bufpath)
     end
   end
 
-  table.sort(roots, function(a, b)
-    return #a > #b
-  end)
-  return roots[1]
+  best = roots[1]
+  for _, r in ipairs(roots) do
+    if #r > #best then
+      best = r
+    end
+  end
+  return best
 end
 
 --- Stable serialization of a marker list for use as a cache key.
@@ -77,7 +85,7 @@ local function markers_key(markers)
 end
 
 ---@param bufnr integer
----@param bufpath string  normalized buffer path
+---@param bufpath string?  normalized buffer path
 ---@return string|nil
 local function get_lsp_root(bufnr, bufpath)
   local clients = vim.lsp.get_clients({ bufnr = bufnr })
@@ -91,36 +99,33 @@ local function get_lsp_root(bufnr, bufpath)
 
   local roots = {} ---@type string[]
   for _, client in ipairs(clients) do
-    -- Neovim 0.11+ exposes the root via `client.config.root_dir`;
-    -- older versions also set `client.root_dir`. Prefer the former.
-    local root = (client.config and client.config.root_dir) or client.root_dir
-
-    -- Fall back to workspace folders (some servers only report these).
+    local root = client.root_dir or (client.config and client.config.root_dir)
     if not root and client.workspace_folders and client.workspace_folders[1] then
       local uri = client.workspace_folders[1].uri
       if uri then
         root = vim.uri_to_fname(uri)
       end
     end
-
     if root and root ~= '' then
       roots[#roots + 1] = vim.fs.normalize(root)
     end
   end
-
   if #roots == 0 then
     return nil
   end
 
+  if bufpath == '' or bufpath == nil then
+    bufpath = vim.fn.getcwd()
+  end
   return pick_best(roots, bufpath)
 end
 
----@param bufpath string|integer
+---@param source string|integer
 ---@param markers (string|string[])[]
 ---@return string|nil
-local function get_fs_root(bufpath, markers)
-  local root = vim.fs.root(bufpath, markers)
-  return root and vim.fs.normalize(root) or nil
+local function get_fs_root(source, markers)
+  local root = vim.fs.root(source, markers)
+  return root and vim.fs.normalize(root)
 end
 
 --- Clear all cached entries for a given buffer (or all buffers if nil).
@@ -153,11 +158,7 @@ function M.get(opts)
     return vim.fn.getcwd()
   end
 
-  local bufpath = vim.api.nvim_buf_get_name(bufnr)
-  if bufpath == '' then
-    bufpath = vim.fn.getcwd()
-  end
-  bufpath = vim.fs.normalize(bufpath)
+  local bufpath = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
 
   local key = bufnr .. '|' .. markers_key(markers)
 
@@ -175,7 +176,7 @@ function M.get(opts)
     root = get_lsp_root(bufnr, bufpath)
   end
   if not root then
-    root = get_fs_root(bufpath, markers)
+    root = get_fs_root(bufnr, markers)
   end
   if not root then
     root = vim.fn.getcwd()

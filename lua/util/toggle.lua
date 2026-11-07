@@ -1,5 +1,5 @@
 ---@class util.toggle
----@overload fun(): string
+---@overload fun(option: string, silent?: boolean, values?: table): any
 local M = setmetatable({}, {
   __call = function(m, ...)
     return m.option(...)
@@ -8,9 +8,10 @@ local M = setmetatable({}, {
 
 --- Toggle Options
 ---@param option string
----@param silent boolean?
 ---@param values table?
-function M.option(option, silent, values)
+---@param silent boolean?
+---@return any
+function M.option(option, values, silent)
   local ok, current = pcall(function()
     return vim.opt_local[option]:get()
   end)
@@ -18,30 +19,34 @@ function M.option(option, silent, values)
     vim.notify('Failed to get option: ' .. tostring(option), vim.log.levels.ERROR, { title = 'Option' })
     return
   end
+
+  local new_value
   if values then
-    local new_value = current == values[1] and values[2] or values[1]
-    local set_ok, err = pcall(function()
-      vim.opt_local[option] = new_value
-    end)
-    if not set_ok then
-      vim.notify('Failed to set option: ' .. tostring(err), vim.log.levels.ERROR, { title = 'Option' })
+    new_value = current == values[1] and values[2] or values[1]
+  else
+    if type(current) ~= 'boolean' then
+      vim.notify('Option ' .. option .. ' is not boolean, use values', vim.log.levels.ERROR, { title = 'Option' })
       return
     end
-    if not silent then
-      vim.notify('Set ' .. option .. ' to ' .. new_value, vim.log.levels.INFO, { title = 'Option' })
-    end
+    new_value = not current
+  end
+
+  local set_ok, err = pcall(function()
+    vim.opt_local[option] = new_value
+  end)
+  if not set_ok then
+    vim.notify('Failed to set option: ' .. tostring(err), vim.log.levels.ERROR, { title = 'Option' })
     return
   end
 
-  local new_value = not current
-  vim.opt_local[option] = new_value
   if not silent then
-    vim.notify(
-      (new_value and 'Enabled' or 'Disabled') .. ' ' .. tostring(option),
-      vim.log.levels.INFO,
-      { title = 'Option' }
-    )
+    if type(new_value) == 'boolean' then
+      vim.notify((new_value and 'Enabled' or 'Disabled') .. ' ' .. option, vim.log.levels.INFO, { title = 'Option' })
+    else
+      vim.notify('Set ' .. option .. ' to ' .. tostring(new_value), vim.log.levels.INFO, { title = 'Option' })
+    end
   end
+  return new_value
 end
 
 --- Toggle Line Numbers
@@ -58,37 +63,27 @@ function M.number()
 end
 
 --- Toggle Inlay Hints
----@param buf integer?
+---@param bufnr integer?
 ---@param value boolean?
-function M.inlay_hints(buf, value)
-  local ih = vim.lsp.inlay_hint or vim.lsp.buf.inlay_hint
-  buf = buf or 0
-  if type(ih) == 'function' then
-    ih(buf, value)
-  elseif type(ih) == 'table' and ih.enable then
-    if value == nil then
-      value = not ih.is_enabled({ bufnr = buf })
-    end
-    ih.enable(value, { bufnr = buf })
-    vim.notify((value and 'Enabled' or 'Disabled') .. ' Inlay Hint', vim.log.levels.INFO, { title = 'Inlay Hints' })
+function M.inlay_hints(bufnr, value)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  if value == nil then
+    value = not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr })
   end
+  vim.lsp.inlay_hint.enable(value, { bufnr = bufnr })
+  vim.notify((value and 'Enabled' or 'Disabled') .. ' Inlay Hint', vim.log.levels.INFO, { title = 'Inlay Hints' })
 end
 
 --- Toggle CodeLens
----@param buf integer?
+---@param bufnr integer?
 ---@param value boolean?
-function M.codelens(buf, value)
-  local cl = vim.lsp.codelens or vim.lsp.buf.codelens
-  buf = buf or 0
-  if type(cl) == 'function' then
-    cl(buf, value)
-  elseif type(cl) == 'table' and cl.enable then
-    if value == nil then
-      value = not cl.is_enabled({ bufnr = buf })
-    end
-    cl.enable(value, { bufnr = buf })
-    vim.notify((value and 'Enabled' or 'Disabled') .. ' CodeLens', vim.log.levels.INFO, { title = 'CodeLens' })
+function M.codelens(bufnr, value)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  if value == nil then
+    value = not vim.lsp.codelens.is_enabled({ bufnr = bufnr })
   end
+  vim.lsp.codelens.enable(value, { bufnr = bufnr })
+  vim.notify((value and 'Enabled' or 'Disabled') .. ' CodeLens', vim.log.levels.INFO, { title = 'CodeLens' })
 end
 
 return M

@@ -5,7 +5,7 @@ end
 vim.api.nvim_create_autocmd({ 'LspAttach', 'BufFilePost', 'DirChanged', 'BufEnter' }, {
   group = augroup('root_cache'),
   callback = function(ev)
-    require('util.root').clear_cache(ev.buf)
+    require('util.root').clear_cache(ev.buf or vim.api.nvim_get_current_buf())
   end,
 })
 
@@ -22,7 +22,10 @@ vim.api.nvim_create_autocmd('BufReadPost', {
     local mark = vim.api.nvim_buf_get_mark(buf, '"')
     local lcount = vim.api.nvim_buf_line_count(buf)
     if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+      local win = vim.fn.bufwinid(buf)
+      if win ~= -1 then
+        pcall(vim.api.nvim_win_set_cursor, 0, mark)
+      end
     end
   end,
 })
@@ -31,8 +34,8 @@ vim.api.nvim_create_autocmd('BufReadPost', {
 vim.api.nvim_create_autocmd({ 'TermOpen', 'BufEnter' }, {
   group = augroup('startinsert'),
   pattern = 'term://*',
-  callback = function()
-    if vim.opt.buftype:get() == 'terminal' then
+  callback = function(ev)
+    if vim.bo[ev.buf].buftype == 'terminal' then
       vim.cmd('startinsert')
     end
   end,
@@ -115,9 +118,11 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd('FileType', {
   group = augroup('wrap_spell'),
   pattern = { 'text', 'plaintex', 'typst', 'gitcommit', 'markdown' },
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.spell = true
+  callback = function(ev)
+    for _, win in ipairs(vim.fn.win_findbuf(ev.buf)) do
+      vim.wo[win].spell = true
+      vim.wo[win].wrap = true
+    end
   end,
 })
 
@@ -125,20 +130,22 @@ vim.api.nvim_create_autocmd('FileType', {
 vim.api.nvim_create_autocmd({ 'FileType' }, {
   group = augroup('json_conceal'),
   pattern = { 'json', 'jsonc', 'json5' },
-  callback = function()
-    vim.opt_local.conceallevel = 0
+  callback = function(ev)
+    for _, win in ipairs(vim.fn.win_findbuf(ev.buf)) do
+      vim.wo[win].conceallevel = 0
+    end
   end,
 })
 
--- Auto set tab's length to 2, while open yaml or markdown file
+-- Auto set tab's length to 2
 vim.api.nvim_create_autocmd('FileType', {
-  group = augroup('yaml_md'),
-  pattern = { 'markdown', 'yaml' },
-  callback = function()
-    vim.opt_local.expandtab = false
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.softtabstop = 2
-    vim.opt_local.tabstop = 2
+  group = augroup('tabs_to_2_spaces'),
+  pattern = { 'lua', 'markdown', 'yaml' },
+  callback = function(ev)
+    local bo = vim.bo[ev.buf]
+    bo.shiftwidth = 2
+    bo.softtabstop = 2
+    bo.tabstop = 2
   end,
 })
 
