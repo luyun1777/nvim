@@ -51,20 +51,25 @@ local function user_sysroot_src()
   return vim.tbl_get(vim.lsp.config['rust_analyzer'], 'settings', 'rust-analyzer', 'cargo', 'sysrootSrc')
 end
 
+local sysroot_cache = {} ---@type table<string, string|false>
+
 local function default_sysroot_src()
   local sysroot = vim.tbl_get(vim.lsp.config['rust_analyzer'], 'settings', 'rust-analyzer', 'cargo', 'sysroot')
   if not sysroot then
-    local result = vim
-      .system({ 'cargo', '-Z', 'unstable-options', 'rustc', '--print', 'sysroot' }, { text = true })
-      :wait()
-
-    if result.code == 0 and result.stdout then
-      sysroot = vim.trim(result.stdout)
+    local cwd = vim.fn.getcwd()
+    if sysroot_cache[cwd] == nil then
+      local ok, result = pcall(function()
+        return vim.system({ 'rustc', '--print', 'sysroot' }, { text = true }):wait()
+      end)
+      sysroot_cache[cwd] = ok and result.code == 0 and result.stdout and vim.trim(result.stdout) or false
     end
+    sysroot = sysroot_cache[cwd] or nil
   end
 
   return sysroot and vim.fs.joinpath(sysroot, 'lib/rustlib/src/rust/library') or nil
 end
+
+local workspace_cache = {} ---@type table<string, string>
 
 local function is_library(fname)
   local user_home = vim.fs.normalize(vim.env.HOME)
@@ -112,6 +117,11 @@ return {
       return
     end
 
+    if workspace_cache[cargo_crate_dir] then
+      on_dir(workspace_cache[cargo_crate_dir])
+      return
+    end
+
     local cmd = {
       'cargo',
       'metadata',
@@ -131,6 +141,7 @@ return {
           end
         end
 
+        workspace_cache[cargo_crate_dir] = cargo_workspace_root or cargo_crate_dir
         on_dir(cargo_workspace_root or cargo_crate_dir)
       else
         vim.schedule(function()
